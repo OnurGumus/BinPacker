@@ -38,4 +38,6 @@ jobs:
         app-name: 'binpacker'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_8bc89b6b64bb4f1cbb6f3d7ef9d85157 }}
-        package: ${{env.DOTNET_ROOT}}/deploy
+        #package: ${{env.DOTNET_ROOT}}/deploy
+        #app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
