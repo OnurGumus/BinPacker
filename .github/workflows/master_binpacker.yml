@@ -1,0 +1,35 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - binpacker
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.301'
+
+    - name: Build with dotnet
+      run: dotnet tool restore
+
+    - name: dotnet publish
+      run: dotnet fake build --target BuildRelease
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v1
+      with:
+        app-name: 'binpacker'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_8bc89b6b64bb4f1cbb6f3d7ef9d85157 }}
+        package: ${{env.DOTNET_ROOT}}/myapp 
