@@ -23,15 +23,12 @@ jobs:
       with:
         dotnet-version: '3.1.301'
 
-    - name: Build with dotnet
+    - name: Tool restore
       run: dotnet tool restore
 
-    - name: dotnet publish
+    - name: Build release
       run: dotnet fake build --target BuildRelease
-    - task: PublishPipelineArtifact@1
-      inputs:
-          targetPath: $(System.DefaultWorkingDirectory)/deploy
-          artifactName: WebApp
+  
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
       with:
