@@ -7,6 +7,9 @@ on:
   push:
     branches:
       - master
+env:
+  AZURE_WEBAPP_NAME: "BinPacker" # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: "deploy" # set this to the path to your web app project, defaults to the repository root
 
 jobs:
   build-and-deploy:
@@ -29,12 +32,10 @@ jobs:
       inputs:
           targetPath: $(System.DefaultWorkingDirectory)/deploy
           artifactName: WebApp
-  #  - name: Deploy to Azure Web App
-   #   uses: azure/webapps-deploy@v1
-    #  with:
-     #   app-name: 'binpacker'
-      #  slot-name: 'production'
-       # publish:  - publish: $(System.DefaultWorkingDirectory)/bin/WebApp
-  #artifact: WebApp
-  #      publish-profile: ${{ secrets.AzureAppService_PublishProfile_8bc89b6b64bb4f1cbb6f3d7ef9d85157 }}
-   #     package: ${{env.DOTNET_ROOT}}/myapp 
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v1
+      with:
+        app-name: 'binpacker'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_8bc89b6b64bb4f1cbb6f3d7ef9d85157 }}
+        package: ${{env.DOTNET_ROOT}}/deploy
