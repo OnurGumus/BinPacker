@@ -1402,7 +1402,7 @@ let runPerContainer (logger: ILogger)
                 | _ -> res
             | _ -> res
 
-        let timeOut = sw.ElapsedMilliseconds > 300000L
+        let timeOut = sw.ElapsedMilliseconds > 90000L
         let results = res :: resList
 
         match timeOut, res.ItemsUnput, retryCount with
@@ -1418,7 +1418,7 @@ let runPerContainer (logger: ILogger)
             outerLoop (CalculationMode.MinimizeVolume) (loopMutate items (items.Length / 10)) (retryCount - 1) results
     let retryCount =
          match containerMode with
-         | MultiContainer -> 5
+         | MultiContainer -> 2
          | _ -> 10
     try
         let resList =

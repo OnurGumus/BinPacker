@@ -875,7 +875,7 @@ let viewC =
                             "All dimensions are unitless."
                             "Select the calculation mode depending on items to be at minimum height or pushed to the edge."
                             "Select container mode to multi container if you want to see how many container it takes to fit"
-                            "Click calculate and wait up to 300 sec."
+                            "Click calculate and wait up to 90 sec."
                             "Bin packer will try to fit the items and minimize the placement."
                             "Gravity is ignored."
                             "Review the result in 3D then you may share it via share the result button and copy the url."
@@ -1130,7 +1130,7 @@ let viewC =
                              "Calculate")
                     let duration =
                         match model.ContainerMode with
-                        | MultiContainer -> 300
+                        | MultiContainer -> 90
                         | _ -> 90
 
                     prop.onClick (fun _ ->
