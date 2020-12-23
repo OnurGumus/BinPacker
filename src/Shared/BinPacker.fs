@@ -1196,6 +1196,7 @@ let defaultBatchSize = 20
 let runPerContainer (logger: ILogger)
                     (sw: IStopwatch)
                     (rootContainer: Container)
+                    (containerMode: ContainerMode)
                     (calculationMode: CalculationMode)
                     (items: Item list)
                     (T: float)
@@ -1262,9 +1263,12 @@ let runPerContainer (logger: ILogger)
             |]
 
         let rbatchCount = Math.Max(1, (batchCount / 2))
-
+        let duration =
+             match containerMode with
+             | MultiContainer -> 300000L
+             | _ -> 90000L
         let timeOut =
-            sw.ElapsedMilliseconds > 90000L
+            sw.ElapsedMilliseconds > duration
             || items
                |> List.forall (fun x -> x.Weight > rootContainer.Weight)
         //printfn "rbatchCount %i" rbatchCount
@@ -1317,7 +1321,7 @@ let runPerContainer (logger: ILogger)
                 batchCount
                 retryCount
 
-    let rec outerLoop (calculationMode: CalculationMode) (items: Item list) retryCount resList =
+    let rec outerLoop  (calculationMode: CalculationMode) (items: Item list) retryCount resList =
 
         let defaultBatchSize = if items.Length < 100 then 15 else 20
 
@@ -1398,7 +1402,7 @@ let runPerContainer (logger: ILogger)
                 | _ -> res
             | _ -> res
 
-        let timeOut = sw.ElapsedMilliseconds > 90000L
+        let timeOut = sw.ElapsedMilliseconds > 300000L
         let results = res :: resList
 
         match timeOut, res.ItemsUnput, retryCount with
@@ -1412,7 +1416,10 @@ let runPerContainer (logger: ILogger)
                 | n -> loopMutate (items |> mutate calculationMode res.ItemsPut) (n - 1)
 
             outerLoop (CalculationMode.MinimizeVolume) (loopMutate items (items.Length / 10)) (retryCount - 1) results
-
+    let retryCount =
+         match containerMode with
+         | MultiContainer -> 5
+         | _ -> 10
     try
         let resList =
             outerLoop
@@ -1420,7 +1427,8 @@ let runPerContainer (logger: ILogger)
                 (items
                  |> List.map (Rotate.rotateToMinZ calculationMode)
                  |> List.sortByDescending (fun x -> (x.KeepBottom, maxDim x)))
-                10
+
+                retryCount
                 []
 
         let res =
@@ -1460,7 +1468,7 @@ let run (sw: IStopwatch)
         =
     let rec loop results unputItems =
         let res =
-            runPerContainer logger sw rootContainer calculationMode unputItems T alpha
+            runPerContainer logger sw rootContainer containerMode calculationMode unputItems T alpha
 
         let res =
             match res.ItemsUnput with
@@ -1499,7 +1507,7 @@ let run (sw: IStopwatch)
                     res
                 else
                     let newRes =
-                        runPerContainer logger sw newRootContainer calculationMode unputItems T alpha
+                        runPerContainer logger sw newRootContainer containerMode calculationMode unputItems T alpha
 
                     match newRes.ItemsUnput with
                     | [] ->
