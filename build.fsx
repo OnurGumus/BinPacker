@@ -85,7 +85,7 @@ Target.create "Build" (fun _ ->
        ("let app = \"" + release.NugetVersion + "\"")
         System.Text.Encoding.UTF8
         (Path.combine clientPath "Version.fs")
-    runTool yarnTool "webpack-cli -p" __SOURCE_DIRECTORY__
+    runDotNet "fable watch ./src/Client  --run yarn prod" __SOURCE_DIRECTORY__
 )
 
 Target.create "BuildServerOnlyRelease"
@@ -95,9 +95,10 @@ Target.create "BuildServerOnlyRelease"
 
 Target.create "BuildRelease" (fun _ ->
     let runTool = runTool Proc.run
-    runTool yarnTool "webpack-cli -p" __SOURCE_DIRECTORY__
+    runDotNet "fable ./src/Client  --run yarn prod" __SOURCE_DIRECTORY__
     printf "source: %A target:%A" clientDeployPath clientDeployReleasePath
     Shell.copyDir clientDeployReleasePath clientDeployPath (fun _ -> true))
+
 
 Target.create "Run" (fun _ ->
     let runTool = runTool Proc.run
@@ -105,7 +106,7 @@ Target.create "Run" (fun _ ->
         runDotNet "watch run" serverPath
     }
     let client = async {
-        runTool yarnTool "webpack-dev-server" __SOURCE_DIRECTORY__
+        runDotNet "fable watch ./src/Client  --run yarn dev" __SOURCE_DIRECTORY__
     }
     let browser = async {
         do! Async.Sleep 5000

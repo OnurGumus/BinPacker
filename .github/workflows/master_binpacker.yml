@@ -21,14 +21,14 @@ jobs:
     - name: Set up .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.301'
+        dotnet-version: '5.0.101'
 
     - name: Tool restore
       run: dotnet tool restore
 
     - name: Build release
       run: dotnet fake build --target BuildRelease
-  
+
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v1
       with:

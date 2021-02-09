@@ -16,7 +16,7 @@ var CONFIG = {
     // The tags to include the generated JS and CSS will be automatically injected in the HTML template
     // See https://github.com/jantimon/html-webpack-plugin
     indexHtmlTemplate: './src/Client/index.html',
-    fsharpEntry: './src/Client/Client.fsproj',
+    fsharpEntry: './src/Client/Client.fs.js',
     cssEntry: './src/Client/style.scss',
     outputDir: './src/Client/deploy',
     assetsDir: './src/Client/public',
@@ -35,25 +35,10 @@ var CONFIG = {
             ws: true
            }
        },
-    // Use babel-preset-env to generate JS compatible with most-used browsers.
-    // More info at https://babeljs.io/docs/en/next/babel-preset-env.html
-    babel: {
-        presets: [
-            ['@babel/preset-env', {
-                modules: false,
-                // This adds polyfills when needed. Requires core-js dependency.
-                // See https://babeljs.io/docs/en/babel-preset-env#usebuiltins
-                // Note that you still need to add custom polyfills if necessary (e.g. whatwg-fetch)
-                useBuiltIns: 'usage',
-                corejs: 3
-            }]
-        ],
-    }
 }
 
 // If we're running the webpack-dev-server, assume we're in development mode
-var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
-console.log('Bundling for ' + (isProduction ? 'production' : 'development') + '...');
+const isProduction = env => (env.production) ? true : false; // !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
 
 // The HtmlWebpackPlugin allows us to use a template for the index.html page
 // and automatically injects <script> or <link> tags for generated bundles.
@@ -64,12 +49,12 @@ var commonPlugins = [
     })
 ];
 
-module.exports = {
+module.exports = env => ({
     // In development, split the JavaScript and CSS files in order to
     // have a faster HMR support. In production bundle styles together
     // with the code because the MiniCssExtractPlugin will extract the
     // CSS in a separate files.
-    entry: isProduction ? {
+    entry: (isProduction(env))  ? {
         app: [resolve(CONFIG.fsharpEntry), resolve(CONFIG.cssEntry)]
     } : {
             app: [resolve(CONFIG.fsharpEntry)],
@@ -79,10 +64,11 @@ module.exports = {
     // to prevent browser caching if code changes
     output: {
         path: resolve(CONFIG.outputDir),
-        filename: isProduction ? '[name].[hash].js' : '[name].js'
+        filename: (isProduction(env))  ? '[name].[chunkhash].js' : '[name].js',
+        publicPath: "/",
     },
-    mode: isProduction ? 'production' : 'development',
-    devtool: isProduction ? 'none' : 'eval-source-map',
+    mode: (isProduction(env))  ? 'production' : 'development',
+    devtool: (isProduction(env))  ? 'hidden-source-map' : 'eval-source-map',
     optimization: {
         splitChunks: {
             chunks: 'all'
@@ -95,10 +81,10 @@ module.exports = {
     //      - CopyWebpackPlugin: Copies static assets to output directory
     // DEVELOPMENT
     //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing
-    plugins: isProduction ?
+    plugins: (isProduction(env))  ?
         commonPlugins.concat([
-            new MiniCssExtractPlugin({ filename: 'style.[hash].css' }),
-            new CopyWebpackPlugin([{ from: resolve(CONFIG.assetsDir) }]),
+            new MiniCssExtractPlugin({ filename: 'style.[chunkhash].css' }),
+            new CopyWebpackPlugin({ patterns : [ { from: resolve(CONFIG.assetsDir) }] }),
         ])
         : commonPlugins.concat([
             new webpack.HotModuleReplacementPlugin(),
@@ -124,26 +110,9 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.fs(x|proj)?$/,
-                use: {
-                    loader: 'fable-loader',
-                    options: {
-                        babel: CONFIG.babel
-                    }
-                }
-            },
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
-                    options: CONFIG.babel
-                },
-            },
-            {
                 test: /\.(sass|scss|css)$/,
                 use: [
-                    isProduction
+                    (isProduction(env))
                         ? MiniCssExtractPlugin.loader
                         : 'style-loader',
                     'css-loader',
@@ -162,7 +131,7 @@ module.exports = {
             }
         ]
     }
-};
+});
 
 function resolve(filePath) {
     return path.isAbsolute(filePath) ? filePath : path.join(__dirname, filePath);

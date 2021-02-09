@@ -1,23 +1,14 @@
 {
   "private": true,
   "devDependencies": {
-    "@babel/core": "^7.6.4",
-    "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/polyfill": "^7.6.0",
-    "@babel/preset-env": "^7.6.3",
-    "@babel/runtime": "^7.6.3",
     "@fortawesome/fontawesome-free": "^5.14.0",
     "@storybook/html": "^5.3.19",
-    "babel-loader": "^8.0.5",
     "bulma": "^0.9.0",
-    "copy-webpack-plugin": "^5.1.1",
-    "core-js": "^3.3.2",
+    "copy-webpack-plugin": "^7.0.0",
     "css-loader": "^2.0.1",
-    "fable-compiler": "^2.4.6",
-    "fable-loader": "^2.1.8",
     "file-loader": "^4.2.0",
-    "html-webpack-plugin": "^3.2.0",
-    "mini-css-extract-plugin": "^0.5.0",
+    "html-webpack-plugin": "^5.0.0-beta.5",
+    "mini-css-extract-plugin": "^1.3.4",
     "open-sans-fonts": "^1.5.1",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
@@ -30,9 +21,9 @@
     "three": "^0.118.3",
     "three-trackballcontrols": "^0.0.8",
     "three-trackballcontrols-ts": "^0.2.1",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.2",
+    "webpack": "^5.15.2",
+    "webpack-cli": "^4.3.1",
+    "webpack-dev-server": "^3.11.2",
     "whatwg-fetch": "^3.0.0"
   },
   "dependencies": {
@@ -42,6 +33,8 @@
   },
   "scripts": {
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "dev": "webpack serve --mode development --env development",
+    "prod": "webpack  --mode production --env production"
   }
 }
