@@ -92,6 +92,8 @@ export const lineMaterial = new THREE.LineBasicMaterial({
 export const cubes = [];
 
 export function renderCube(x, y, z, width, height, length, color, L, W) {
+    const L_1 = L;
+    const W_1 = W;
     const cubeMaterial_1 = new THREE.MeshLambertMaterial({
         color: color,
         wireframe: false,
@@ -103,7 +105,7 @@ export function renderCube(x, y, z, width, height, length, color, L, W) {
     const value = cube.add(wireFrame);
     void value;
     cube.castShadow = true;
-    const value_1 = cube.position.set(z - ((L - length) / 2), y + (height / 2), ((W - width) / 2) - x);
+    const value_1 = cube.position.set(z - ((L_1 - length) / 2), y + (height / 2), ((W_1 - width) / 2) - x);
     void value_1;
     const value_2 = scene.add(cube);
     void value_2;
@@ -156,33 +158,48 @@ export function init() {
     const value_14 = camera.position.set(500, 550, -700);
     void value_14;
     camera.lookAt(scene.position);
+    const initTrackballControls = (tupledArg) => {
+        const camera_1 = tupledArg[0];
+        const renderer_1 = tupledArg[1];
+        const trackballControls = new three$002Dtrackballcontrols(camera_1, renderer_1.domElement);
+        trackballControls.rotateSpeed = 1;
+        trackballControls.zoomSpeed = 1.2;
+        trackballControls.panSpeed = 0.8;
+        trackballControls.noZoom = false;
+        trackballControls.noPan = false;
+        trackballControls.staticMoving = true;
+        trackballControls.dynamicDampingFactor = 0.3;
+        trackballControls.keys = [65, 83, 68];
+        return trackballControls;
+    };
     let trackballControls_1;
     const tupledArg_1 = [camera, renderer];
-    const tupledArg = [tupledArg_1[0], tupledArg_1[1]];
-    const trackballControls = new three$002Dtrackballcontrols(tupledArg[0], tupledArg[1].domElement);
-    trackballControls.rotateSpeed = 1;
-    trackballControls.zoomSpeed = 1.2;
-    trackballControls.panSpeed = 0.8;
-    trackballControls.noZoom = false;
-    trackballControls.noPan = false;
-    trackballControls.staticMoving = true;
-    trackballControls.dynamicDampingFactor = 0.3;
-    trackballControls.keys = [65, 83, 68];
-    trackballControls_1 = trackballControls;
+    trackballControls_1 = initTrackballControls([tupledArg_1[0], tupledArg_1[1]]);
     const clock = new THREE.Clock();
+    const resizeRendererToDisplaySize = (renderer_2) => {
+        const canvas = renderer_2.domElement;
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        const needResize = (canvas.width !== width) ? true : (canvas.height !== height);
+        if (needResize) {
+            renderer_2.setSize(width, height, false);
+        }
+        return needResize;
+    };
     const renderScene = (time) => {
-        let renderer_2, canvas, width, height, needResize;
         const time_1 = time * 0.001;
         trackballControls_1.update(clock.getDelta());
-        if (renderer_2 = renderer, (canvas = renderer_2.domElement, (width = canvas.clientWidth, (height = canvas.clientHeight, (needResize = ((canvas.width !== width) ? true : (canvas.height !== height)), (needResize ? renderer_2.setSize(width, height, false) : (void 0), needResize)))))) {
+        if (resizeRendererToDisplaySize(renderer)) {
             const canvas_1 = renderer.domElement;
             camera.aspect = (canvas_1.clientWidth / canvas_1.clientHeight);
             camera.updateProjectionMatrix();
         }
         if (demoMode2()) {
             iterate((tupledArg_2) => {
+                const ndx = tupledArg_2[0] | 0;
                 const ob = tupledArg_2[1];
-                const rot = time_1 * (0.1 + (tupledArg_2[0] * 0.05));
+                const speed = 0.1 + (ndx * 0.05);
+                const rot = time_1 * speed;
                 ob.rotation.x = rot;
                 ob.rotation.y = rot;
             }, indexed(cubes));
@@ -214,7 +231,8 @@ export function renderResultInner(container, items, demoMode) {
 
 export function renderResult(container, items, demoMode) {
     if (lastLController() != null) {
-        gui.remove(lastLController());
+        const c = lastLController();
+        gui.remove(c);
     }
     const h = {
         h_filter: 0,
@@ -234,7 +252,8 @@ export function renderResult(container, items, demoMode) {
         renderResultInner(container, callback(items), demoMode2());
     }), true);
     if (lastHController() != null) {
-        gui.remove(lastHController());
+        const c_1 = lastHController();
+        gui.remove(c_1);
     }
     lastHController(gui.add(v, "v_filter", 0, toNumber(container.Dim.Height)).onChange((_arg1) => {
         renderResultInner(container, callback(items), demoMode2());

@@ -1,12 +1,11 @@
 @charset "utf-8";
-$size-7:0.8rem;
+$size-7:0.6em;
 @import "~bulma/bulma";
 @import "../../node_modules/@fortawesome/fontawesome-free/css/all.css";
 
 main {
     display: flex;
 
-    font-size: 16px !important;
     flex-direction: column;
 }
 
@@ -46,10 +45,18 @@ input[type="number"]{
     margin-bottom: 1em;
     ;
 }
-
+.dg.ac span{
+    font-size: 0.6em;
+}
+.dg.ac input{
+    font-size: 0.6em;
+}
 @media only screen and (min-width: 900px) {
+    *{
+        font-size: 1.06em;
+    }
     .dg.ac{
-        top:0 !important;
+        top:10em !important;
     }
     input[type="number"]{
         padding:10px !important;

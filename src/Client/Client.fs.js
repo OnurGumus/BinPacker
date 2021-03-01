@@ -1,17 +1,17 @@
 import { toString as toString_1, Record, Union } from "./.fable/fable-library.3.1.1/Types.js";
 import { ClientModel_RowItem, ClientModel_ContainerItem, ClientModel_Model, ContainerMode as ContainerMode_2, CalculationMode as CalculationMode_2, ClientModel_Calculation, Container as Container_1, ItemPut, Item, Dim as Dim_2, Coordinates, Calcs, ICalcApi$reflection, Route_builder, ClientModel_Model$reflection, ClientModel_ContainerItem$reflection, ClientModel_RowItem$reflection, CalcResult$reflection } from "../Shared/Shared.fs.js";
-import { lambda_type, unit_type, record_type, bool_type, union_type, int32_type, option_type, string_type, class_type, list_type } from "./.fable/fable-library.3.1.1/Reflection.js";
+import { getCaseFields, getCaseName as getCaseName_1, isUnion, lambda_type, unit_type, record_type, bool_type, union_type, int32_type, option_type, string_type, class_type, list_type } from "./.fable/fable-library.3.1.1/Reflection.js";
 import { join, toText, substring, printf, toConsole } from "./.fable/fable-library.3.1.1/String.js";
 import { op_UnaryNegation, compare, parse as parse_2, op_Addition, fromInteger, fromInt, toString, toInt, op_Subtraction, abs, op_Multiply, fromBits } from "./.fable/fable-library.3.1.1/Long.js";
 import { RemotingModule_createApi, RemotingModule_withRouteBuilder, Remoting_buildProxy_Z15584635 } from "./.fable/Fable.Remoting.Client.7.2.0/Remoting.fs.js";
-import { stringHash, max as max_3, randomNext, createObj, equals, int32ToString, curry } from "./.fable/fable-library.3.1.1/Util.js";
-import { Cmd_OfFunc_result, Cmd_ofSub, Cmd_none, Cmd_OfAsync_start, Cmd_OfAsyncWith_perform } from "./.fable/Fable.Elmish.3.1.0/cmd.fs.js";
+import { uncurry, stringHash, max as max_3, randomNext, createObj, equals, int32ToString, curry } from "./.fable/fable-library.3.1.1/Util.js";
+import { Cmd_batch, Cmd_map, Cmd_OfFunc_result, Cmd_ofSub, Cmd_none, Cmd_OfAsync_start, Cmd_OfAsyncWith_perform } from "./.fable/Fable.Elmish.3.1.0/cmd.fs.js";
 import { parse, newGuid } from "./.fable/fable-library.3.1.1/Guid.js";
 import { validateSync, single, Validator$1__Test, Validator$1__NotBlank_2B595, Validator$1__To_7C4B0DD6, Validator$1__Gt, Validator$1__Lt, Validator$1__End_Z5E18B1E2 } from "./.fable/Fable.Validation.0.2.1/Validation.fs.js";
-import { renderResult, init as init_1 } from "./CanvasRenderer.fs.js";
-import { max as max_4, groupBy, last, collect as collect_1, maxBy, exists, indexed, length, cons, sumBy, forAll, map as map_1, filter, append as append_1, singleton, item as item_2, ofSeq, ofArray } from "./.fable/fable-library.3.1.1/List.js";
-import { empty, singleton as singleton_1, rangeNumber, collect, rangeLong, map, append, delay } from "./.fable/fable-library.3.1.1/Seq.js";
-import { map as map_2, defaultArg, value as value_175, some } from "./.fable/fable-library.3.1.1/Option.js";
+import { renderResult, init as init_2 } from "./CanvasRenderer.fs.js";
+import { empty as empty_2, max as max_4, groupBy, last, collect as collect_1, maxBy, exists, indexed, length, cons, sumBy, forAll, map as map_2, filter, append as append_1, singleton, item as item_2, ofSeq, ofArray } from "./.fable/fable-library.3.1.1/List.js";
+import { empty, singleton as singleton_1, rangeNumber, collect, rangeLong, map as map_1, append, delay } from "./.fable/fable-library.3.1.1/Seq.js";
+import { map as map_3, defaultArg, value as value_175, some } from "./.fable/fable-library.3.1.1/Option.js";
 import { parse as parse_1 } from "./.fable/fable-library.3.1.1/Double.js";
 import { FSharpResult$2 } from "./.fable/fable-library.3.1.1/Choice.js";
 import { parse as parse_3 } from "./.fable/fable-library.3.1.1/Int32.js";
@@ -24,8 +24,18 @@ import { Helpers_combineClasses } from "./.fable/Feliz.Bulma.2.9.0/ElementBuilde
 import { Browser_Types_Event__Event_get_Value } from "./.fable/Fable.React.7.2.0/Fable.React.Extensions.fs.js";
 import { op_PlusPlus } from "./.fable/Feliz.Bulma.2.9.0/Operators.fs.js";
 import { parse as parse_4 } from "./.fable/fable-library.3.1.1/Boolean.js";
-import { ProgramModule_mkProgram, ProgramModule_run } from "./.fable/Fable.Elmish.3.1.0/program.fs.js";
-import { Program_withReactBatched } from "./.fable/Fable.Elmish.React.3.0.1/react.fs.js";
+import { Program_Internal_withReactBatchedUsing } from "./.fable/Fable.Elmish.React.3.0.1/react.fs.js";
+import { lazyView2With } from "./.fable/Fable.Elmish.HMR.4.1.0/common.fs.js";
+import { ProgramModule_map, ProgramModule_runWith, ProgramModule_mkProgram, ProgramModule_withConsoleTrace } from "./.fable/Fable.Elmish.3.1.0/program.fs.js";
+import { Program_withDebuggerUsing, Debugger_ConnectionOptions, Debugger_showWarning, Debugger_showError } from "./.fable/Fable.Elmish.Debugger.3.2.0/debugger.fs.js";
+import { add } from "./.fable/fable-library.3.1.1/Map.js";
+import { Auto_generateEncoder_Z127D9D79, uint64, int64, decimal } from "./.fable/Thoth.Json.5.1.0/Encode.fs.js";
+import { fromValue, Auto_generateDecoder_7848D058, uint64 as uint64_1, int64 as int64_1, decimal as decimal_1 } from "./.fable/Thoth.Json.5.1.0/Decode.fs.js";
+import { empty as empty_1 } from "./.fable/Thoth.Json.5.1.0/Extra.fs.js";
+import { ExtraCoders } from "./.fable/Thoth.Json.5.1.0/Types.fs.js";
+import { Options$1 } from "./.fable/Fable.Elmish.Debugger.3.2.0/Fable.Import.RemoteDev.fs.js";
+import { connectViaExtension } from "remotedev";
+import { Internal_saveState, Model$1, Msg$1, Internal_tryRestoreState } from "./.fable/Fable.Elmish.HMR.4.1.0/hmr.fs.js";
 
 export const r = {};
 
@@ -65,9 +75,12 @@ export function Server_sw() {
     )();
 }
 
-export const Server_api = Remoting_buildProxy_Z15584635(RemotingModule_withRouteBuilder(Route_builder, RemotingModule_createApi()), {
-    ResolveType: ICalcApi$reflection,
-});
+export const Server_api = (() => {
+    const calcApi = Remoting_buildProxy_Z15584635(RemotingModule_withRouteBuilder(Route_builder, RemotingModule_createApi()), {
+        ResolveType: ICalcApi$reflection,
+    });
+    return calcApi;
+})();
 
 export const run = curry(5, Server_api.run);
 
@@ -103,13 +116,14 @@ export function numericCheck(t, typef, min, max, name, data) {
 }
 
 export function init() {
-    init_1();
+    let s;
+    init_2();
     const colors = ofArray(["green", "blue", "red", "pink", "yellow", "aqua", "orange", "white", "purple", "lime"]);
-    const boxes = ofSeq(delay(() => append(map((i) => {
+    const boxes = ofSeq(delay(() => append(map_1((i) => {
         let Dim, Tag;
         const Coord = new Coordinates(op_Multiply(i, fromBits(10, 0, false)), op_Multiply(abs(op_Subtraction(fromBits(5, 0, false), i)), fromBits(10, 0, false)), op_Multiply(abs(op_Subtraction(fromBits(5, 0, false), i)), fromBits(10, 0, false)));
         return new ItemPut((Dim = (new Dim_2(fromBits(10, 0, false), fromBits(10, 0, false), fromBits(10, 0, false))), (Tag = item_2(~(~toInt(i)), colors), new Item(Dim, 0, toString(i), Tag, false, false, false))), Coord);
-    }, rangeLong(fromBits(0, 0, false), fromInt(1), fromBits(9, 0, false), false)), delay(() => map((i_1) => {
+    }, rangeLong(fromBits(0, 0, false), fromInt(1), fromBits(9, 0, false), false)), delay(() => map_1((i_1) => {
         let Dim_1, Tag_1;
         const Coord_1 = new Coordinates(op_Multiply(i_1, fromBits(10, 0, false)), op_Multiply(abs(op_Subtraction(fromBits(5, 0, false), i_1)), fromBits(10, 0, false)), op_Subtraction(fromBits(90, 0, false), op_Multiply(abs(op_Subtraction(fromBits(5, 0, false), i_1)), fromBits(10, 0, false))));
         return new ItemPut((Dim_1 = (new Dim_2(fromBits(10, 0, false), fromBits(10, 0, false), fromBits(10, 0, false))), (Tag_1 = item_2(~(~toInt(i_1)), colors), new Item(Dim_1, 0, toString(i_1), Tag_1, false, false, false))), Coord_1);
@@ -117,7 +131,8 @@ export function init() {
     const container = new Container_1(new Dim_2(fromBits(100, 0, false), fromBits(100, 0, false), fromBits(100, 0, false)), new Coordinates(fromBits(0, 0, false), fromBits(0, 0, false), fromBits(0, 0, false)), 0);
     let patternInput;
     try {
-        const matchValue = window.top.location.search;
+        const window$ = window.top;
+        const matchValue = window$.location.search;
         let pattern_matching_result;
         if (matchValue === null) {
             pattern_matching_result = 0;
@@ -125,7 +140,7 @@ export function init() {
         else if (matchValue === "") {
             pattern_matching_result = 0;
         }
-        else if (matchValue.indexOf("?g=") === 0) {
+        else if (s = matchValue, s.indexOf("?g=") === 0) {
             pattern_matching_result = 1;
         }
         else {
@@ -137,7 +152,9 @@ export function init() {
                 break;
             }
             case 1: {
-                patternInput = [loadCmd(parse(substring(window.location.search, 3))), true];
+                const s_1 = matchValue;
+                const guid = parse(substring(window.location.search, 3));
+                patternInput = [loadCmd(guid), true];
                 break;
             }
             case 2: {
@@ -150,8 +167,10 @@ export function init() {
         console.log(some(e));
         patternInput = [Cmd_none(), false];
     }
+    const loading = patternInput[1];
+    const cmd = patternInput[0];
     renderResult(container, boxes, true);
-    return [new ClientModel_Model(new ClientModel_Calculation(0), new CalculationMode_2(0), new ContainerMode_2(0), void 0, void 0, singleton(newRowItem()), void 0, 0, false, patternInput[1]), patternInput[0]];
+    return [new ClientModel_Model(new ClientModel_Calculation(0), new CalculationMode_2(0), new ContainerMode_2(0), void 0, void 0, singleton(newRowItem()), void 0, 0, false, loading), cmd];
 }
 
 export const cols = ofArray(["Length", "Width", "Height", "Weight", "Quant.", "⬆⬆", "⬇⬇", "Stack", "Color", "", ""]);
@@ -162,26 +181,31 @@ export function validateTreshold(v) {
 
 export function convertToItems(model) {
     return ofSeq(delay(() => collect((matchValue) => {
-        const r_1 = value_175(matchValue[0]);
-        return map((i) => (new Item(new Dim_2(r_1.Width, r_1.Height, r_1.Length), r_1.Weight, matchValue[1] + int32ToString(i), r_1.Color, !r_1.Stackable, r_1.KeepTop, r_1.KeepBottom)), rangeNumber(1, 1, r_1.Quantity));
+        const rowItem = matchValue[0];
+        const key = matchValue[1];
+        const r_1 = value_175(rowItem);
+        return map_1((i) => (new Item(new Dim_2(r_1.Width, r_1.Height, r_1.Length), r_1.Weight, key + int32ToString(i), r_1.Color, !r_1.Stackable, r_1.KeepTop, r_1.KeepBottom)), rangeNumber(1, 1, r_1.Quantity));
     }, model.RowItems)));
 }
 
 export function update(msg, model) {
-    let matchValue_2;
+    let rowItems;
     let patternInput;
     if (msg.tag === 1) {
+        const guid = msg.fields[0];
         patternInput = [new ClientModel_Model(model.Calculation, model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, model.RowItems, model.TotalVolume, model.CurrentResultIndex, true, model.Loading), Cmd_ofSub((_arg1) => {
-            window.history.replaceState(null, null, toText(printf("?g=%s"))(msg.fields[0]));
+            window.history.replaceState(null, null, toText(printf("?g=%s"))(guid));
         })];
     }
     else if (msg.tag === 10) {
         patternInput = [model, saveCmd(model)];
     }
     else if (msg.tag === 9) {
+        const i = msg.fields[0] | 0;
         const matchValue_1 = model.Calculation;
         if (matchValue_1.tag === 2) {
-            patternInput = [new ClientModel_Model(model.Calculation, model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, model.RowItems, model.TotalVolume, msg.fields[0], model.UrlShown, model.Loading), Cmd_OfFunc_result(new Msg(0, matchValue_1.fields[0]))];
+            const c_1 = matchValue_1.fields[0];
+            patternInput = [new ClientModel_Model(model.Calculation, model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, model.RowItems, model.TotalVolume, i, model.UrlShown, model.Loading), Cmd_OfFunc_result(new Msg(0, c_1))];
         }
         else {
             throw (new Error("should not happen"));
@@ -191,13 +215,21 @@ export function update(msg, model) {
         patternInput = [new ClientModel_Model(model.Calculation, model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, append_1(model.RowItems, singleton(newRowItem())), model.TotalVolume, model.CurrentResultIndex, model.UrlShown, model.Loading), Cmd_none()];
     }
     else if (msg.tag === 4) {
-        patternInput = [new ClientModel_Model(model.Calculation, model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, filter((tupledArg) => (tupledArg[1] !== msg.fields[0]), model.RowItems), model.TotalVolume, model.CurrentResultIndex, model.UrlShown, model.Loading), Cmd_none()];
+        const key = msg.fields[0];
+        patternInput = [new ClientModel_Model(model.Calculation, model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, filter((tupledArg) => {
+            const r_1 = tupledArg[0];
+            const k = tupledArg[1];
+            return k !== key;
+        }, model.RowItems), model.TotalVolume, model.CurrentResultIndex, model.UrlShown, model.Loading), Cmd_none()];
     }
     else if (msg.tag === 5) {
-        patternInput = [new ClientModel_Model(model.Calculation, model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, map_1((_arg2) => {
+        const key_1 = msg.fields[0];
+        const row = msg.fields[1];
+        patternInput = [new ClientModel_Model(model.Calculation, model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, map_2((_arg2) => {
             const old = _arg2;
-            if (old[1] === msg.fields[0]) {
-                return [msg.fields[1], msg.fields[0]];
+            const oldKey = old[1];
+            if (oldKey === key_1) {
+                return [row, key_1];
             }
             else {
                 return old;
@@ -205,13 +237,15 @@ export function update(msg, model) {
         }, model.RowItems), model.TotalVolume, model.CurrentResultIndex, model.UrlShown, model.Loading), Cmd_none()];
     }
     else if (msg.tag === 0) {
-        const model_2 = new ClientModel_Model(new ClientModel_Calculation(2, msg.fields[0]), model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, model.RowItems, model.TotalVolume, model.CurrentResultIndex, model.UrlShown, model.Loading);
+        const c_2 = msg.fields[0];
+        const model_2 = new ClientModel_Model(new ClientModel_Calculation(2, c_2), model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, model.RowItems, model.TotalVolume, model.CurrentResultIndex, model.UrlShown, model.Loading);
         patternInput = [model_2, Cmd_ofSub((_arg3) => {
-            renderResult(item_2(model_2.CurrentResultIndex, msg.fields[0]).Container, item_2(model_2.CurrentResultIndex, msg.fields[0]).ItemsPut, false);
+            renderResult(item_2(model_2.CurrentResultIndex, c_2).Container, item_2(model_2.CurrentResultIndex, c_2).ItemsPut, false);
         })];
     }
     else if (msg.tag === 6) {
-        patternInput = [new ClientModel_Model(model.Calculation, model.CalculationMode, model.ContainerMode, model.Container, msg.fields[0], model.RowItems, model.TotalVolume, model.CurrentResultIndex, model.UrlShown, model.Loading), Cmd_none()];
+        const c_3 = msg.fields[0];
+        patternInput = [new ClientModel_Model(model.Calculation, model.CalculationMode, model.ContainerMode, model.Container, c_3, model.RowItems, model.TotalVolume, model.CurrentResultIndex, model.UrlShown, model.Loading), Cmd_none()];
     }
     else if (msg.tag === 7) {
         patternInput = ((msg.fields[0] === "Minimize Length") ? [new ClientModel_Model(model.Calculation, new CalculationMode_2(0), model.ContainerMode, model.Container, model.ContainerItem, model.RowItems, model.TotalVolume, model.CurrentResultIndex, model.UrlShown, model.Loading), Cmd_none()] : ((msg.fields[0] === "Minimize Height") ? [new ClientModel_Model(model.Calculation, new CalculationMode_2(1), model.ContainerMode, model.Container, model.ContainerItem, model.RowItems, model.TotalVolume, model.CurrentResultIndex, model.UrlShown, model.Loading), Cmd_none()] : [model, Cmd_none()]));
@@ -221,22 +255,38 @@ export function update(msg, model) {
     }
     else if (msg.tag === 2) {
         const c_4 = value_175(model.ContainerItem);
-        patternInput = [new ClientModel_Model(new ClientModel_Calculation(1), model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, model.RowItems, model.TotalVolume, 0, false, model.Loading), runCmd(model.ContainerMode, model.CalculationMode, new Container_1(new Dim_2(c_4.Width, c_4.Height, c_4.Length), new Coordinates(fromBits(0, 0, false), fromBits(0, 0, false), fromBits(0, 0, false)), c_4.Weight), convertToItems(model))];
+        const container = new Container_1(new Dim_2(c_4.Width, c_4.Height, c_4.Length), new Coordinates(fromBits(0, 0, false), fromBits(0, 0, false), fromBits(0, 0, false)), c_4.Weight);
+        const items = convertToItems(model);
+        patternInput = [new ClientModel_Model(new ClientModel_Calculation(1), model.CalculationMode, model.ContainerMode, model.Container, model.ContainerItem, model.RowItems, model.TotalVolume, 0, false, model.Loading), runCmd(model.ContainerMode, model.CalculationMode, container, items)];
     }
     else {
-        const matchValue = msg.fields[0].Calculation;
+        const model_1 = msg.fields[0];
+        const matchValue = model_1.Calculation;
         if (matchValue.tag === 2) {
-            patternInput = [new ClientModel_Model(msg.fields[0].Calculation, msg.fields[0].CalculationMode, msg.fields[0].ContainerMode, msg.fields[0].Container, msg.fields[0].ContainerItem, msg.fields[0].RowItems, msg.fields[0].TotalVolume, msg.fields[0].CurrentResultIndex, msg.fields[0].UrlShown, false), Cmd_OfFunc_result(new Msg(0, matchValue.fields[0]))];
+            const c = matchValue.fields[0];
+            patternInput = [new ClientModel_Model(model_1.Calculation, model_1.CalculationMode, model_1.ContainerMode, model_1.Container, model_1.ContainerItem, model_1.RowItems, model_1.TotalVolume, model_1.CurrentResultIndex, model_1.UrlShown, false), Cmd_OfFunc_result(new Msg(0, c))];
         }
         else {
             throw (new Error("should not happen"));
         }
     }
     const model_3 = patternInput[0];
-    return [new ClientModel_Model(model_3.Calculation, model_3.CalculationMode, model_3.ContainerMode, model_3.Container, model_3.ContainerItem, model_3.RowItems, (matchValue_2 = model_3.RowItems, forAll((x) => (x[0] != null), matchValue_2) ? sumBy((x_2) => op_Multiply(op_Multiply(op_Multiply(x_2.Width, x_2.Height), x_2.Length), fromInteger(x_2.Quantity, false, 2)), map_1((x_1) => value_175(x_1[0]), matchValue_2), {
-        GetZero: () => fromInt(0),
-        Add: op_Addition,
-    }) : (void 0)), model_3.CurrentResultIndex, model_3.UrlShown, model_3.Loading), patternInput[1]];
+    const cmd = patternInput[1];
+    let totalVolume;
+    const matchValue_2 = model_3.RowItems;
+    if (rowItems = matchValue_2, forAll((x) => (x[0] != null), rowItems)) {
+        const rowItems_1 = matchValue_2;
+        const rowItems_2 = map_2((x_1) => value_175(x_1[0]), rowItems_1);
+        const vol = sumBy((x_2) => op_Multiply(op_Multiply(op_Multiply(x_2.Width, x_2.Height), x_2.Length), fromInteger(x_2.Quantity, false, 2)), rowItems_2, {
+            GetZero: () => fromInt(0),
+            Add: op_Addition,
+        });
+        totalVolume = vol;
+    }
+    else {
+        totalVolume = (void 0);
+    }
+    return [new ClientModel_Model(model_3.Calculation, model_3.CalculationMode, model_3.ContainerMode, model_3.Container, model_3.ContainerItem, model_3.RowItems, totalVolume, model_3.CurrentResultIndex, model_3.UrlShown, model_3.Loading), cmd];
 }
 
 export class RowFormData extends Record {
@@ -342,48 +392,126 @@ export function Container_validate(formData) {
         const min_1 = fromBits(0, 0, false);
         const max_1 = fromBits(2000, 0, false);
         intCheck = ((name_1) => ((data_1) => numericCheck(t, (value_1) => parse_2(value_1, 511, false, 64), min_1, max_1, name_1, data_1)));
-        return new ClientModel_ContainerItem(floatCheck("width")(formData.Width), floatCheck("height")(formData.Height), floatCheck("length")(formData.Length), numericCheck(t, (value_2) => parse_3(value_2, 511, false, 32), -1, 100000, "weight", formData.Weight));
+        const weightCheck = (name_2, data_2) => numericCheck(t, (value_2) => parse_3(value_2, 511, false, 32), -1, 100000, name_2, data_2);
+        return new ClientModel_ContainerItem(floatCheck("width")(formData.Width), floatCheck("height")(formData.Height), floatCheck("length")(formData.Length), weightCheck("weight", formData.Weight));
     });
 }
 
 export function Container_update(containerUpdated, msg, state) {
     const formData = state.FormData;
-    const formData_1 = (msg.tag === 1) ? (new ContainerFormData(formData.Width, msg.fields[0], formData.Length, formData.Weight)) : ((msg.tag === 2) ? (new ContainerFormData(formData.Width, formData.Height, msg.fields[0], formData.Weight)) : ((msg.tag === 3) ? (new ContainerFormData(formData.Width, formData.Height, formData.Length, msg.fields[0])) : (new ContainerFormData(msg.fields[0], formData.Height, formData.Length, formData.Weight))));
+    let formData_1;
+    switch (msg.tag) {
+        case 1: {
+            const s_1 = msg.fields[0];
+            formData_1 = (new ContainerFormData(formData.Width, s_1, formData.Length, formData.Weight));
+            break;
+        }
+        case 2: {
+            const s_2 = msg.fields[0];
+            formData_1 = (new ContainerFormData(formData.Width, formData.Height, s_2, formData.Weight));
+            break;
+        }
+        case 3: {
+            const s_3 = msg.fields[0];
+            formData_1 = (new ContainerFormData(formData.Width, formData.Height, formData.Length, s_3));
+            break;
+        }
+        default: {
+            const s = msg.fields[0];
+            formData_1 = (new ContainerFormData(s, formData.Height, formData.Length, formData.Weight));
+        }
+    }
     const r_1 = Container_validate(formData_1);
-    return [new Container_Model(r_1, formData_1), (r_1.tag === 0) ? (equals(r_1, state.ContainerItem) ? Cmd_none() : ((r_1.tag === 1) ? Cmd_ofSub((_arg2) => {
-        containerUpdated(void 0);
-    }) : Cmd_ofSub((_arg1) => {
-        containerUpdated(r_1.fields[0]);
-    }))) : ((r_1.tag === 1) ? Cmd_ofSub((_arg2) => {
-        containerUpdated(void 0);
-    }) : Cmd_ofSub((_arg1) => {
-        containerUpdated(r_1.fields[0]);
-    }))];
+    let cmd;
+    let pattern_matching_result;
+    if (r_1.tag === 0) {
+        if (equals(r_1, state.ContainerItem)) {
+            pattern_matching_result = 0;
+        }
+        else {
+            pattern_matching_result = 1;
+        }
+    }
+    else {
+        pattern_matching_result = 1;
+    }
+    switch (pattern_matching_result) {
+        case 0: {
+            cmd = Cmd_none();
+            break;
+        }
+        case 1: {
+            if (r_1.tag === 1) {
+                cmd = Cmd_ofSub((_arg2) => {
+                    containerUpdated(void 0);
+                });
+            }
+            else {
+                const r_2 = r_1.fields[0];
+                cmd = Cmd_ofSub((_arg1) => {
+                    containerUpdated(r_2);
+                });
+            }
+            break;
+        }
+    }
+    return [new Container_Model(r_1, formData_1), cmd];
 }
 
 export const Container_view = React_functionComponent_2F9D7239((props) => {
     const patternInput = useFeliz_React__React_useElmish_Static_17DC4F1D(Container_init(props.ContainerFormData), (msg, state) => Container_update(props.ContainerUpdated, msg, state), []);
     const model = patternInput[0];
+    const dispatch = patternInput[1];
+    const dispatch$0027 = (col, v) => {
+        let other;
+        dispatch((col === "Height") ? (new Container_Msg(1, v)) : ((col === "Width") ? (new Container_Msg(0, v)) : ((col === "Length") ? (new Container_Msg(2, v)) : ((col === "Max Weight") ? (new Container_Msg(3, v)) : (other = col, (() => {
+            throw (new Error(other));
+        })())))));
+    };
+    const defaultValue = (col_1) => {
+        switch (col_1) {
+            case "Height": {
+                return model.FormData.Height;
+            }
+            case "Width": {
+                return model.FormData.Width;
+            }
+            case "Length": {
+                return model.FormData.Length;
+            }
+            case "Max Weight": {
+                const matchValue = model.FormData.Weight;
+                switch (matchValue) {
+                    case null:
+                    case "": {
+                        return "0";
+                    }
+                    default: {
+                        const e = matchValue;
+                        return e;
+                    }
+                }
+            }
+            default: {
+                const other_1 = col_1;
+                throw (new Error(other_1));
+            }
+        }
+    };
     return createElement("div", createObj(ofSeq(delay(() => {
         const cols_1 = ofArray(["Length", "Width", "Height", "Max Weight"]);
         return append(singleton_1(["className", "table"]), delay(() => singleton_1(["children", reactApi.Children.toArray([createElement("div", {
             className: "tr",
-            children: reactApi.Children.toArray(Array.from(ofSeq(delay(() => map((col_2) => createElement("div", {
+            children: reactApi.Children.toArray(Array.from(ofSeq(delay(() => map_1((col_2) => createElement("div", {
                 className: join(" ", ["td", "th"]),
                 children: reactApi.Children.toArray([createElement("label", createObj(Helpers_combineClasses("label", ofArray([["className", "is-small"], ["children", col_2]]))))]),
             }), cols_1))))),
         }), createElement("div", {
             className: "tr",
-            children: reactApi.Children.toArray(Array.from(ofSeq(delay(() => map((col_3) => {
-                let props_5, col_1, matchValue;
-                const props_7 = ofArray([["className", "td"], ["children", reactApi.Children.toArray([(props_5 = ofArray([["readOnly", props.Disabled], ["maxLength", 4], ["max", 2000], ["defaultValue", (col_1 = col_3, (col_1 === "Height") ? model.FormData.Height : ((col_1 === "Width") ? model.FormData.Width : ((col_1 === "Length") ? model.FormData.Length : ((col_1 === "Max Weight") ? (matchValue = model.FormData.Weight, (matchValue === null) ? "0" : ((matchValue === "") ? "0" : matchValue)) : (() => {
-                    throw (new Error(col_1));
-                })()))))], ["className", "is-small"], ["placeholder", col_3], ["onChange", (e_1) => {
-                    const v = Browser_Types_Event__Event_get_Value(e_1);
-                    const col = col_3;
-                    patternInput[1]((col === "Height") ? (new Container_Msg(1, v)) : ((col === "Width") ? (new Container_Msg(0, v)) : ((col === "Length") ? (new Container_Msg(2, v)) : ((col === "Max Weight") ? (new Container_Msg(3, v)) : (() => {
-                        throw (new Error(col));
-                    })()))));
+            children: reactApi.Children.toArray(Array.from(ofSeq(delay(() => map_1((col_3) => {
+                let props_5;
+                const props_7 = ofArray([["className", "td"], ["children", reactApi.Children.toArray([(props_5 = ofArray([["readOnly", props.Disabled], ["maxLength", 4], ["max", 2000], ["defaultValue", defaultValue(col_3)], ["className", "is-small"], ["placeholder", col_3], ["onChange", (e_1) => {
+                    dispatch$0027(col_3, Browser_Types_Event__Event_get_Value(e_1));
                 }]]), createElement("input", createObj(cons(["type", "number"], Helpers_combineClasses("input", props_5)))))])]]);
                 return createElement("div", createObj(Helpers_combineClasses("control", props_7)));
             }, cols_1))))),
@@ -428,32 +556,101 @@ export function Row_validate(formData) {
         const min = fromBits(0, 0, false);
         const max = fromBits(2000, 0, false);
         floatCheck = ((name) => ((data) => numericCheck(t, (value) => parse_2(value, 511, false, 64), min, max, name, data)));
+        const intCheck = (name_1, data_1) => numericCheck(t, (value_1) => parse_3(value_1, 511, false, 32), 0, 2000, name_1, data_1);
+        const weightCheck = (name_2, data_2) => numericCheck(t, (value_2) => parse_3(value_2, 511, false, 32), -1, 100000, name_2, data_2);
         const Width = floatCheck("width")(formData.Width);
         const Height = floatCheck("height")(formData.Height);
         const Length = floatCheck("length")(formData.Length);
-        const Quantity = numericCheck(t, (value_1) => parse_3(value_1, 511, false, 32), 0, 2000, "quantity", formData.Quantity) | 0;
-        return new ClientModel_RowItem(Width, Height, Length, numericCheck(t, (value_2) => parse_3(value_2, 511, false, 32), -1, 100000, "weight", formData.Weight), formData.Color, Quantity, formData.Stackable, formData.KeepTop, formData.KeepBottom);
+        const Quantity = intCheck("quantity", formData.Quantity) | 0;
+        return new ClientModel_RowItem(Width, Height, Length, weightCheck("weight", formData.Weight), formData.Color, Quantity, formData.Stackable, formData.KeepTop, formData.KeepBottom);
     });
 }
 
 export function Row_update(rowUpdated, msg, state) {
     const formData = state.FormData;
-    const formData_1 = (msg.tag === 1) ? (new RowFormData(formData.Width, msg.fields[0], formData.Length, formData.Quantity, formData.Weight, formData.Color, formData.Stackable, formData.KeepTop, formData.KeepBottom)) : ((msg.tag === 2) ? (new RowFormData(formData.Width, formData.Height, msg.fields[0], formData.Quantity, formData.Weight, formData.Color, formData.Stackable, formData.KeepTop, formData.KeepBottom)) : ((msg.tag === 3) ? (new RowFormData(formData.Width, formData.Height, formData.Length, formData.Quantity, msg.fields[0], formData.Color, formData.Stackable, formData.KeepTop, formData.KeepBottom)) : ((msg.tag === 7) ? (new RowFormData(formData.Width, formData.Height, formData.Length, msg.fields[0], formData.Weight, formData.Color, formData.Stackable, formData.KeepTop, formData.KeepBottom)) : ((msg.tag === 4) ? (new RowFormData(formData.Width, formData.Height, formData.Length, formData.Quantity, formData.Weight, formData.Color, msg.fields[0], formData.KeepTop, formData.KeepBottom)) : ((msg.tag === 5) ? (new RowFormData(formData.Width, formData.Height, formData.Length, formData.Quantity, formData.Weight, formData.Color, formData.Stackable, formData.KeepTop, msg.fields[0])) : ((msg.tag === 6) ? (new RowFormData(formData.Width, formData.Height, formData.Length, formData.Quantity, formData.Weight, formData.Color, formData.Stackable, msg.fields[0], formData.KeepBottom)) : (new RowFormData(msg.fields[0], formData.Height, formData.Length, formData.Quantity, formData.Weight, formData.Color, formData.Stackable, formData.KeepTop, formData.KeepBottom))))))));
+    let formData_1;
+    switch (msg.tag) {
+        case 1: {
+            const s_1 = msg.fields[0];
+            formData_1 = (new RowFormData(formData.Width, s_1, formData.Length, formData.Quantity, formData.Weight, formData.Color, formData.Stackable, formData.KeepTop, formData.KeepBottom));
+            break;
+        }
+        case 2: {
+            const s_2 = msg.fields[0];
+            formData_1 = (new RowFormData(formData.Width, formData.Height, s_2, formData.Quantity, formData.Weight, formData.Color, formData.Stackable, formData.KeepTop, formData.KeepBottom));
+            break;
+        }
+        case 3: {
+            const s_3 = msg.fields[0];
+            formData_1 = (new RowFormData(formData.Width, formData.Height, formData.Length, formData.Quantity, s_3, formData.Color, formData.Stackable, formData.KeepTop, formData.KeepBottom));
+            break;
+        }
+        case 7: {
+            const s_4 = msg.fields[0];
+            formData_1 = (new RowFormData(formData.Width, formData.Height, formData.Length, s_4, formData.Weight, formData.Color, formData.Stackable, formData.KeepTop, formData.KeepBottom));
+            break;
+        }
+        case 4: {
+            const s_5 = msg.fields[0];
+            formData_1 = (new RowFormData(formData.Width, formData.Height, formData.Length, formData.Quantity, formData.Weight, formData.Color, s_5, formData.KeepTop, formData.KeepBottom));
+            break;
+        }
+        case 5: {
+            const s_6 = msg.fields[0];
+            formData_1 = (new RowFormData(formData.Width, formData.Height, formData.Length, formData.Quantity, formData.Weight, formData.Color, formData.Stackable, formData.KeepTop, s_6));
+            break;
+        }
+        case 6: {
+            const s_7 = msg.fields[0];
+            formData_1 = (new RowFormData(formData.Width, formData.Height, formData.Length, formData.Quantity, formData.Weight, formData.Color, formData.Stackable, s_7, formData.KeepBottom));
+            break;
+        }
+        default: {
+            const s = msg.fields[0];
+            formData_1 = (new RowFormData(s, formData.Height, formData.Length, formData.Quantity, formData.Weight, formData.Color, formData.Stackable, formData.KeepTop, formData.KeepBottom));
+        }
+    }
     const r_1 = Row_validate(formData_1);
-    return [new Row_Model(r_1, formData_1), (r_1.tag === 0) ? (equals(r_1, state.RowItem) ? Cmd_none() : ((r_1.tag === 1) ? Cmd_ofSub((_arg2) => {
-        rowUpdated(void 0);
-    }) : Cmd_ofSub((_arg1) => {
-        rowUpdated(r_1.fields[0]);
-    }))) : ((r_1.tag === 1) ? Cmd_ofSub((_arg2) => {
-        rowUpdated(void 0);
-    }) : Cmd_ofSub((_arg1) => {
-        rowUpdated(r_1.fields[0]);
-    }))];
+    let cmd;
+    let pattern_matching_result;
+    if (r_1.tag === 0) {
+        if (equals(r_1, state.RowItem)) {
+            pattern_matching_result = 0;
+        }
+        else {
+            pattern_matching_result = 1;
+        }
+    }
+    else {
+        pattern_matching_result = 1;
+    }
+    switch (pattern_matching_result) {
+        case 0: {
+            cmd = Cmd_none();
+            break;
+        }
+        case 1: {
+            if (r_1.tag === 1) {
+                cmd = Cmd_ofSub((_arg2) => {
+                    rowUpdated(void 0);
+                });
+            }
+            else {
+                const r_2 = r_1.fields[0];
+                cmd = Cmd_ofSub((_arg1) => {
+                    rowUpdated(r_2);
+                });
+            }
+            break;
+        }
+    }
+    return [new Row_Model(r_1, formData_1), cmd];
 }
 
 export const Row_view = React_functionComponent_2F9D7239((props) => {
     const patternInput = useFeliz_React__React_useElmish_Static_17DC4F1D(Row_init(props.FormData), (msg, state) => Row_update(props.RowUpdated, msg, state), []);
     const model = patternInput[0];
+    const dispatch = patternInput[1];
     let removeButton;
     const props_1 = ofSeq(delay(() => append(singleton_1(op_PlusPlus(["className", "is-small"], ["className", "is-danger"])), delay(() => append(singleton_1(["disabled", props.Disabled]), delay(() => append(singleton_1(["className", join(" ", ["fa", "fa-times-circle"])]), delay(() => {
         const matchValue = props.Remove;
@@ -487,9 +684,42 @@ export const Row_view = React_functionComponent_2F9D7239((props) => {
     }))))))));
     addButton = createElement("button", createObj(Helpers_combineClasses("button", props_3)));
     const dispatch$0027 = (col, v) => {
-        patternInput[1]((col === "Height") ? (new Row_Msg(1, v)) : ((col === "Width") ? (new Row_Msg(0, v)) : ((col === "Weight") ? (new Row_Msg(3, v)) : ((col === "Quant.") ? (new Row_Msg(7, v)) : ((col === "⬆⬆") ? (new Row_Msg(6, parse_4(v))) : ((col === "⬇⬇") ? (new Row_Msg(5, parse_4(v))) : ((col === "Stack") ? (new Row_Msg(4, parse_4(v))) : ((col === "Length") ? (new Row_Msg(2, v)) : (() => {
-            throw (new Error(col));
-        })()))))))));
+        let other;
+        dispatch((col === "Height") ? (new Row_Msg(1, v)) : ((col === "Width") ? (new Row_Msg(0, v)) : ((col === "Weight") ? (new Row_Msg(3, v)) : ((col === "Quant.") ? (new Row_Msg(7, v)) : ((col === "⬆⬆") ? (new Row_Msg(6, parse_4(v))) : ((col === "⬇⬇") ? (new Row_Msg(5, parse_4(v))) : ((col === "Stack") ? (new Row_Msg(4, parse_4(v))) : ((col === "Length") ? (new Row_Msg(2, v)) : (other = col, (() => {
+            throw (new Error(other));
+        })())))))))));
+    };
+    const defaultt = (col_1) => {
+        switch (col_1) {
+            case "Height": {
+                return model.FormData.Height;
+            }
+            case "Width": {
+                return model.FormData.Width;
+            }
+            case "Weight": {
+                return model.FormData.Weight;
+            }
+            case "Quant.": {
+                return model.FormData.Quantity;
+            }
+            case "⬆⬆": {
+                return toString_1(model.FormData.KeepTop);
+            }
+            case "⬇⬇": {
+                return toString_1(model.FormData.KeepBottom);
+            }
+            case "Stack": {
+                return toString_1(model.FormData.Stackable);
+            }
+            case "Length": {
+                return model.FormData.Length;
+            }
+            default: {
+                const other_1 = col_1;
+                throw (new Error(other_1));
+            }
+        }
     };
     return createElement("div", {
         className: "tr",
@@ -498,7 +728,7 @@ export const Row_view = React_functionComponent_2F9D7239((props) => {
             const i = matchValue_2[0] | 0;
             const col_2 = matchValue_2[1];
             return singleton_1((props_15 = ofArray([["className", "td"], ["children", reactApi.Children.toArray(Array.from(ofSeq(delay(() => {
-                let props_11, props_13, col_1;
+                let props_11, props_13;
                 return (i < (length(cols) - 2)) ? ((col_2 === "⬆⬆") ? singleton_1(createElement("input", createObj(cons(["type", "checkbox"], Helpers_combineClasses("checkbox", ofArray([["className", "is-small"], ["defaultChecked", model.FormData.KeepTop], ["readOnly", props.Disabled], ["onChange", (ev) => {
                     dispatch$0027("⬆⬆", toString_1(ev.target.checked));
                 }]])))))) : ((col_2 === "⬇⬇") ? singleton_1(createElement("input", createObj(cons(["type", "checkbox"], Helpers_combineClasses("checkbox", ofArray([["className", "is-small"], ["defaultChecked", model.FormData.KeepBottom], ["readOnly", props.Disabled], ["onChange", (ev_1) => {
@@ -507,9 +737,7 @@ export const Row_view = React_functionComponent_2F9D7239((props) => {
                     dispatch$0027("Stack", toString_1(ev_2.target.checked));
                 }]])))))) : ((col_2 === "Color") ? singleton_1((props_11 = ofArray([["className", "is-small"], ["readOnly", true], ["style", {
                     backgroundColor: model.FormData.Color,
-                }]]), createElement("input", createObj(cons(["type", "text"], Helpers_combineClasses("input", props_11)))))) : singleton_1((props_13 = ofArray([["maxLength", 5], ["readOnly", props.Disabled], ["defaultValue", (col_1 = col_2, (col_1 === "Height") ? model.FormData.Height : ((col_1 === "Width") ? model.FormData.Width : ((col_1 === "Weight") ? model.FormData.Weight : ((col_1 === "Quant.") ? model.FormData.Quantity : ((col_1 === "⬆⬆") ? toString_1(model.FormData.KeepTop) : ((col_1 === "⬇⬇") ? toString_1(model.FormData.KeepBottom) : ((col_1 === "Stack") ? toString_1(model.FormData.Stackable) : ((col_1 === "Length") ? model.FormData.Length : (() => {
-                    throw (new Error(col_1));
-                })()))))))))], ["max", 2000], ["className", "is-small"], ["placeholder", col_2], ["onChange", (e_3) => {
+                }]]), createElement("input", createObj(cons(["type", "text"], Helpers_combineClasses("input", props_11)))))) : singleton_1((props_13 = ofArray([["maxLength", 5], ["readOnly", props.Disabled], ["defaultValue", defaultt(col_2)], ["max", 2000], ["className", "is-small"], ["placeholder", col_2], ["onChange", (e_3) => {
                     dispatch$0027(col_2, Browser_Types_Event__Event_get_Value(e_3));
                 }]]), createElement("input", createObj(cons(["type", "number"], Helpers_combineClasses("input", props_13)))))))))) : ((i === (length(cols) - 2)) ? singleton_1(removeButton) : singleton_1(addButton));
             }))))]]), createElement("div", createObj(Helpers_combineClasses("control", props_15)))));
@@ -523,7 +751,7 @@ export function thousands(n) {
     v = toString(copyOfStruct);
     const r_1 = (v.length % 3) | 0;
     const s = ((r_1 === 0) ? 3 : r_1) | 0;
-    const s_1 = join(",", ofSeq(delay(() => append(singleton_1(v.slice(0, (s - 1) + 1)), delay(() => map((i) => v.slice((i * 3) + s, (((i * 3) + s) + 2) + 1), rangeNumber(0, 1, (~(~((v.length - s) / 3))) - 1)))))));
+    const s_1 = join(",", ofSeq(delay(() => append(singleton_1(v.slice(0, (s - 1) + 1)), delay(() => map_1((i) => v.slice((i * 3) + s, (((i * 3) + s) + 2) + 1), rangeNumber(0, 1, (~(~((v.length - s) / 3))) - 1)))))));
     if (compare(n, fromBits(0, 0, false)) < 0) {
         return "-" + s_1;
     }
@@ -540,11 +768,12 @@ export const viewC = React_functionComponent_2F9D7239((props) => {
     const patternInput = useFeliz_React__React_useState_Static_1505(90);
     const setCounterValue = patternInput[1];
     const counterValue = patternInput[0] | 0;
-    useReact_useEffect_Z5234A374(() => {
+    const scollDown = () => {
+        let results;
         const matchValue_1 = model.Calculation;
         let pattern_matching_result;
         if (matchValue_1.tag === 2) {
-            if (exists((r_1) => (length(r_1.ItemsPut) > 0), matchValue_1.fields[0])) {
+            if (results = matchValue_1.fields[0], exists((r_1) => (length(r_1.ItemsPut) > 0), results)) {
                 pattern_matching_result = 0;
             }
             else {
@@ -568,8 +797,9 @@ export const viewC = React_functionComponent_2F9D7239((props) => {
             Dispose() {
             },
         };
-    }, [isCalculating]);
-    useReact_useEffect_Z5ECA432F(() => {
+    };
+    useReact_useEffect_Z5234A374(scollDown, [isCalculating]);
+    const subscribeToTimer = () => {
         const subscriptionId = setTimeout(() => {
             if (isCalculating) {
                 setCounterValue(counterValue - 1);
@@ -580,27 +810,34 @@ export const viewC = React_functionComponent_2F9D7239((props) => {
                 clearTimeout(subscriptionId);
             },
         };
-    });
+    };
+    useReact_useEffect_Z5ECA432F(subscribeToTimer);
     const rowItems = ofSeq(delay(() => collect((matchValue_2) => {
         let r_3, Width_1, Height_1, Length_1, Weight_1, arg30, arg20, arg10;
         const row = matchValue_2[1][0];
         const key = matchValue_2[1][1];
+        const i = matchValue_2[0] | 0;
+        const addRow = (i === (length(model.RowItems) - 1)) ? (() => {
+            dispatch(new Msg(3));
+        }) : (void 0);
+        const remove = (length(model.RowItems) > 1) ? (() => {
+            dispatch(new Msg(4, key));
+        }) : (void 0);
         return singleton_1(Row_view(new RowProp((r_2) => {
             dispatch(new Msg(5, key, r_2));
-        }, (matchValue_2[0] === (length(model.RowItems) - 1)) ? (() => {
-            dispatch(new Msg(3));
-        }) : (void 0), (length(model.RowItems) > 1) ? (() => {
-            dispatch(new Msg(4, key));
-        }) : (void 0), key, isCalculating, (row != null) ? (r_3 = row, (Width_1 = toString(r_3.Width), (Height_1 = toString(r_3.Height), (Length_1 = toString(r_3.Length), (Weight_1 = int32ToString(r_3.Weight), new RowFormData(Width_1, Height_1, Length_1, int32ToString(r_3.Quantity), Weight_1, r_3.Color, r_3.Stackable, r_3.KeepTop, r_3.KeepBottom)))))) : (new RowFormData("", "", "", "", "0", (arg30 = (randomNext(40, 256) | 0), (arg20 = (randomNext(40, 256) | 0), (arg10 = (randomNext(40, 256) | 0), toText(printf("rgb(%i,%i,%i)"))(arg10)(arg20)(arg30)))), true, false, false)))));
+        }, addRow, remove, key, isCalculating, (row != null) ? (r_3 = row, (Width_1 = toString(r_3.Width), (Height_1 = toString(r_3.Height), (Length_1 = toString(r_3.Length), (Weight_1 = int32ToString(r_3.Weight), new RowFormData(Width_1, Height_1, Length_1, int32ToString(r_3.Quantity), Weight_1, r_3.Color, r_3.Stackable, r_3.KeepTop, r_3.KeepBottom)))))) : (new RowFormData("", "", "", "", "0", (arg30 = (randomNext(40, 256) | 0), (arg20 = (randomNext(40, 256) | 0), (arg10 = (randomNext(40, 256) | 0), toText(printf("rgb(%i,%i,%i)"))(arg10)(arg20)(arg30)))), true, false, false)))));
     }, indexed(model.RowItems))));
     let content;
     const elms_1 = ofSeq(delay(() => append(singleton_1(createElement("b", {
         children: ["How to use:"],
     })), delay(() => append(singleton_1(createElement("ul", createObj(ofSeq(delay(() => append(singleton_1(op_PlusPlus(["className", "ml-1"], ["className", "is-size-7"])), delay(() => append(singleton_1(["style", {
         listStyleType: "disc",
-    }]), delay(() => singleton_1(["children", reactApi.Children.toArray(Array.from(ofSeq(delay(() => map((item) => createElement("li", {
-        children: item,
-    }), ["Enter container and item dimensions between 1 and 2000, no decimals.", "Weight range is between 0 and 100,000.", "Add as many items as you want.", "If the item is not stackable (no other item is on top of this) uncheck \"Stack\" for that item.", "If the item must keep its upright then check \"⬆⬆\" for that item.", "If the item must be at the bottom (e.g, heavy items) then check \"⬇⬇\" for that item.", "All dimensions are unitless.", "Select the calculation mode depending on items to be at minimum height or pushed to the edge.", "Select container mode to multi container if you want to see how many container it takes to fit", "Click calculate and wait up to 100 sec.", "Bin packer will try to fit the items and minimize the placement.", "Gravity is ignored.", "Review the result in 3D then you may share it via share the result button and copy the url.", "You may visually remove some boxes by using h-filter and v-filter controls on 3D."])))))])))))))))), delay(() => append(singleton_1(react.createElement("br", {})), delay(() => append(singleton_1(createElement("label", createObj(Helpers_combineClasses("label", ofArray([["children", "Enter CONTAINER dimensions:"], ["className", "is-small"]]))))), delay(() => {
+    }]), delay(() => {
+        const items = ofArray(["Enter container and item dimensions between 1 and 2000, no decimals.", "Weight range is between 0 and 100,000.", "Add as many items as you want.", "If the item is not stackable (no other item is on top of this) uncheck \"Stack\" for that item.", "If the item must keep its upright then check \"⬆⬆\" for that item.", "If the item must be at the bottom (e.g, heavy items) then check \"⬇⬇\" for that item.", "All dimensions are unitless.", "Select the calculation mode depending on items to be at minimum height or pushed to the edge.", "Select container mode to multi container if you want to see how many container it takes to fit", "Click calculate and wait up to 100 sec.", "Bin packer will try to fit the items and minimize the placement.", "Gravity is ignored.", "Review the result in 3D then you may share it via share the result button and copy the url.", "You may visually remove some boxes by using h-filter and v-filter controls on 3D."]);
+        return singleton_1(["children", reactApi.Children.toArray(Array.from(ofSeq(delay(() => map_1((item) => createElement("li", {
+            children: item,
+        }), items)))))]);
+    }))))))))), delay(() => append(singleton_1(react.createElement("br", {})), delay(() => append(singleton_1(createElement("label", createObj(Helpers_combineClasses("label", ofArray([["children", "Enter CONTAINER dimensions:"], ["className", "is-small"]]))))), delay(() => {
         let matchValue_3, container, Width_3, Height_3, Weight_3;
         return append(model.Loading ? singleton_1(null) : (matchValue_3 = model.ContainerItem, (matchValue_3 != null) ? (container = matchValue_3, singleton_1(Container_view(new ContainerProp((r_5) => {
             dispatch(new Msg(6, r_5));
@@ -611,7 +848,7 @@ export const viewC = React_functionComponent_2F9D7239((props) => {
             disabled: isCalculating,
             children: reactApi.Children.toArray([createElement("div", {
                 className: "tr",
-                children: reactApi.Children.toArray(Array.from(ofSeq(delay(() => map((col) => createElement("div", {
+                children: reactApi.Children.toArray(Array.from(ofSeq(delay(() => map_1((col) => createElement("div", {
                     className: join(" ", ["td", "th"]),
                     children: reactApi.Children.toArray([createElement("label", createObj(Helpers_combineClasses("label", ofArray([["className", "is-small"], ["children", col]]))))]),
                 }), cols))))),
@@ -622,19 +859,26 @@ export const viewC = React_functionComponent_2F9D7239((props) => {
                 return react.createElement(react.Fragment, {}, createElement("label", {
                     className: "label",
                     children: title,
-                }), (elms = singleton(createElement("output", createObj(ofSeq(delay(() => append(((title.indexOf("Chargable") === 0) ? (v != null) : false) ? singleton_1(["className", "output"]) : empty(), delay(() => singleton_1(["children", defaultArg(map_2(thousands, v), "Please complete the form.")])))))))), createElement("div", {
+                }), (elms = singleton(createElement("output", createObj(ofSeq(delay(() => append(((title.indexOf("Chargable") === 0) ? (v != null) : false) ? singleton_1(["className", "output"]) : empty(), delay(() => singleton_1(["children", defaultArg(map_3(thousands, v), "Please complete the form.")])))))))), createElement("div", {
                     className: "control",
                     children: reactApi.Children.toArray(Array.from(elms)),
                 })));
             };
-            return append(singleton_1(Array.from(ofSeq(delay(() => collect((matchValue_4) => singleton_1(line(matchValue_4[0], matchValue_4[1])), [["Total Item Volume:", model.TotalVolume]]))))), delay(() => {
+            return append(singleton_1(Array.from(ofSeq(delay(() => {
+                const items_1 = singleton(["Total Item Volume:", model.TotalVolume]);
+                return collect((matchValue_4) => {
+                    const v_1 = matchValue_4[1];
+                    const t = matchValue_4[0];
+                    return singleton_1(line(t, v_1));
+                }, items_1);
+            })))), delay(() => {
                 let matchValue_5, container_1;
                 return append((matchValue_5 = model.ContainerItem, (matchValue_5 != null) ? (container_1 = matchValue_5, singleton_1(line("Container volume:", op_Multiply(op_Multiply(container_1.Height, container_1.Width), container_1.Length)))) : singleton_1(null)), delay(() => {
-                    let matchValue_6;
-                    return append((matchValue_6 = model.Calculation, (matchValue_6.tag === 2) ? singleton_1(line("Volume fit:", sumBy((c) => c.PutVolume, matchValue_6.fields[0], {
+                    let matchValue_6, r_6;
+                    return append((matchValue_6 = model.Calculation, (matchValue_6.tag === 2) ? (r_6 = matchValue_6.fields[0], singleton_1(line("Volume fit:", sumBy((c) => c.PutVolume, r_6, {
                         GetZero: () => fromInt(0),
                         Add: op_Addition,
-                    }))) : singleton_1(null)), delay(() => {
+                    })))) : singleton_1(null)), delay(() => {
                         let matchValue_8, container_2, volume;
                         const isMultiBin = (model.ContainerMode.tag === 1) ? true : false;
                         const isinvalid = (model.ContainerItem == null) ? true : (model.TotalVolume == null);
@@ -664,9 +908,15 @@ export const viewC = React_functionComponent_2F9D7239((props) => {
                                 });
                                 let maxHeight;
                                 const _arg1_1 = filter((x_4) => x_4.NoTop, convertToItems(model));
-                                maxHeight = ((_arg1_1.tail == null) ? fromBits(0, 0, false) : maxBy((x_5) => x_5.Dim.Height, _arg1_1, {
-                                    Compare: compare,
-                                }).Dim.Height);
+                                if (_arg1_1.tail == null) {
+                                    maxHeight = fromBits(0, 0, false);
+                                }
+                                else {
+                                    const other = _arg1_1;
+                                    maxHeight = maxBy((x_5) => x_5.Dim.Height, other, {
+                                        Compare: compare,
+                                    }).Dim.Height;
+                                }
                                 nostackExceeds = (((compare(areaItems, containerArea) > 0) ? true : (compare(maxHeight, container_3.Height) > 0)) ? (!isMultiBin) : false);
                                 break;
                             }
@@ -693,8 +943,13 @@ export const viewC = React_functionComponent_2F9D7239((props) => {
                         }
                         switch (pattern_matching_result_2) {
                             case 0: {
+                                const checkDim = (item_1) => {
+                                    const itemDim = max_3(compare, max_3(compare, item_1.Dim.Length, item_1.Dim.Width), item_1.Dim.Height);
+                                    const cDim = max_3(compare, max_3(compare, container_4.Length, container_4.Width), container_4.Height);
+                                    return compare(itemDim, cDim) > 0;
+                                };
                                 const items_2 = convertToItems(model);
-                                itemExceeds = (exists((item_1) => (compare(max_3(compare, max_3(compare, item_1.Dim.Length, item_1.Dim.Width), item_1.Dim.Height), max_3(compare, max_3(compare, container_4.Length, container_4.Width), container_4.Height)) > 0), items_2) ? true : exists((i_1) => (i_1.Weight > container_4.Weight), items_2));
+                                itemExceeds = (exists(checkDim, items_2) ? true : exists((i_1) => (i_1.Weight > container_4.Weight), items_2));
                                 break;
                             }
                             case 1: {
@@ -742,30 +997,47 @@ export const viewC = React_functionComponent_2F9D7239((props) => {
                             })))))))))), createElement("button", createObj(Helpers_combineClasses("button", props_32))))), delay(() => append(singleton_1(createElement("span", {
                                 className: "my-1",
                                 children: reactApi.Children.toArray(Array.from(ofSeq(delay(() => {
-                                    let matchValue_15, props_34, g, children_4, props_44;
+                                    let children_4, props_44;
                                     const matchValue_14 = model.Calculation;
                                     if (matchValue_14.tag === 2) {
                                         const c_1 = matchValue_14.fields[0];
                                         const itemsPut = collect_1((l) => l.ItemsPut, c_1);
-                                        return singleton_1(react.createElement(react.Fragment, {}, (matchValue_15 = [last(c_1).ItemsUnput, itemsPut], (matchValue_15[0].tail == null) ? (props_34 = ofArray([["style", {
-                                            color: "#008000",
-                                        }], ["children", "All items put successfully!"]]), createElement("label", createObj(Helpers_combineClasses("label", props_34)))) : ((matchValue_15[1].tail == null) ? createElement("label", createObj(Helpers_combineClasses("label", ofArray([["className", "is-danger"], ["children", "Unable to fit all items!"]])))) : (g = groupBy((x_11) => x_11.Tag, matchValue_15[0], {
-                                            Equals: (x_12, y_7) => (x_12 === y_7),
-                                            GetHashCode: stringHash,
-                                        }), react.createElement(react.Fragment, {}, createElement("label", {
-                                            className: "label",
-                                            children: "Could not fit the following items:",
-                                        }), (children_4 = ofSeq(delay(() => collect((matchValue_16) => {
-                                            let children_2;
-                                            return singleton_1((children_2 = ofArray([createElement("span", createObj(ofArray([op_PlusPlus(["className", "is-inline-block"], ["className", "has-text-white"]), ["children", " x "], ["style", {
-                                                backgroundColor: matchValue_16[0],
-                                                width: 1 + "ch",
-                                            }]]))), createElement("span", createObj(singleton(printf("%i items not fit with this color.").cont((arg00) => ["children", arg00])(length(matchValue_16[1])))))]), createElement("li", {
-                                                children: reactApi.Children.toArray(Array.from(children_2)),
+                                        const itemsUnput = last(c_1).ItemsUnput;
+                                        let label;
+                                        const matchValue_15 = [itemsUnput, itemsPut];
+                                        if (matchValue_15[0].tail == null) {
+                                            const props_34 = ofArray([["style", {
+                                                color: "#008000",
+                                            }], ["children", "All items put successfully!"]]);
+                                            label = createElement("label", createObj(Helpers_combineClasses("label", props_34)));
+                                        }
+                                        else if (matchValue_15[1].tail == null) {
+                                            label = createElement("label", createObj(Helpers_combineClasses("label", ofArray([["className", "is-danger"], ["children", "Unable to fit all items!"]]))));
+                                        }
+                                        else {
+                                            const items_3 = matchValue_15[0];
+                                            const g = groupBy((x_11) => x_11.Tag, items_3, {
+                                                Equals: (x_12, y_7) => (x_12 === y_7),
+                                                GetHashCode: stringHash,
+                                            });
+                                            label = react.createElement(react.Fragment, {}, createElement("label", {
+                                                className: "label",
+                                                children: "Could not fit the following items:",
+                                            }), (children_4 = ofSeq(delay(() => collect((matchValue_16) => {
+                                                let children_2;
+                                                const values = matchValue_16[1];
+                                                const key_54 = matchValue_16[0];
+                                                return singleton_1((children_2 = ofArray([createElement("span", createObj(ofArray([op_PlusPlus(["className", "is-inline-block"], ["className", "has-text-white"]), ["children", " x "], ["style", {
+                                                    backgroundColor: key_54,
+                                                    width: 1 + "ch",
+                                                }]]))), createElement("span", createObj(singleton(printf("%i items not fit with this color.").cont((arg00) => ["children", arg00])(length(values)))))]), createElement("li", {
+                                                    children: reactApi.Children.toArray(Array.from(children_2)),
+                                                })));
+                                            }, g))), createElement("ul", {
+                                                children: reactApi.Children.toArray(Array.from(children_4)),
                                             })));
-                                        }, g))), createElement("ul", {
-                                            children: reactApi.Children.toArray(Array.from(children_4)),
-                                        })))))), (props_44 = ofArray([["className", "is-info"], ["children", model.UrlShown ? "Now copy the url and share it" : "Share the result"], ["disabled", isCalculating ? true : model.UrlShown], ["onClick", (_arg4) => {
+                                        }
+                                        return singleton_1(react.createElement(react.Fragment, {}, label, (props_44 = ofArray([["className", "is-info"], ["children", model.UrlShown ? "Now copy the url and share it" : "Share the result"], ["disabled", isCalculating ? true : model.UrlShown], ["onClick", (_arg4) => {
                                             dispatch(new Msg(10));
                                         }]]), createElement("button", createObj(Helpers_combineClasses("button", props_44))))));
                                     }
@@ -791,9 +1063,9 @@ export const viewC = React_functionComponent_2F9D7239((props) => {
                                                     display: "inline-flex",
                                                     flexDirection: "column",
                                                 },
-                                                children: reactApi.Children.toArray([containers, createElement("span", createObj(ofSeq(delay(() => append(singleton_1(["className", "has-text-weight-semibold"]), delay(() => ((length(item_2(model.CurrentResultIndex, c_3).ItemsPut) > 0) ? singleton_1(printf("Max item L:%i, H:%i").cont((arg00_2) => ["children", arg00_2])(max_4(map_1((i_2) => op_Addition(i_2.Coord.Z, i_2.Item.Dim.Length), item_2(model.CurrentResultIndex, c_3).ItemsPut), {
+                                                children: reactApi.Children.toArray([containers, createElement("span", createObj(ofSeq(delay(() => append(singleton_1(["className", "has-text-weight-semibold"]), delay(() => ((length(item_2(model.CurrentResultIndex, c_3).ItemsPut) > 0) ? singleton_1(printf("Max item L:%i, H:%i").cont((arg00_2) => ["children", arg00_2])(max_4(map_2((i_2) => op_Addition(i_2.Coord.Z, i_2.Item.Dim.Length), item_2(model.CurrentResultIndex, c_3).ItemsPut), {
                                                     Compare: compare,
-                                                }))(max_4(map_1((i_3) => op_Addition(i_3.Coord.Y, i_3.Item.Dim.Height), item_2(model.CurrentResultIndex, c_3).ItemsPut), {
+                                                }))(max_4(map_2((i_3) => op_Addition(i_3.Coord.Y, i_3.Item.Dim.Height), item_2(model.CurrentResultIndex, c_3).ItemsPut), {
                                                     Compare: compare,
                                                 }))) : empty())))))))]),
                                             }))) : singleton_1(containers)), delay(() => {
@@ -852,5 +1124,189 @@ export function view(model, dispatch) {
     });
 }
 
-ProgramModule_run(Program_withReactBatched("elmish-app", ProgramModule_mkProgram(init, update, view)));
+(function () {
+    let program_5;
+    const program_4 = Program_Internal_withReactBatchedUsing(lazyView2With, "elmish-app", ProgramModule_withConsoleTrace(ProgramModule_mkProgram(init, update, view)));
+    try {
+        let patternInput;
+        try {
+            let coders;
+            let extra_6;
+            const extra_3 = new ExtraCoders((() => {
+                let copyOfStruct = newGuid();
+                return copyOfStruct;
+            })(), add("System.Decimal", [decimal, (path) => ((value_1) => decimal_1(path, value_1))], empty_1.Coders));
+            extra_6 = (new ExtraCoders((() => {
+                let copyOfStruct_1 = newGuid();
+                return copyOfStruct_1;
+            })(), add("System.Int64", [int64, int64_1], extra_3.Coders)));
+            coders = (new ExtraCoders((() => {
+                let copyOfStruct_2 = newGuid();
+                return copyOfStruct_2;
+            })(), add("System.UInt64", [uint64, uint64_1], extra_6.Coders)));
+            const encoder_3 = Auto_generateEncoder_Z127D9D79(void 0, coders, void 0, {
+                ResolveType: ClientModel_Model$reflection,
+            });
+            const decoder_3 = Auto_generateDecoder_7848D058(void 0, coders, {
+                ResolveType: ClientModel_Model$reflection,
+            });
+            const deflate = (x) => {
+                try {
+                    return encoder_3(x);
+                }
+                catch (er) {
+                    Debugger_showWarning(singleton(er.message));
+                    return x;
+                }
+            };
+            const inflate = (x_1) => {
+                const matchValue = fromValue("$", uncurry(2, decoder_3), x_1);
+                if (matchValue.tag === 1) {
+                    const er_1 = matchValue.fields[0];
+                    throw (new Error(er_1));
+                }
+                else {
+                    const x_2 = matchValue.fields[0];
+                    return x_2;
+                }
+            };
+            patternInput = [deflate, inflate];
+        }
+        catch (er_2) {
+            Debugger_showWarning(singleton(er_2.message));
+            patternInput = [(value_7) => value_7, (_arg1) => {
+                throw (new Error("Cannot inflate model"));
+            }];
+        }
+        const inflater = patternInput[1];
+        const deflater = patternInput[0];
+        let connection;
+        const opt = new Debugger_ConnectionOptions(0);
+        const makeMsgObj = (tupledArg) => {
+            const case$ = tupledArg[0];
+            const fields = tupledArg[1];
+            return {
+                type: case$,
+                msg: fields,
+            };
+        };
+        const getCase = (x_3) => {
+            if (isUnion(x_3)) {
+                const getCaseName = (acc_mut, x_4_mut) => {
+                    getCaseName:
+                    while (true) {
+                        const acc = acc_mut, x_4 = x_4_mut;
+                        const acc_1 = cons(getCaseName_1(x_4), acc);
+                        const fields_1 = getCaseFields(x_4);
+                        if ((fields_1.length === 1) ? isUnion(fields_1[0]) : false) {
+                            acc_mut = acc_1;
+                            x_4_mut = fields_1[0];
+                            continue getCaseName;
+                        }
+                        else {
+                            return makeMsgObj([join("/", acc_1), fields_1]);
+                        }
+                        break;
+                    }
+                };
+                return getCaseName(empty_2(), x_3);
+            }
+            else {
+                return makeMsgObj(["NOT-AN-F#-UNION", x_3]);
+            }
+        };
+        const fallback = new Options$1(true, 443, "remotedev.io", true, getCase);
+        connection = connectViaExtension((opt.tag === 1) ? (() => {
+            const port = opt.fields[1] | 0;
+            const address = opt.fields[0];
+            const inputRecord_1 = fallback;
+            return new Options$1(inputRecord_1.remote, port, address, false, inputRecord_1.getActionType);
+        })() : ((opt.tag === 2) ? (() => {
+            const port_1 = opt.fields[1] | 0;
+            const address_1 = opt.fields[0];
+            const inputRecord_2 = fallback;
+            return new Options$1(inputRecord_2.remote, port_1, address_1, inputRecord_2.secure, inputRecord_2.getActionType);
+        })() : (new Options$1(false, 8000, "localhost", false, fallback.getActionType))));
+        program_5 = Program_withDebuggerUsing(deflater, inflater, connection, program_4);
+    }
+    catch (ex) {
+        Debugger_showError(ofArray(["Unable to connect to the monitor, continuing w/o debugger", ex.message]));
+        program_5 = program_4;
+    }
+    let hmrState = null;
+    const hot = module.hot;
+    if (!(hot == null)) {
+        window.Elmish_HMR_Count = ((window.Elmish_HMR_Count == null) ? 0 : (window.Elmish_HMR_Count + 1));
+        const value_8 = hot.accept();
+        void undefined;
+        const matchValue_1 = Internal_tryRestoreState(hot);
+        if (matchValue_1 == null) {
+        }
+        else {
+            const previousState = value_175(matchValue_1);
+            hmrState = previousState;
+        }
+    }
+    const map = (tupledArg_1) => {
+        const model_2 = tupledArg_1[0];
+        const cmd = tupledArg_1[1];
+        return [model_2, Cmd_map((arg0) => (new Msg$1(0, arg0)), cmd)];
+    };
+    const mapUpdate = (update_1, msg_1, model_3) => {
+        let msg_2, userModel, patternInput_1, newModel, cmd_2;
+        const patternInput_2 = map((msg_1.tag === 1) ? [new Model$1(0), Cmd_none()] : (msg_2 = msg_1.fields[0], (model_3.tag === 1) ? (userModel = model_3.fields[0], (patternInput_1 = update_1(msg_2, userModel), (newModel = patternInput_1[0], (cmd_2 = patternInput_1[1], [new Model$1(1, newModel), cmd_2])))) : [model_3, Cmd_none()]));
+        const newModel_1 = patternInput_2[0];
+        const cmd_3 = patternInput_2[1];
+        hmrState = newModel_1;
+        return [newModel_1, cmd_3];
+    };
+    const createModel = (tupledArg_2) => {
+        const model_4 = tupledArg_2[0];
+        const cmd_4 = tupledArg_2[1];
+        return [new Model$1(1, model_4), cmd_4];
+    };
+    const mapInit = (init_1) => {
+        if (hmrState == null) {
+            return (arg_2) => createModel(map(init_1(arg_2)));
+        }
+        else {
+            return (_arg1_1) => [hmrState, Cmd_none()];
+        }
+    };
+    const mapSetState = (setState, model_5, dispatch_2) => {
+        if (model_5.tag === 1) {
+            const userModel_1 = model_5.fields[0];
+            setState(userModel_1, (arg_3) => dispatch_2(new Msg$1(0, arg_3)));
+        }
+    };
+    let hmrSubscription;
+    const handler = (dispatch_3) => {
+        if (!(hot == null)) {
+            hot.dispose((data) => {
+                Internal_saveState(data, hmrState);
+                return dispatch_3(new Msg$1(1));
+            });
+        }
+    };
+    hmrSubscription = singleton(handler);
+    const mapSubscribe = (subscribe, model_6) => {
+        if (model_6.tag === 1) {
+            const userModel_2 = model_6.fields[0];
+            return Cmd_batch(ofArray([Cmd_map((arg0_2) => (new Msg$1(0, arg0_2)), subscribe(userModel_2)), hmrSubscription]));
+        }
+        else {
+            return Cmd_none();
+        }
+    };
+    const mapView = (view_2, model_7, dispatch_4) => {
+        if (model_7.tag === 1) {
+            const userModel_3 = model_7.fields[0];
+            return view_2(userModel_3, (arg_4) => dispatch_4(new Msg$1(0, arg_4)));
+        }
+        else {
+            throw (new Error("\nYour are using HMR and this Elmish application has been marked as inactive.\n\nYou should not see this message\n                    "));
+        }
+    };
+    ProgramModule_runWith(void 0, ProgramModule_map(uncurry(2, mapInit), mapUpdate, mapView, mapSetState, mapSubscribe, program_5));
+})();
 
