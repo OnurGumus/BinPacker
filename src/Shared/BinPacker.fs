@@ -1535,7 +1535,7 @@ let runPerContainer
                 batchCount
                 retryCount
 
-    let rec outerLoop (calculationMode: CalculationMode) (items: Item list) retryCount resList =
+    let rec outerLoop (calculationMode: CalculationMode) (containerMode: ContainerMode) (items: Item list) retryCount resList =
 
         let defaultBatchSize = if items.Length < 100 then 15 else 20
 
@@ -1628,8 +1628,11 @@ let runPerContainer
                 function
                 | 0 -> items
                 | n -> loopMutate (items |> mutate calculationMode res.ItemsPut) (n - 1)
-
-            outerLoop (CalculationMode.MinimizeVolume) (loopMutate items (items.Length / 10)) (retryCount - 1) results
+            let retryMode =
+                match containerMode with
+                | SingleContainer -> MinimizeVolume
+                | _ -> calculationMode
+            outerLoop (retryMode) containerMode (loopMutate items (items.Length / 10)) (retryCount - 1) results
 
     let retryCount =
         match containerMode with
@@ -1640,6 +1643,7 @@ let runPerContainer
         let resList =
             outerLoop
                 calculationMode
+                containerMode
                 (items
                  |> List.map (Rotate.rotateToMinZ calculationMode)
                  |> List.sortByDescending (fun x -> (x.KeepBottom, maxDim x)))
