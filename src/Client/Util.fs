@@ -14,10 +14,10 @@ type CSSStyleSheet() =
     class
     end
 
-let sheet = new CSSStyleSheet()
+//let sheet = new CSSStyleSheet()
 //sheet?replaceSync ("h1 { color: red; }")
 
-Browser.Dom.document?adoptedStyleSheets <- [| sheet |]
+//Browser.Dom.document?adoptedStyleSheets <- [| sheet |]
 
 let useShadowRoot (html: string) =
     let (shadowRoot: HTMLElement option), setRootTag = React.useState (None)

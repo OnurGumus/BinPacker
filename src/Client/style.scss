@@ -1,134 +1,132 @@
 @charset "utf-8";
-@import "~bulma/bulma";
-@import "../../node_modules/@fortawesome/fontawesome-free/css/all.css";
 
-main {
-    display: flex;
+// main {
+//     display: flex;
 
-    flex-direction: column;
-}
+//     flex-direction: column;
+// }
 
-button {
-    background-color: chartreuse
-}
+// button {
+//     background-color: chartreuse
+// }
 
-input {
-    width: 7ch;
-    display: inline;
-}
-.dg.ac{
-    position: absolute !important;
-    top:95em !important;
-    left:initial !important;
-    right:0 !important;;
+// input {
+//     width: 7ch;
+//     display: inline;
+// }
+// .dg.ac{
+//     position: absolute !important;
+//     top:95em !important;
+//     left:initial !important;
+//     right:0 !important;;
 
-}
+// }
 
-input[type="checkbox"] {
-    width: unset;
-    display: inline;
-}
+// input[type="checkbox"] {
+//     width: unset;
+//     display: inline;
+// }
 
 
-.card,
-.card-body {
-    padding: 0 !important;
-}
-input[type="number"]{
-    padding:0;
-}
-.card {
-    margin-bottom: 1em;
-    ;
-}
-.dg.ac span{
-    font-size: 0.6em;
-}
-.dg.ac input{
-    font-size: 0.6em;
-}
-.label.is-small {
-    font-size: 0.5rem;
-}
+// .card,
+// .card-body {
+//     padding: 0 !important;
+// }
+// input[type="number"]{
+//     padding:0;
+// }
+// .card {
+//     margin-bottom: 1em;
+//     ;
+// }
+// .dg.ac span{
+//     font-size: 0.6em;
+// }
+// .dg.ac input{
+//     font-size: 0.6em;
+// }
+// .label.is-small {
+//     font-size: 0.5rem;
+// }
 
-@media only screen and (min-width: 900px) {
-    .label.is-small {
-        font-size: 0.75rem;
-    }
+// @media only screen and (min-width: 900px) {
+//     .label.is-small {
+//         font-size: 0.75rem;
+//     }
 
-    .dg.ac{
-        top:10em !important;
-    }
-    input[type="number"]{
-        padding:10px !important;
-    }
-    main {
-        flex-direction: row;
-        margin: 1em;
-    }
+//     .dg.ac{
+//         top:10em !important;
+//     }
+//     input[type="number"]{
+//         padding:10px !important;
+//     }
+//     main {
+//         flex-direction: row;
+//         margin: 1em;
+//     }
 
-    #myCanvas {
-        flex: 1 1 50%;
-        width: 50% !important;
-    }
+//     #myCanvasd {
+//         flex: 1 1 50%;
+//         width: 50% !important;
+//     }
 
-    #elmish-app {
-        flex: 1 1 50%;
-    }
-    header{
-        width: 50%;
-    }
-    .panel{
-        min-width: 500px;
-    }
-}
+//     #elmish-app {
+//         flex: 1 1 50%;
+//     }
+//     header{
+//         width: 50%;
+//     }
+//     .panel{
+//         min-width: 500px;
+//     }
+// }
 
-.panel-heading {
-    background-color: #bd3a3a !important;
-}
+// .panel-heading {
+//     background-color: #bd3a3a !important;
+// }
 
-.table {
-    display: table;
-    margin: 1em 0;
-}
+// .table {
+//     display: table;
+//     margin: 1em 0;
+// }
 
-.tr {
-    display: table-row;
-}
+// .tr {
+//     display: table-row;
+// }
 
-.td {
-    display: table-cell;
-    text-align: center;
-}
+// .td {
+//     display: table-cell;
+//     text-align: center;
+// }
 
-.th {
-    background-color: #f5fb6199;
-}
+// .th {
+//     background-color: #f5fb6199;
+// }
 
-.table {
-    border-collapse: collapse;
-}
+// .table {
+//     border-collapse: collapse;
+// }
 
-.table,
-.th,
-.td {
-    border: 1px solid gray;
-}
+// .table,
+// .th,
+// .td {
+//     border: 1px solid gray;
+// }
 
-.output {
-    background-color: #96ff2f;
-    border-radius: 6px;
-    padding: 5px;
-}
+// .output {
+//     background-color: #96ff2f;
+//     border-radius: 6px;
+//     padding: 5px;
+// }
 
-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    place-content: center;
-    gap: 1em;
-}
+// header {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     place-content: center;
+//     gap: 1em;
+// }
 
-header>* {
-    display: inline-block;
-}
+// header>* {
+//     display: inline-block;
+// }

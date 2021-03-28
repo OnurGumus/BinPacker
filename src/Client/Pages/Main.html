@@ -1,8 +1,53 @@
 <style>
+    canvas {
+        background-color: blue;
+    }
+    #content-wrapper{
+        width: 100vw;
+        overflow-x: scroll;
+        -ms-overflow-style: none;  /* Internet Explorer 10+ */
+        scrollbar-width: none;  /* Firefox */
+    }
+    #content-wrapper::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+    }
+
+    #content {
+        display: flex;
+        width:150vw;
+    }
+    ::slotted(#help) {
+        background-color: red;
+        flex-grow: 1;
+        flex-basis:33%;
+    }
+    #form {
+        background-color: green;
+        flex-grow: 1;
+        flex-basis:33%;
+    }
+
+    ::slotted(canvas) {
+        flex-basis:33%;
+        flex-grow: 1;
+        height: 500px !important;
+    }
 
 </style>
 <section>
     <slot name="title">
         <div>test-title</div>
     </slot>
+    <div id="content-wrapper">
+        <div id="content">
+            <slot name="help">
+                help
+            </slot>
+            <div id="form">
+                form
+            </div>
+            <slot name="my-canvas">
+            </slot>
+        </div>
+    </div>
 </section>

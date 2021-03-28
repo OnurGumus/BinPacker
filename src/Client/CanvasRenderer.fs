@@ -11,23 +11,23 @@ let mutable demoMode2 = false
 
 let gui = Dat.exports.GUI.Create()
 
-
 let THREE = Three.exports
 let scene = THREE.Scene.Create()
+let mutable camera = Unchecked.defaultof<_>
+let mutable renderer = Unchecked.defaultof<_>
+let init1() =
+    camera <-
+        THREE.PerspectiveCamera.Create(30., window.innerWidth / window.innerHeight, 20., 10000.)
+    let opt =
+        jsOptions<Three.WebGLRendererParameters> (fun x ->
+            x.antialias <- true
+            x.canvas <- !^(document.getElementById ("my-canvas")))
 
-let camera =
-    THREE.PerspectiveCamera.Create(30., window.innerWidth / window.innerHeight, 20., 10000.)
+    renderer <- THREE.WebGLRenderer.Create(opt)
 
-let opt =
-    jsOptions<Three.WebGLRendererParameters> (fun x ->
-        x.antialias <- true
-        x.canvas <- !^(document.getElementById ("myCanvas")))
-
-let renderer = THREE.WebGLRenderer.Create(opt)
-
-renderer.setClearColor (!^THREE.Color.Create(!^(float 0xFFFFFF)))
-renderer.setSize (window.innerWidth, window.innerHeight)
-renderer.shadowMap?enabled <- true
+    renderer.setClearColor (!^THREE.Color.Create(!^(float 0xFFFFFF)))
+    renderer.setSize (window.innerWidth, window.innerHeight)
+    renderer.shadowMap?enabled <- true
 
 let axes = THREE.AxesHelper.Create(20.)
 let currentContainer = ResizeArray<Three.Object3D>()
@@ -146,6 +146,7 @@ let renderCube x y z width height length (color: string) L W =
 
 
 let init () =
+    init1()
     let addSpottLight x y z inten =
         let spotLight = THREE.SpotLight.Create(!^ "white")
         spotLight.position.set (x, y, z) |> ignore
