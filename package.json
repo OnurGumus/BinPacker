@@ -21,6 +21,7 @@
     "three": "^0.118.3",
     "three-trackballcontrols": "^0.0.8",
     "three-trackballcontrols-ts": "^0.2.1",
+    "source-map-loader": "^2.0.1",
     "webpack": "^5.15.2",
     "webpack-cli": "^4.3.1",
     "webpack-dev-server": "^3.11.2",

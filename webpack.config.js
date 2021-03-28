@@ -16,7 +16,7 @@ var CONFIG = {
     // The tags to include the generated JS and CSS will be automatically injected in the HTML template
     // See https://github.com/jantimon/html-webpack-plugin
     indexHtmlTemplate: './src/Client/index.html',
-    fsharpEntry: './src/Client/Client.fs.js',
+    fsharpEntry: './src/Client/fable-output/Client.js',
     cssEntry: './src/Client/style.scss',
     outputDir: './src/Client/deploy',
     assetsDir: './src/Client/public',
@@ -68,8 +68,9 @@ module.exports = env => ({
         publicPath: "/",
     },
     mode: (isProduction(env))  ? 'production' : 'development',
-    devtool: (isProduction(env))  ? 'hidden-source-map' : 'eval-source-map',
+    devtool: (isProduction(env))  ? 'nosources-source-map' : 'eval-source-map',
     optimization: {
+        runtimeChunk: 'single',
         splitChunks: {
             chunks: 'all'
         },

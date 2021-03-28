@@ -95,7 +95,7 @@ Target.create "BuildServerOnlyRelease"
 
 Target.create "BuildRelease" (fun _ ->
     let runTool = runTool Proc.run
-    runDotNet "fable ./src/Client  --run yarn prod" __SOURCE_DIRECTORY__
+    runDotNet "fable ./src/Client -o ./src/Client/fable-output  --run yarn prod" __SOURCE_DIRECTORY__
     printf "source: %A target:%A" clientDeployPath clientDeployReleasePath
     Shell.copyDir clientDeployReleasePath clientDeployPath (fun _ -> true))
 
@@ -106,7 +106,7 @@ Target.create "Run" (fun _ ->
         runDotNet "watch run" serverPath
     }
     let client = async {
-        runDotNet "fable watch ./src/Client  --run yarn dev" __SOURCE_DIRECTORY__
+        runDotNet "fable watch ./src/Client -o  ./src/Client/fable-output  --run yarn dev" __SOURCE_DIRECTORY__
     }
     let browser = async {
         do! Async.Sleep 5000

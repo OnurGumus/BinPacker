@@ -16,3 +16,4 @@ deploy
 .ionide/
 src/Server/*.txt
 debug.log
+src/Client/fable-output
