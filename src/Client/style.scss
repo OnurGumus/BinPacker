@@ -1,5 +1,4 @@
 @charset "utf-8";
-$size-7:0.6em;
 @import "~bulma/bulma";
 @import "../../node_modules/@fortawesome/fontawesome-free/css/all.css";
 
@@ -31,7 +30,6 @@ input[type="checkbox"] {
 }
 
 h4 {
-    font-size: 1.1;
 }
 
 .card,
@@ -51,10 +49,15 @@ input[type="number"]{
 .dg.ac input{
     font-size: 0.6em;
 }
+.label.is-small {
+    font-size: 0.5rem;
+}
+
 @media only screen and (min-width: 900px) {
-    *{
-        font-size: 1.08em;
+    .label.is-small {
+        font-size: 0.75rem;
     }
+
     .dg.ac{
         top:10em !important;
     }
