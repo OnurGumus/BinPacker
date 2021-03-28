@@ -92,7 +92,11 @@ module.exports = env => ({
         ]),
     resolve: {
         // See https://github.com/fable-compiler/Fable/issues/1490
-        symlinks: false
+        symlinks: false,
+        alias: {
+            './_Pages': path.resolve(__dirname, `src/Client/Pages`),
+            './_Components': path.resolve(__dirname, `src/Client/Components`),
+        }
     },
     // Configuration for webpack-dev-server
     devServer: {

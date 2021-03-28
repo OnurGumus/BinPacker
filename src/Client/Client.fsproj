@@ -11,11 +11,13 @@
     <None Include="index.html" />
     <None Include="paket.references" />
     <None Include="style.scss" />
+    <Compile Include="Util.fs" />
     <Compile Include="Version.fs" />
     <Compile Include="Three.fs" />
     <Compile Include="TrackballControls.fs" />
     <Compile Include="Dat.fs" />
     <Compile Include="CanvasRenderer.fs" />
+    <Compile Include="Pages/Main.fs" />
     <Compile Include="Client.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

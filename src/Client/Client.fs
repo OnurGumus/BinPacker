@@ -20,10 +20,10 @@ type FA = CssClasses<"../../node_modules/@fortawesome/fontawesome-free/css/all.c
 open Thoth.Json
 
 [<Emit("btoa($0)")>]
-let toBase64String (s: string): string = jsNative
+let toBase64String (s: string) : string = jsNative
 
 [<Emit("atob($0)")>]
-let fromBase64String (s: string): string = jsNative
+let fromBase64String (s: string) : string = jsNative
 
 let r = Random()
 
@@ -42,7 +42,7 @@ type Msg =
     | ModelLoaded of Model
 
 module Server =
-    let logger: Shared.ILogger =
+    let logger : Shared.ILogger =
         { new Shared.ILogger with
             member this.LogError e = printf "%A" e
             member this.Log str arr = printf "%s" str
@@ -57,7 +57,7 @@ module Server =
     open Fable.Remoting.Client
 
     /// A proxy you can use to talk to server directly
-    let api: ICalcApi =
+    let api : ICalcApi =
         let calcApi =
             Remoting.createApi ()
             |> Remoting.withRouteBuilder Route.builder
@@ -78,21 +78,25 @@ module Server =
         //                     alpha
         //     } }
         calcApi
+
 let run = Server.api.run
 let save = Server.api.saveModel
 let load = Server.api.loadModel
 
 let runCmd containerMode calcMode container items =
-    Cmd.OfAsync.perform (fun _ ->
-        run
-            {
-                ContainerMode = containerMode
-                CalculationMode = (calcMode)
-            }
-            container
-            items
-            10000000000.
-            0.99) () ResultLoaded
+    Cmd.OfAsync.perform
+        (fun _ ->
+            run
+                {
+                    ContainerMode = containerMode
+                    CalculationMode = (calcMode)
+                }
+                container
+                items
+                10000000000.
+                0.99)
+        ()
+        ResultLoaded
 
 let saveCmd model =
     Cmd.OfAsync.perform (fun _ -> save model) () ModelSaved
@@ -127,7 +131,7 @@ let init () =
             "lime"
         ]
 
-    let boxes: ItemPut list =
+    let boxes : ItemPut list =
         [
             for i = 0L to 9L do
                 {
@@ -139,7 +143,12 @@ let init () =
                         }
                     Item =
                         {
-                            Dim = { Width = 10L; Height = 10L; Length = 10L }
+                            Dim =
+                                {
+                                    Width = 10L
+                                    Height = 10L
+                                    Length = 10L
+                                }
                             Tag = colors.[int i]
                             Id = i.ToString()
                             NoTop = false
@@ -158,7 +167,12 @@ let init () =
                         }
                     Item =
                         {
-                            Dim = { Width = 10L; Height = 10L; Length = 10L }
+                            Dim =
+                                {
+                                    Width = 10L
+                                    Height = 10L
+                                    Length = 10L
+                                }
                             Tag = colors.[int i]
                             Id = i.ToString()
                             NoTop = false
@@ -169,7 +183,7 @@ let init () =
                 }
         ]
 
-    let container: Container =
+    let container : Container =
         {
             Dim =
                 {
@@ -297,7 +311,10 @@ let update (msg: Msg) model =
             { model with
                 RowItems =
                     model.RowItems
-                    |> List.map (fun ((_, oldKey) as old) -> if oldKey = key then (row, key) else old)
+                    |> List.map
+                        (fun old ->
+                            match old with
+                            | (_, oldKey) as old -> if oldKey = key then (row, key) else old)
             },
             Cmd.none
         | ResultLoaded c ->
@@ -307,11 +324,12 @@ let update (msg: Msg) model =
                 }
 
             model,
-            Cmd.ofSub (fun _ ->
-                CanvasRenderer.renderResult
-                    c.[model.CurrentResultIndex].Container
-                    c.[model.CurrentResultIndex].ItemsPut
-                    false)
+            Cmd.ofSub
+                (fun _ ->
+                    CanvasRenderer.renderResult
+                        c.[model.CurrentResultIndex].Container
+                        c.[model.CurrentResultIndex].ItemsPut
+                        false)
 
         | ContainerUpdated c -> { model with ContainerItem = c }, Cmd.none
         | CalculationModeChanged "Minimize Length" ->
@@ -342,7 +360,7 @@ let update (msg: Msg) model =
         | CalculateRequested _ ->
             let c = model.ContainerItem.Value
 
-            let container: Container =
+            let container : Container =
                 {
                     Coord = { X = 0L; Y = 0L; Z = 0L }
                     Dim =
@@ -354,7 +372,7 @@ let update (msg: Msg) model =
                     Weight = c.Weight
                 }
 
-            let items: list<Item> = convertToItems model
+            let items : list<Item> = convertToItems model
 
             { model with
                 Calculation = Calculating
@@ -371,7 +389,7 @@ let update (msg: Msg) model =
 
             let vol =
                 rowItems
-                |> List.sumBy (fun x -> x.Width * x.Height * x.Length * int64(x.Quantity))
+                |> List.sumBy (fun x -> x.Width * x.Height * x.Length * int64 (x.Quantity))
 
             Some vol
         | _ -> None
@@ -447,6 +465,7 @@ module Container =
             let intCheck = numericCheck t int64 0L 2000L
             let weightCheck = numericCheck t int -1 100000
 
+
             {
                 Width = floatCheck "width" formData.Width
                 Height = floatCheck "height" formData.Height
@@ -479,8 +498,8 @@ module Container =
         cmd
 
     let view =
-        React.functionComponent
-            ((fun (props: ContainerProp) ->
+        React.functionComponent (
+            (fun (props: ContainerProp) ->
                 let model, dispatch =
                     React.useElmish (init props.ContainerFormData, update props.ContainerUpdated, [||])
 
@@ -553,7 +572,8 @@ module Container =
                             ]
                         ]
                     ]
-                ]))
+                ])
+        )
 
 module Row =
     open Feliz.UseElmish
@@ -586,6 +606,7 @@ module Row =
             let floatCheck = numericCheck t int64 0L 2000L
             let intCheck = numericCheck t int 0 2000
             let weightCheck = numericCheck t int -1 100000
+
 
             {
                 Width = floatCheck "width" formData.Width
@@ -629,8 +650,8 @@ module Row =
         cmd
 
     let view =
-        React.functionComponent
-            ((fun (props: RowProp) ->
+        React.functionComponent (
+            (fun (props: RowProp) ->
                 let model, dispatch =
                     React.useElmish (init props.FormData, update props.RowUpdated, [||])
 
@@ -744,13 +765,14 @@ module Row =
                 ]
 
                 ),
-             (fun props -> props.Key))
+            (fun props -> props.Key)
+        )
 
 open Fable.Core
 open Browser.Dom
 open Fable.Core.JsInterop
 
-let thousands (n:Int64) =
+let thousands (n: Int64) =
     let v = (if n < 0L then -n else n).ToString()
     let r = v.Length % 3
     let s = if r = 0 then 3 else r
@@ -764,521 +786,556 @@ let thousands (n:Int64) =
     |> fun s -> if n < 0L then "-" + s else s
 
 let viewC =
-    React.functionComponent (fun (props: {| model: Model
-                                            dispatch: Msg -> unit |}) ->
-        let model = props.model
-        let dispatch = props.dispatch
+    React.functionComponent
+        (fun (props: {| model: Model
+                        dispatch: Msg -> unit |}) ->
+            let model = props.model
+            let dispatch = props.dispatch
 
-        let isCalculating =
-            match model.Calculation with
-            | Calculating -> true
-            | _ -> false
+            let isCalculating =
+                match model.Calculation with
+                | Calculating -> true
+                | _ -> false
 
-        let (counterValue, setCounterValue) = React.useState (90)
+            let (counterValue, setCounterValue) = React.useState (90)
 
-        let scollDown () =
-            match model.Calculation with
-            | Calculated results when results
-                                      |> List.exists (fun r -> r.ItemsPut.Length > 0) ->
-                let element =
-                    document.querySelector ("#calculate-button")
+            let scollDown () =
+                match model.Calculation with
+                | Calculated results when
+                    results
+                    |> List.exists (fun r -> r.ItemsPut.Length > 0) ->
+                    let element =
+                        document.querySelector ("#calculate-button")
 
-                element?scrollIntoView ({|
-                                            behavior = "smooth"
-                                            block = "start"
-                                        |})
-            | _ -> ()
+                    element?scrollIntoView ({|
+                                                behavior = "smooth"
+                                                block = "start"
+                                            |})
+                | _ -> ()
 
-            { new IDisposable with
-                member this.Dispose() = ()
-            }
+                { new IDisposable with
+                    member this.Dispose() = ()
+                }
 
-        React.useEffect (scollDown, [| box isCalculating |])
+            React.useEffect (scollDown, [| box isCalculating |])
 
-        let subscribeToTimer () =
-            let subscriptionId =
-                JS.setTimeout (fun _ -> if isCalculating then setCounterValue (counterValue - 1)) 1000
-            { new IDisposable with
-                member this.Dispose() = JS.clearTimeout (subscriptionId)
-            }
+            let subscribeToTimer () =
+                let subscriptionId =
+                    JS.setTimeout
+                        (fun _ ->
+                            if isCalculating then
+                                setCounterValue (counterValue - 1))
+                        1000
 
-        React.useEffect (subscribeToTimer)
+                { new IDisposable with
+                    member this.Dispose() = JS.clearTimeout (subscriptionId)
+                }
 
-        let rowItems =
-            [
-                for i, (row, key) in model.RowItems |> List.indexed do
-                    let addRow =
-                        if i = model.RowItems.Length - 1 then Some(fun () -> dispatch AddRow) else None
+            React.useEffect (subscribeToTimer)
 
-                    let remove =
-                        if model.RowItems.Length > 1 then Some(fun _ -> dispatch (RemoveItem key)) else None
+            let rowItems =
+                [
+                    for i, (row, key) in model.RowItems |> List.indexed do
+                        let addRow =
+                            if i = model.RowItems.Length - 1 then
+                                Some(fun () -> dispatch AddRow)
+                            else
+                                None
 
-                    Row.view
-                        {
-                            RowUpdated = fun r -> dispatch (RowUpdated(key, r))
-                            AddRow = addRow
-                            Key = key
-                            Remove = remove
-                            Disabled = isCalculating
-                            FormData =
-                                match row with
-                                | None ->
-                                    {
-                                        Width = ""
-                                        Height = ""
-                                        Length = ""
-                                        Weight = "0"
-                                        Color =
-                                            sprintf
-                                                "rgb(%i,%i,%i)"
-                                                (r.Next(40, 256))
-                                                (r.Next(40, 256))
-                                                (r.Next(40, 256))
-                                        Stackable = true
-                                        KeepTop = false
-                                        KeepBottom = false
-                                        Quantity = ""
+                        let remove =
+                            if model.RowItems.Length > 1 then
+                                Some(fun _ -> dispatch (RemoveItem key))
+                            else
+                                None
 
-                                    }
-                                | Some r ->
-                                    {
-                                        Width = r.Width.ToString()
-                                        Height = r.Height.ToString()
-                                        Length = r.Length.ToString()
-                                        Weight = r.Weight.ToString()
-                                        Color = r.Color.ToString()
-                                        Stackable = r.Stackable
-                                        KeepTop = r.KeepTop
-                                        KeepBottom = r.KeepBottom
-                                        Quantity = r.Quantity.ToString()
-                                    }
+                        Row.view
+                            {
+                                RowUpdated = fun r -> dispatch (RowUpdated(key, r))
+                                AddRow = addRow
+                                Key = key
+                                Remove = remove
+                                Disabled = isCalculating
+                                FormData =
+                                    match row with
+                                    | None ->
+                                        {
+                                            Width = ""
+                                            Height = ""
+                                            Length = ""
+                                            Weight = "0"
+                                            Color =
+                                                sprintf
+                                                    "rgb(%i,%i,%i)"
+                                                    (r.Next(40, 256))
+                                                    (r.Next(40, 256))
+                                                    (r.Next(40, 256))
+                                            Stackable = true
+                                            KeepTop = false
+                                            KeepBottom = false
+                                            Quantity = ""
 
-                        }
-            ]
+                                        }
+                                    | Some r ->
+                                        {
+                                            Width = r.Width.ToString()
+                                            Height = r.Height.ToString()
+                                            Length = r.Length.ToString()
+                                            Weight = r.Weight.ToString()
+                                            Color = r.Color.ToString()
+                                            Stackable = r.Stackable
+                                            KeepTop = r.KeepTop
+                                            KeepBottom = r.KeepBottom
+                                            Quantity = r.Quantity.ToString()
+                                        }
 
-        let content =
+                            }
+                ]
 
-            field.div [
-                Html.b "How to use:"
-                Html.ul [
-                    spacing.ml1 ++ size.isSize7
-                    prop.style [ style.listStyleType.disc ]
+            let content =
 
-                    let items =
-                        [
-                            "Enter container and item dimensions between 1 and 2000, no decimals."
-                            "Weight range is between 0 and 100,000."
-                            "Add as many items as you want."
-                            "If the item is not stackable (no other item is on top of this) uncheck \"Stack\" for that item."
-                            "If the item must keep its upright then check \"⬆⬆\" for that item."
-                            "If the item must be at the bottom (e.g, heavy items) then check \"⬇⬇\" for that item."
-                            "All dimensions are unitless."
-                            "Select the calculation mode depending on items to be at minimum height or pushed to the edge."
-                            "Select container mode to multi container if you want to see how many container it takes to fit"
-                            "Click calculate and wait up to 100 sec."
-                            "Bin packer will try to fit the items and minimize the placement."
-                            "Gravity is ignored."
-                            "Review the result in 3D then you may share it via share the result button and copy the url."
-                            "You may visually remove some boxes by using h-filter and v-filter controls on 3D."
+                field.div [
+                    Html.b "How to use:"
+                    Html.ul [
+                        spacing.ml1 ++ size.isSize7
+                        prop.style [ style.listStyleType.disc ]
+
+                        let items =
+                            [
+                                "Enter container and item dimensions between 1 and 2000, no decimals."
+                                "Weight range is between 0 and 100,000."
+                                "Add as many items as you want."
+                                "If the item is not stackable (no other item is on top of this) uncheck \"Stack\" for that item."
+                                "If the item must keep its upright then check \"⬆⬆\" for that item."
+                                "If the item must be at the bottom (e.g, heavy items) then check \"⬇⬇\" for that item."
+                                "All dimensions are unitless."
+                                "Select the calculation mode depending on items to be at minimum height or pushed to the edge."
+                                "Select container mode to multi container if you want to see how many container it takes to fit"
+                                "Click calculate and wait up to 100 sec."
+                                "Bin packer will try to fit the items and minimize the placement."
+                                "Gravity is ignored."
+                                "Review the result in 3D then you may share it via share the result button and copy the url."
+                                "You may visually remove some boxes by using h-filter and v-filter controls on 3D."
 
 
+                            ]
+
+                        prop.children [
+                            for item in items do
+                                Html.li [ prop.text item ]
                         ]
 
-                    prop.children [
-                        for item in items do
-                            Html.li [ prop.text item ]
+
                     ]
+                    br []
+                    Bulma.label [
+                        prop.text "Enter CONTAINER dimensions:"
+                        control.isSmall
+                    ]
+                    if model.Loading then
+                        Html.none
+                    else
+                        match model.ContainerItem with
+                        | None ->
+                            Container.view
+                                {
+                                    ContainerUpdated = fun r -> dispatch (ContainerUpdated(r))
+                                    Disabled = isCalculating
+                                    ContainerFormData =
+                                        {
+                                            Width = ""
+                                            Height = ""
+                                            Weight = "0"
+                                            Length = ""
+                                        }
+                                }
+                        | Some container ->
+                            Container.view
+                                {
+                                    ContainerUpdated = fun r -> dispatch (ContainerUpdated(r))
+                                    Disabled = isCalculating
+                                    ContainerFormData =
+                                        {
+                                            Width = container.Width.ToString()
+                                            Height = container.Height.ToString()
+                                            Weight = container.Weight.ToString()
+                                            Length = container.Length.ToString()
+                                        }
+                                }
 
-
-                ]
-                br []
-                Bulma.label [
-                    prop.text "Enter CONTAINER dimensions:"
-                    control.isSmall
-                ]
-                if model.Loading then
-                    Html.none
-                else
-                    match model.ContainerItem with
-                    | None ->
-                        Container.view
-                            {
-                                ContainerUpdated = fun r -> dispatch (ContainerUpdated(r))
-                                Disabled = isCalculating
-                                ContainerFormData =
-                                    {
-                                        Width = ""
-                                        Height = ""
-                                        Weight = "0"
-                                        Length = ""
-                                    }
-                            }
-                    | Some container ->
-                        Container.view
-                            {
-                                ContainerUpdated = fun r -> dispatch (ContainerUpdated(r))
-                                Disabled = isCalculating
-                                ContainerFormData =
-                                    {
-                                        Width = container.Width.ToString()
-                                        Height = container.Height.ToString()
-                                        Weight = container.Weight.ToString()
-                                        Length = container.Length.ToString()
-                                    }
-                            }
-
-                Bulma.label [
-                    prop.text "Enter ITEM dimensions:"
-                    control.isSmall
-                ]
-                Html.div [
-                    prop.className "table"
-                    prop.disabled isCalculating
-                    prop.children [
-                        Html.div [
-                            prop.className "tr"
-                            prop.children [
-                                for col in cols do
-                                    Html.div [
-                                        prop.classes [ "td"; "th" ]
-                                        prop.children [
-                                            Bulma.label [
-                                                control.isSmall
-                                                prop.text col
+                    Bulma.label [
+                        prop.text "Enter ITEM dimensions:"
+                        control.isSmall
+                    ]
+                    Html.div [
+                        prop.className "table"
+                        prop.disabled isCalculating
+                        prop.children [
+                            Html.div [
+                                prop.className "tr"
+                                prop.children [
+                                    for col in cols do
+                                        Html.div [
+                                            prop.classes [ "td"; "th" ]
+                                            prop.children [
+                                                Bulma.label [
+                                                    control.isSmall
+                                                    prop.text col
+                                                ]
                                             ]
                                         ]
-                                    ]
+                                ]
                             ]
-                        ]
-                        rowItems |> ofList
-                    ]
-                ]
-
-                let line (title: string) (v: Int64 option) =
-                    React.fragment [
-                        Bulma.label title
-                        control.div [
-                            Html.output [
-                                if title.StartsWith "Chargable" && v.IsSome
-                                then prop.className "output"
-                                prop.text
-                                    (v
-                                     |> Option.map (thousands)
-                                     |> Option.defaultValue "Please complete the form.")
-                            ]
+                            rowItems |> ofList
                         ]
                     ]
 
-                [
-                    let items =
-                        [
-                            ("Total Item Volume:", model.TotalVolume)
-                        ]
-
-                    for t, v in items do
-                        line t v
-                ]
-                |> ofList
-
-                match model.ContainerItem with
-                | Some container ->
-                    line
-                        "Container volume:"
-                        (Some
-                            (container.Height
-                             * container.Width
-                             * container.Length))
-                | _ -> Html.none
-
-                match model.Calculation with
-                | Calculated r -> line "Volume fit:" (Some(r |> List.sumBy (fun c -> c.PutVolume)))
-                | _ -> Html.none
-
-                let isMultiBin =
-                    match model.ContainerMode with
-                    | MultiContainer -> true
-                    | _ -> false
-
-                let isinvalid =
-                    (model.ContainerItem.IsNone
-                     || model.TotalVolume.IsNone)
-
-                let volumeExceeds =
-                    match model.ContainerItem, model.TotalVolume with
-                    | Some container, Some volume ->
-                        container.Height
-                        * container.Width
-                        * container.Length < volume
-                    | _ -> false
-                    |> (&&) (isMultiBin |> not)
-
-                let nostackExceeds =
-                    match model.ContainerItem, model.TotalVolume with
-                    | Some container, Some volume ->
-                        let containerArea = container.Length * container.Width
-
-                        let areaItems =
-                            model
-                            |> convertToItems
-                            |> List.filter (fun x -> x.NoTop)
-                            |> List.sumBy (fun x -> x.Dim.Width * x.Dim.Length)
-
-                        let maxHeight =
-                            model
-                            |> convertToItems
-                            |> List.filter (fun x -> x.NoTop)
-                            |> function
-                            | [] -> 0L
-                            | other ->
-                                (other |> List.maxBy (fun x -> x.Dim.Height))
-                                    .Dim.Height
-
-                        (areaItems > containerArea
-                         || maxHeight > container.Height)
-                        && (isMultiBin |> not)
-
-
-                    | _ -> false
-
-                let itemExceeds =
-                    match model.ContainerItem, model.TotalVolume with
-                    | Some container, Some volume ->
-                        let checkDim (item: Item) =
-                            let itemDim =
-                                Math.Max(Math.Max(item.Dim.Length, item.Dim.Width), item.Dim.Height)
-
-                            let cDim =
-                                Math.Max(Math.Max(container.Length, container.Width), container.Height)
-
-                            itemDim > cDim
-
-                        let items = convertToItems model
-
-                        List.exists (checkDim) items
-                        || items
-                           |> List.exists (fun i -> i.Weight > container.Weight)
-                    | _ -> false
-
-                Html.br []
-
-                Html.div [
-                    helpers.isInlineBlock
-                    prop.children [
-                        Bulma.label "Calculation mode:"
-                        Html.select [
-                            prop.value
-                                (match model.CalculationMode with
-                                 | MinimizeHeight -> "Minimize Height"
-                                 | _ -> "Minimize Length")
-                            prop.children [
-                                Html.option "Minimize Height"
-                                Html.option "Minimize Length"
+                    let line (title: string) (v: Int64 option) =
+                        React.fragment [
+                            Bulma.label title
+                            control.div [
+                                Html.output [
+                                    if title.StartsWith "Chargable" && v.IsSome then
+                                        prop.className "output"
+                                    prop.text (
+                                        v
+                                        |> Option.map (thousands)
+                                        |> Option.defaultValue "Please complete the form."
+                                    )
+                                ]
                             ]
-                            prop.onChange (fun (e: Event) ->
-                                CalculationModeChanged(!!e.target?value)
-                                |> dispatch)
                         ]
-                    ]
-                ]
 
-                Html.div [
-                    spacing.ml4 ++ helpers.isInlineBlock
-                    prop.children [
-                        Bulma.label "Container mode:"
-                        Html.select [
-                            prop.value
-                                (match model.ContainerMode with
-                                 | SingleContainer -> "Single Container"
-                                 | _ -> "Multi Container")
-
-                            prop.children [
-                                Html.option "Single Container"
-                                Html.option "Multi Container"
+                    [
+                        let items =
+                            [
+                                ("Total Item Volume:", model.TotalVolume)
                             ]
 
-                            prop.onChange (fun (e: Event) -> ContainerModeChanged(!!e.target?value) |> dispatch)
-                        ]
+                        for t, v in items do
+                            line t v
                     ]
-                ]
+                    |> ofList
 
-                Html.br []
-                Html.br []
+                    match model.ContainerItem with
+                    | Some container ->
+                        line
+                            "Container volume:"
+                            (Some(
+                                container.Height
+                                * container.Width
+                                * container.Length
+                            ))
+                    | _ -> Html.none
 
-                Bulma.button.button [
-                    prop.disabled
-                        (isinvalid
-                         || isCalculating
-                        // || nostackExceeds
-                         || volumeExceeds
-                         || itemExceeds)
-                    color.isPrimary
-                    prop.id "calculate-button"
-                    prop.text
-                        (if isCalculating then
-                            sprintf "Calculating... (Max %i sec)" counterValue
+                    match model.Calculation with
+                    | Calculated r -> line "Volume fit:" (Some(r |> List.sumBy (fun c -> c.PutVolume)))
+                    | _ -> Html.none
 
-                         elif volumeExceeds then
-                             "Items' volume exceeds single container volume."
-                        //  else if nostackExceeds then
-                        //      "No stack items won't fit to single container."
-                         elif isinvalid then
-                             "First fill the form correctly!"
-                         else if itemExceeds then
-                             "An item's parameters are larger than container's."
-
-                         else
-                             "Calculate")
-                    let duration =
+                    let isMultiBin =
                         match model.ContainerMode with
-                        | MultiContainer -> 100
-                        | _ -> 100
+                        | MultiContainer -> true
+                        | _ -> false
 
-                    prop.onClick (fun _ ->
-                        setCounterValue duration
-                        dispatch CalculateRequested)
-                ]
+                    let isinvalid =
+                        (model.ContainerItem.IsNone
+                         || model.TotalVolume.IsNone)
 
-                Html.span [
-                    spacing.my1
-                    prop.children [
-                        match model.Calculation with
-                        | Calculated c ->
-                            let itemsPut = c |> List.collect (fun l -> l.ItemsPut)
-                            let itemsUnput = (c |> List.last).ItemsUnput
+                    let volumeExceeds =
+                        match model.ContainerItem, model.TotalVolume with
+                        | Some container, Some volume ->
+                            container.Height
+                            * container.Width
+                            * container.Length < volume
+                        | _ -> false
+                        |> (&&) (isMultiBin |> not)
 
-                            let label =
-                                match itemsUnput, itemsPut with
-                                | [], _ ->
-                                    Bulma.label [
-                                        prop.style [ style.color.green ]
-                                        prop.text "All items put successfully!"
-                                    ]
-                                | _, [] ->
-                                    Bulma.label [
-                                        color.isDanger
-                                        prop.text "Unable to fit all items!"
-                                    ]
-                                | items, _ ->
-                                    let g = items |> List.groupBy (fun x -> x.Tag)
+                    let nostackExceeds =
+                        match model.ContainerItem, model.TotalVolume with
+                        | Some container, Some volume ->
+                            let containerArea = container.Length * container.Width
 
-                                    React.fragment [
-                                        Bulma.label "Could not fit the following items:"
-                                        Html.ul [
-                                            for key, values in g do
-                                                yield
-                                                    Html.li [
-                                                        Html.span [
-                                                            helpers.isInlineBlock ++ color.hasTextWhite
-                                                            prop.text " x "
-                                                            prop.style [
-                                                                style.backgroundColor key
-                                                                style.width (length.ch 1)
+                            let areaItems =
+                                model
+                                |> convertToItems
+                                |> List.filter (fun x -> x.NoTop)
+                                |> List.sumBy (fun x -> x.Dim.Width * x.Dim.Length)
+
+                            let maxHeight =
+                                model
+                                |> convertToItems
+                                |> List.filter (fun x -> x.NoTop)
+                                |> function
+                                | [] -> 0L
+                                | other ->
+                                    (other |> List.maxBy (fun x -> x.Dim.Height))
+                                        .Dim
+                                        .Height
+
+                            (areaItems > containerArea
+                             || maxHeight > container.Height)
+                            && (isMultiBin |> not)
+
+
+                        | _ -> false
+
+                    let itemExceeds =
+                        match model.ContainerItem, model.TotalVolume with
+                        | Some container, Some volume ->
+                            let checkDim (item: Item) =
+                                let itemDim =
+                                    Math.Max(Math.Max(item.Dim.Length, item.Dim.Width), item.Dim.Height)
+
+                                let cDim =
+                                    Math.Max(Math.Max(container.Length, container.Width), container.Height)
+
+                                itemDim > cDim
+
+                            let items = convertToItems model
+
+                            List.exists (checkDim) items
+                            || items
+                               |> List.exists (fun i -> i.Weight > container.Weight)
+                        | _ -> false
+
+                    Html.br []
+
+                    Html.div [
+                        helpers.isInlineBlock
+                        prop.children [
+                            Bulma.label "Calculation mode:"
+                            Html.select [
+                                prop.value (
+                                    match model.CalculationMode with
+                                    | MinimizeHeight -> "Minimize Height"
+                                    | _ -> "Minimize Length"
+                                )
+                                prop.children [
+                                    Html.option "Minimize Height"
+                                    Html.option "Minimize Length"
+                                ]
+                                prop.onChange
+                                    (fun (e: Event) ->
+                                        CalculationModeChanged(!!e.target?value)
+                                        |> dispatch)
+                            ]
+                        ]
+                    ]
+
+                    Html.div [
+                        spacing.ml4 ++ helpers.isInlineBlock
+                        prop.children [
+                            Bulma.label "Container mode:"
+                            Html.select [
+                                prop.value (
+                                    match model.ContainerMode with
+                                    | SingleContainer -> "Single Container"
+                                    | _ -> "Multi Container"
+                                )
+
+                                prop.children [
+                                    Html.option "Single Container"
+                                    Html.option "Multi Container"
+                                ]
+
+                                prop.onChange (fun (e: Event) -> ContainerModeChanged(!!e.target?value) |> dispatch)
+                            ]
+                        ]
+                    ]
+
+                    Html.br []
+                    Html.br []
+
+                    Bulma.button.button [
+                        prop.disabled (
+                            isinvalid
+                            || isCalculating
+                            // || nostackExceeds
+                            || volumeExceeds
+                            || itemExceeds
+                        )
+                        color.isPrimary
+                        prop.id "calculate-button"
+                        prop.text (
+                            if isCalculating then
+                                sprintf "Calculating... (Max %i sec)" counterValue
+
+                            elif volumeExceeds then
+                                "Items' volume exceeds single container volume."
+                            //  else if nostackExceeds then
+                            //      "No stack items won't fit to single container."
+                            elif isinvalid then
+                                "First fill the form correctly!"
+                            else if itemExceeds then
+                                "An item's parameters are larger than container's."
+
+                            else
+                                "Calculate"
+                        )
+                        let duration =
+                            match model.ContainerMode with
+                            | MultiContainer -> 100
+                            | _ -> 100
+
+                        prop.onClick
+                            (fun _ ->
+                                setCounterValue duration
+                                dispatch CalculateRequested)
+                    ]
+
+                    Html.span [
+                        spacing.my1
+                        prop.children [
+                            match model.Calculation with
+                            | Calculated c ->
+                                let itemsPut = c |> List.collect (fun l -> l.ItemsPut)
+                                let itemsUnput = (c |> List.last).ItemsUnput
+
+                                let label =
+                                    match itemsUnput, itemsPut with
+                                    | [], _ ->
+                                        Bulma.label [
+                                            prop.style [ style.color.green ]
+                                            prop.text "All items put successfully!"
+                                        ]
+                                    | _, [] ->
+                                        Bulma.label [
+                                            color.isDanger
+                                            prop.text "Unable to fit all items!"
+                                        ]
+                                    | items, _ ->
+                                        let g = items |> List.groupBy (fun x -> x.Tag)
+
+                                        React.fragment [
+                                            Bulma.label "Could not fit the following items:"
+                                            Html.ul [
+                                                for key, values in g do
+                                                    yield
+                                                        Html.li [
+                                                            Html.span [
+                                                                helpers.isInlineBlock ++ color.hasTextWhite
+                                                                prop.text " x "
+                                                                prop.style [
+                                                                    style.backgroundColor key
+                                                                    style.width (length.ch 1)
+                                                                ]
+                                                            ]
+                                                            Html.span [
+                                                                prop.textf
+                                                                    "%i items not fit with this color."
+                                                                    values.Length
                                                             ]
                                                         ]
-                                                        Html.span [
-                                                            prop.textf "%i items not fit with this color." values.Length
-                                                        ]
-                                                    ]
+                                            ]
+
                                         ]
 
+                                React.fragment [
+                                    label
+                                    Bulma.button.button [
+                                        color.isInfo
+                                        prop.text (
+                                            if model.UrlShown then
+                                                "Now copy the url and share it"
+                                            else
+                                                "Share the result"
+                                        )
+                                        prop.disabled (isCalculating || model.UrlShown)
+                                        prop.onClick (fun _ -> dispatch ShareRequested)
                                     ]
-
-                            React.fragment [
-                                label
-                                Bulma.button.button [
-                                    color.isInfo
-                                    prop.text
-                                        (if model.UrlShown then "Now copy the url and share it" else "Share the result")
-                                    prop.disabled (isCalculating || model.UrlShown)
-                                    prop.onClick (fun _ -> dispatch ShareRequested)
                                 ]
-                            ]
-                        | _ -> Html.none
+                            | _ -> Html.none
+
+                        ]
 
                     ]
 
-                ]
+                    match model.Calculation with
+                    | Calculated c ->
+                        Html.div [
+                            Html.br []
+                            Bulma.button.button [
+                                color.isDanger
+                                prop.text " << "
+                                prop.disabled ((model.CurrentResultIndex = 0) || isCalculating)
+                                prop.onClick (fun _ -> dispatch (CurrentResultChanged(model.CurrentResultIndex - 1)))
+                            ]
+                            let containers =
+                                Html.span [
+                                    text.hasTextWeightSemibold
+                                    prop.textf "Showing container: %i/%i" (model.CurrentResultIndex + 1) (c.Length)
+                                ]
 
-                match model.Calculation with
-                | Calculated c ->
-                    Html.div [
-                        Html.br []
-                        Bulma.button.button [
-                            color.isDanger
-                            prop.text " << "
-                            prop.disabled ((model.CurrentResultIndex = 0) || isCalculating)
-                            prop.onClick (fun _ -> dispatch (CurrentResultChanged(model.CurrentResultIndex - 1)))
-                        ]
-                        let containers =
-                            Html.span [
-                                text.hasTextWeightSemibold
-                                prop.textf "Showing container: %i/%i" (model.CurrentResultIndex + 1) (c.Length)
+                            match model.Calculation with
+                            | Calculated c ->
+                                Html.span [
+                                    spacing.mx2
+                                    prop.style [
+                                        style.display.inlineFlex
+                                        style.flexDirection.column
+                                    ]
+                                    prop.children [
+
+                                        containers
+                                        Html.span [
+                                            text.hasTextWeightSemibold
+                                            if (c.[model.CurrentResultIndex].ItemsPut).Length > 0 then
+                                                prop.textf
+                                                    "Max item L:%i, H:%i"
+                                                    ((c.[model.CurrentResultIndex].ItemsPut
+                                                      |> List.map (fun i -> i.Coord.Z + i.Item.Dim.Length))
+                                                     |> List.max)
+                                                    ((c.[model.CurrentResultIndex].ItemsPut
+                                                      |> List.map (fun i -> i.Coord.Y + i.Item.Dim.Height))
+                                                     |> List.max)
+                                        ]
+                                    ]
+                                ]
+                            | _ -> containers
+
+                            Bulma.button.button [
+                                color.isDanger
+                                prop.text " >> "
+                                prop.disabled (
+                                    (model.CurrentResultIndex = c.Length - 1)
+                                    || isCalculating
+                                )
+                                prop.onClick (fun _ -> dispatch (CurrentResultChanged(model.CurrentResultIndex + 1)))
+
                             ]
 
-                        match model.Calculation with
-                        | Calculated c ->
-                            Html.span [
-                                spacing.mx2
-                                prop.style [
-                                    style.display.inlineFlex
-                                    style.flexDirection.column
-                                ]
+                        ]
+                    | _ -> Html.none
+
+
+                ]
+
+            React.fragment [
+                Html.div[
+                    prop.text "title"
+                ]
+                Bulma.container [
+                    Bulma.columns [
+                        Bulma.column [
+                            Bulma.panel [
+                                spacing.mt1
                                 prop.children [
-
-                                    containers
-                                    Html.span [
-                                        text.hasTextWeightSemibold
-                                        if (c.[model.CurrentResultIndex].ItemsPut).Length > 0 then
-                                            prop.textf
-                                                "Max item L:%i, H:%i"
-                                                ((c.[model.CurrentResultIndex].ItemsPut
-                                                  |> List.map (fun i -> i.Coord.Z + i.Item.Dim.Length))
-                                                 |> List.max)
-                                                ((c.[model.CurrentResultIndex].ItemsPut
-                                                  |> List.map (fun i -> i.Coord.Y + i.Item.Dim.Height))
-                                                 |> List.max)
+                                    Bulma.panelHeading [
+                                        Html.h1 [
+                                            prop.style [ style.color.white ]
+                                            prop.text "3D Bin Packer"
+                                        ]
                                     ]
+                                    Bulma.panelBlock.div [ content ]
                                 ]
                             ]
-                        | _ -> containers
-
-                        Bulma.button.button [
-                            color.isDanger
-                            prop.text " >> "
-                            prop.disabled
-                                ((model.CurrentResultIndex = c.Length - 1)
-                                 || isCalculating)
-                            prop.onClick (fun _ -> dispatch (CurrentResultChanged(model.CurrentResultIndex + 1)))
-
-                        ]
-
-                    ]
-                | _ -> Html.none
-
-
-            ]
-
-        Bulma.container [
-            Bulma.columns [
-                Bulma.column [
-                    Bulma.panel [
-                        spacing.mt1
-                        prop.children [
-                            Bulma.panelHeading [
-                                Html.h1 [
-                                    prop.style [ style.color.white ]
-                                    prop.text "3D Bin Packer"
-                                ]
-                            ]
-                            Bulma.panelBlock.div [ content ]
                         ]
                     ]
                 ]
-            ]
-        ])
+            ])
 
 let view model dispatch =
-    viewC {| model = model; dispatch = dispatch |}
+    Client.Pages.Main.TasksView dispatch Unchecked.defaultof<_>
+   // viewC {| model = model; dispatch = dispatch |}
 #if DEBUG
 open Elmish.Debug
 open Elmish.HMR
