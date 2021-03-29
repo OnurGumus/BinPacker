@@ -201,7 +201,7 @@ let init () =
         trackballControls.keys <- ResizeArray<float>([ 65.; 83.; 68. ])
         trackballControls
 
-    let trackballControls = initTrackballControls (camera, renderer)
+
     let clock = THREE.Clock.Create()
 
     let resizeRendererToDisplaySize (renderer: Three.Renderer) =
@@ -215,14 +215,22 @@ let init () =
         if (needResize) then renderer.setSize (width, height, false)
         needResize
 
-    let rec renderScene time =
+    let rec renderScene (trackballControls:option<_>) time =
         let time = time * 0.001
-        trackballControls.update (clock.getDelta ())
+        if (trackballControls.IsNone |> not) then
+            trackballControls.Value?update (clock.getDelta ())
+        let tb =
+            if (resizeRendererToDisplaySize (renderer)) then
+                let canvas = renderer.domElement
+                camera.aspect <- canvas.clientWidth / canvas.clientHeight
+                camera.updateProjectionMatrix ()
+                if trackballControls.IsNone then
+                    Some(initTrackballControls (camera, renderer))
+                else
+                    trackballControls
+            else
+                trackballControls
 
-        if (resizeRendererToDisplaySize (renderer)) then
-            let canvas = renderer.domElement
-            camera.aspect <- canvas.clientWidth / canvas.clientHeight
-            camera.updateProjectionMatrix ()
 
         if demoMode2 then
             cubes
@@ -235,10 +243,10 @@ let init () =
 
         renderer.render (scene, camera)
 
-        window.requestAnimationFrame (renderScene)
+        window.requestAnimationFrame (renderScene tb)
         |> ignore
-
-    renderScene 0.
+    resizeRendererToDisplaySize(renderer) |> ignore
+    renderScene None 0.
 
 let renderResultInner container items demoMode =
     demoMode2 <- demoMode
