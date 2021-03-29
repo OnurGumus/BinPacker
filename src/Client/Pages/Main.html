@@ -1,6 +1,8 @@
 <style>
-    canvas {
-        background-color: blue;
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
     }
 
     #content-wrapper {
@@ -20,23 +22,18 @@
         display: none;
         /* Safari and Chrome */
     }
-    #content >*{
+
+    #content>* {
         scroll-snap-align: start;
     }
 
     #content {
         display: flex;
-        width: 150vw;
+        width: 300vw;
         scroll-behavior: smooth;
         height: 100%;
     }
 
-    ::slotted(#help) {
-        background-color: red;
-        flex-grow: 1;
-        flex-basis: 33%;
-        scroll-snap-align: start;
-    }
 
     #form {
         background-color: green;
@@ -50,11 +47,28 @@
         height: 100% !important;
         scroll-snap-align: start;
     }
-    #main{
+
+    #help-wrapper {
+        padding: 1em;
+        display: flex;
+        justify-content: center;
+        place-content: center;
+        flex-grow: 1;
+        flex-basis: 33%;
+        scroll-snap-align: start;
+    }
+
+    #main {
         display: flex;
         flex-direction: column;
-        background-color: yellow;
         height: 100vh;
+    }
+
+    @media only screen and (min-width: 1025px) {
+        #content {
+            width: 150vw;
+        }
+
     }
 </style>
 <section id="main">
@@ -63,9 +77,11 @@
     </slot>
     <div id="content-wrapper">
         <div id="content">
-            <slot name="help">
-                help
-            </slot>
+            <div id="help-wrapper">
+                <slot name="help">
+                    help
+                </slot>
+            </div>
             <div id="form">
                 form
             </div>

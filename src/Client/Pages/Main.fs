@@ -1,4 +1,5 @@
 module Client.Pages.Main
+
 open Feliz
 open Fable.Core.JsInterop
 open Browser.Dom
@@ -13,7 +14,7 @@ let html : string =
     importDefault ("!!raw-loader!./_Pages/Main.html")
 
 let initCanvas () =
-    console.log("init")
+    console.log ("init")
     CanvasRenderer.init ()
 
     let colors =
@@ -93,11 +94,47 @@ let initCanvas () =
             Coord = { X = 0L; Y = 0L; Z = 0L }
             Weight = 0
         }
+
     CanvasRenderer.renderResult container boxes true
+
 [<ReactComponent>]
 let TasksView dispatch (model: Model) =
-    React.useEffectOnce(initCanvas)
+    React.useEffectOnce (initCanvas)
     let attachShadowRoot, shadowRoot = Client.Util.useShadowRoot (html)
+
+    let howto =
+        Html.ul [
+            prop.style [ style.listStyleType.disc ]
+
+            let items =
+                [
+                    "Enter container and item dimensions between 1 and 2000, no decimals."
+                    "Weight range is between 0 and 100,000."
+                    "Add as many items as you want."
+                    "If the item is not stackable (no other item is on top of this) uncheck \"Stack\" for that item."
+                    "If the item must keep its upright then check \"⬆⬆\" for that item."
+                    "If the item must be at the bottom (e.g, heavy items) then check \"⬇⬇\" for that item."
+                    "All dimensions are unitless."
+                    "Select the calculation mode depending on items to be at minimum height or pushed to the edge."
+                    "Select container mode to multi container if you want to see how many container it takes to fit"
+                    "Click calculate and wait up to 100 sec."
+                    "Bin packer will try to fit the items and minimize the placement."
+                    "Gravity is ignored."
+                    "Review the result in 3D then you may share it via share the result button and copy the url."
+                    "You may visually remove some boxes by using h-filter and v-filter controls on 3D."
+
+
+                ]
+
+            prop.children [
+                for item in items do
+                    Html.li [ prop.text item ]
+            ]
+
+
+        ]
+
+
 
     Interop.createElement
         "page-main"
@@ -105,8 +142,8 @@ let TasksView dispatch (model: Model) =
             attachShadowRoot
             prop.children [
                 Html.div [
-                   prop.slot "title"
-                   prop.text "onur"
+                    prop.slot "title"
+                    prop.text "onur"
                 ]
                 Html.canvas [
                     prop.id "my-canvas"
@@ -115,7 +152,14 @@ let TasksView dispatch (model: Model) =
                 Html.div [
                     prop.id "help"
                     prop.slot "help"
-                    prop.text "help"
+                    prop.children [
+                        Html.h1[
+                            prop.text "How to use"
+                        ]
+                        howto
+                    ]
+
                 ]
+
             ]
         ]
