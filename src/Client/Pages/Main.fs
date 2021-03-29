@@ -124,16 +124,12 @@ let TasksView dispatch (model: Model) =
                     "Gravity is ignored."
                     "Review the result in 3D then you may share it via share the result button and copy the url."
                     "You may visually remove some boxes by using h-filter and v-filter controls on 3D."
-
-
                 ]
 
             prop.children [
                 for item in items do
                     Html.li [ prop.text item ]
             ]
-
-
         ]
 
 
@@ -168,15 +164,29 @@ let TasksView dispatch (model: Model) =
                         ]
                         howto
                     ]
-
                 ]
                 Html.div [
-                    prop.id "form"
+                    prop.id "form-wrapper"
                     prop.slot "form"
-                    prop.text "form"
-
-
+                    prop.children[
+                        Html.div[
+                            prop.id "form"
+                            prop.text "form"
+                        ]
+                        Html.div[
+                            prop.className "button-panel"
+                            prop.children[
+                                Html.button[
+                                    prop.text "Help"
+                                    prop.onClick(fun _ -> document.querySelector("#help")?scrollIntoView() )
+                                ]
+                                Html.button[
+                                    prop.text "3D Canvas"
+                                    prop.onClick(fun _ -> document.querySelector("#my-canvas")?scrollIntoView() )
+                                ]
+                            ]
+                        ]
+                    ]
                 ]
-
             ]
         ]
