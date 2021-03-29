@@ -620,7 +620,6 @@ module Row =
                     prop.children [
                         for i, col in cols |> List.indexed do
                             Html.td [
-                                prop.className "td"
                                 prop.children [
                                     if i < cols.Length - 2 then
                                         match col with
@@ -779,7 +778,7 @@ let viewC =
                                             Stackable = true
                                             KeepTop = false
                                             KeepBottom = false
-                                            Quantity = ""
+                                            Quantity = "1"
 
                                         }
                                     | Some r ->
@@ -845,7 +844,7 @@ let viewC =
                             Html.tr [
                                 prop.children [
                                     for col in cols do
-                                        Html.td [
+                                        Html.th [
                                             prop.children [
                                                 Html.label [ prop.text col ]
                                             ]
