@@ -168,7 +168,6 @@ let MainView comp dispatch (model: Model) =
                                 ]
                                 howto
                             ]
-
                         ]
                         Html.button[
                             prop.text "Next"

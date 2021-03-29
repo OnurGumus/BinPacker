@@ -964,48 +964,52 @@ let viewC =
                         | _ -> false
 
                     Html.br []
-
-                    Html.div [
-                        prop.children [
-                            Html.label [
-                                prop.text "Calculation mode:"
-                            ]
-                            Html.select [
-                                prop.value (
-                                    match model.CalculationMode with
-                                    | MinimizeHeight -> "Minimize Height"
-                                    | _ -> "Minimize Length"
-                                )
+                    Html.div[
+                        prop.id "mode-panel"
+                        prop.children[
+                            Html.div [
                                 prop.children [
-                                    Html.option "Minimize Height"
-                                    Html.option "Minimize Length"
+                                    Html.label [
+                                        prop.text "Calculation mode:"
+                                    ]
+                                    Html.select [
+                                        prop.value (
+                                            match model.CalculationMode with
+                                            | MinimizeHeight -> "Minimize Height"
+                                            | _ -> "Minimize Length"
+                                        )
+                                        prop.children [
+                                            Html.option "Minimize Height"
+                                            Html.option "Minimize Length"
+                                        ]
+                                        prop.onChange
+                                            (fun (e: Event) ->
+                                                CalculationModeChanged(!!e.target?value)
+                                                |> dispatch)
+                                    ]
                                 ]
-                                prop.onChange
-                                    (fun (e: Event) ->
-                                        CalculationModeChanged(!!e.target?value)
-                                        |> dispatch)
                             ]
-                        ]
-                    ]
 
-                    Html.div [
-                        prop.children [
-                            Html.label [
-                                prop.text "Container mode:"
-                            ]
-                            Html.select [
-                                prop.value (
-                                    match model.ContainerMode with
-                                    | SingleContainer -> "Single Container"
-                                    | _ -> "Multi Container"
-                                )
-
+                            Html.div [
                                 prop.children [
-                                    Html.option "Single Container"
-                                    Html.option "Multi Container"
-                                ]
+                                    Html.label [
+                                        prop.text "Container mode:"
+                                    ]
+                                    Html.select [
+                                        prop.value (
+                                            match model.ContainerMode with
+                                            | SingleContainer -> "Single Container"
+                                            | _ -> "Multi Container"
+                                        )
 
-                                prop.onChange (fun (e: Event) -> ContainerModeChanged(!!e.target?value) |> dispatch)
+                                        prop.children [
+                                            Html.option "Single Container"
+                                            Html.option "Multi Container"
+                                        ]
+
+                                        prop.onChange (fun (e: Event) -> ContainerModeChanged(!!e.target?value) |> dispatch)
+                                    ]
+                                ]
                             ]
                         ]
                     ]
@@ -1049,7 +1053,7 @@ let viewC =
                                 dispatch CalculateRequested)
                     ]
 
-                    Html.span [
+                    Html.div [
                         prop.children [
                             match model.Calculation with
                             | Calculated c ->
@@ -1099,6 +1103,7 @@ let viewC =
                                 React.fragment [
                                     label
                                     Html.button [
+                                        prop.className "share-button"
                                         prop.text (
                                             if model.UrlShown then
                                                 "Now copy the url and share it"
@@ -1120,6 +1125,7 @@ let viewC =
                         Html.div [
                             Html.br []
                             Html.button [
+                                prop.className "arrow-button"
                                 prop.text " << "
                                 prop.disabled ((model.CurrentResultIndex = 0) || isCalculating)
                                 prop.onClick (fun _ -> dispatch (CurrentResultChanged(model.CurrentResultIndex - 1)))
@@ -1155,6 +1161,7 @@ let viewC =
                             | _ -> containers
 
                             Html.button [
+                                prop.className "arrow-button"
                                 prop.text " >> "
                                 prop.disabled (
                                     (model.CurrentResultIndex = c.Length - 1)
