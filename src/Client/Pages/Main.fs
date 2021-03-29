@@ -9,6 +9,7 @@ open Fable
 open Shared
 
 type Model = NA
+open Feliz.UseMediaQuery
 
 let html : string =
     importDefault ("!!raw-loader!./_Pages/Main.html")
@@ -100,6 +101,7 @@ let initCanvas () =
 [<ReactComponent>]
 let TasksView dispatch (model: Model) =
     React.useEffectOnce (initCanvas)
+    let matches = React.useMediaQuery("(min-width: 1025px)")
     let attachShadowRoot, shadowRoot = Client.Util.useShadowRoot (html)
 
     let howto =
@@ -135,7 +137,6 @@ let TasksView dispatch (model: Model) =
         ]
 
 
-
     Interop.createElement
         "page-main"
         [
@@ -154,7 +155,7 @@ let TasksView dispatch (model: Model) =
                         ]
                         Html.button[
                             prop.text "Back"
-                            prop.onClick(fun _ -> document.querySelector("#help")?scrollIntoView() )
+                            prop.onClick(fun _ -> document.querySelector(if matches then "#help" else "#form")?scrollIntoView() )
                         ]
                     ]
                 ]
@@ -167,6 +168,13 @@ let TasksView dispatch (model: Model) =
                         ]
                         howto
                     ]
+
+                ]
+                Html.div [
+                    prop.id "form"
+                    prop.slot "form"
+                    prop.text "form"
+
 
                 ]
 

@@ -11,3 +11,4 @@ group Client
     Feliz.UseElmish
     Zanaptak.TypedCssClasses
     Thoth.Json
+    Feliz.UseMediaQuery

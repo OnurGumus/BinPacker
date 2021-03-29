@@ -31,6 +31,7 @@ group Client
     nuget Feliz.UseElmish
     nuget Zanaptak.TypedCssClasses
     nuget Thoth.Json
+    nuget Feliz.UseMediaQuery
 
 group Build
     source https://api.nuget.org/v3/index.json

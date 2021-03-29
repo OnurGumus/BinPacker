@@ -35,10 +35,11 @@
     }
 
 
-    #form {
+    ::slotted(#form) {
         background-color: green;
         flex-grow: 1;
         flex-basis: 33%;
+        scroll-snap-align: start;
     }
 
     ::slotted(#canvas-wrapper) {
@@ -82,9 +83,8 @@
                     help
                 </slot>
             </div>
-            <div id="form">
-                form
-            </div>
+            <slot name="form">
+            </slot>
             <slot name="my-canvas">
             </slot>
         </div>
