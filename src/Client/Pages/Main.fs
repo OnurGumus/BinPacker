@@ -145,9 +145,18 @@ let TasksView dispatch (model: Model) =
                     prop.slot "title"
                     prop.text "onur"
                 ]
-                Html.canvas [
-                    prop.id "my-canvas"
+                Html.div[
+                    prop.id "canvas-wrapper"
                     prop.slot "my-canvas"
+                    prop.children[
+                        Html.canvas [
+                            prop.id "my-canvas"
+                        ]
+                        Html.button[
+                            prop.text "Back"
+                            prop.onClick(fun _ -> document.querySelector("#help")?scrollIntoView() )
+                        ]
+                    ]
                 ]
                 Html.div [
                     prop.id "help"
