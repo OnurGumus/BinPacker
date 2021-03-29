@@ -6,11 +6,8 @@ open Fable.React
 open Fable.Validation.Core
 open Shared
 open System
-open Feliz.Bulma
 open Feliz
-open Feliz.Bulma.Bulma
 open Browser.Types
-open Feliz.Bulma.Operators
 open Zanaptak.TypedCssClasses
 open Fable.Core
 open Shared.ClientModel
@@ -386,6 +383,7 @@ module Container =
             let weightCheck = numericCheck t int -1 100000
 
 
+
             {
                 Width = floatCheck "width" formData.Width
                 Height = floatCheck "height" formData.Height
@@ -444,7 +442,7 @@ module Container =
                         | e -> e
                     | other -> failwith other
 
-                Html.div [
+                Html.table [
                     let cols =
                         [
                             "Length"
@@ -453,37 +451,29 @@ module Container =
                             "Max Weight"
                         ]
 
-                    prop.className "table"
 
                     prop.children [
-                        Html.div [
-                            prop.className "tr"
+                        Html.tr [
                             prop.children [
                                 for col in cols do
-                                    Html.div [
-                                        prop.classes [ "td"; "th" ]
+                                    Html.th [
                                         prop.children [
-                                            Bulma.label [
-                                                control.isSmall
-                                                prop.text col
-                                            ]
+                                            Html.label [ prop.text col ]
                                         ]
                                     ]
                             ]
                         ]
-                        Html.div [
-                            prop.className "tr"
+                        Html.tr [
                             prop.children [
                                 for col in cols do
-                                    control.div [
-                                        prop.className "td"
+                                    Html.td [
                                         prop.children [
-                                            input.number [
+                                            Html.input [
+                                                prop.type'.number
                                                 prop.readOnly props.Disabled
                                                 prop.maxLength 4
                                                 prop.max 2000
                                                 prop.defaultValue (defaultValue col)
-                                                input.isSmall
                                                 prop.placeholder col
                                                 prop.onChange (fun (e: Event) -> dispatch' col e.Value)
                                             ]
@@ -526,6 +516,7 @@ module Row =
             let floatCheck = numericCheck t int64 0L 2000L
             let intCheck = numericCheck t int 0 2000
             let weightCheck = numericCheck t int -1 100000
+
 
 
             {
@@ -576,8 +567,7 @@ module Row =
                     React.useElmish (init props.FormData, update props.RowUpdated, [||])
 
                 let removeButton =
-                    Bulma.button.button [
-                        button.isSmall ++ color.isDanger
+                    Html.button [
                         prop.disabled props.Disabled
                         prop.classes [
                             FA.fa
@@ -589,8 +579,7 @@ module Row =
                     ]
 
                 let addButton =
-                    Bulma.button.button [
-                        button.isSmall ++ color.isPrimary
+                    Html.button [
                         prop.disabled props.Disabled
 
                         prop.classes [
@@ -627,51 +616,49 @@ module Row =
                     | "Length" -> model.FormData.Length.ToString()
                     | other -> failwith other
 
-                Html.div [
-                    prop.className "tr"
+                Html.tr [
                     prop.children [
                         for i, col in cols |> List.indexed do
-                            control.div [
+                            Html.td [
                                 prop.className "td"
                                 prop.children [
                                     if i < cols.Length - 2 then
                                         match col with
                                         | "⬆⬆" ->
-                                            input.checkbox [
-                                                input.isSmall
+                                            Html.input [
+                                                prop.type'.checkbox
                                                 prop.defaultChecked model.FormData.KeepTop
                                                 prop.readOnly props.Disabled
                                                 prop.onCheckedChange (fun e -> dispatch' "⬆⬆" (e.ToString()))
                                             ]
                                         | "⬇⬇" ->
-                                            input.checkbox [
-                                                input.isSmall
+                                            Html.input [
+                                                prop.type'.checkbox
                                                 prop.defaultChecked model.FormData.KeepBottom
                                                 prop.readOnly props.Disabled
                                                 prop.onCheckedChange (fun e -> dispatch' "⬇⬇" (e.ToString()))
                                             ]
                                         | "Stack" ->
-                                            input.checkbox [
-                                                input.isSmall
+                                            Html.input [
+                                                prop.type'.checkbox
                                                 prop.readOnly props.Disabled
                                                 prop.defaultChecked model.FormData.Stackable
                                                 prop.onCheckedChange (fun e -> dispatch' "Stack" (e.ToString()))
                                             ]
                                         | "Color" ->
-                                            input.text [
-                                                input.isSmall
+                                            Html.input [
                                                 prop.readOnly true
                                                 prop.style [
                                                     style.backgroundColor model.FormData.Color
                                                 ]
                                             ]
                                         | _ ->
-                                            input.number [
+                                            Html.input [
+                                                prop.type'.number
                                                 prop.maxLength 5
                                                 prop.readOnly props.Disabled
                                                 prop.defaultValue (defaultt col)
                                                 prop.max 2000
-                                                input.isSmall
                                                 prop.placeholder col
                                                 prop.onChange (fun (e: Browser.Types.Event) -> dispatch' col e.Value)
                                             ]
@@ -813,43 +800,10 @@ let viewC =
 
             let content =
 
-                field.div [
-                    Html.b "How to use:"
-                    Html.ul [
-                        spacing.ml1 ++ size.isSize7
-                        prop.style [ style.listStyleType.disc ]
+                Html.div [
 
-                        let items =
-                            [
-                                "Enter container and item dimensions between 1 and 2000, no decimals."
-                                "Weight range is between 0 and 100,000."
-                                "Add as many items as you want."
-                                "If the item is not stackable (no other item is on top of this) uncheck \"Stack\" for that item."
-                                "If the item must keep its upright then check \"⬆⬆\" for that item."
-                                "If the item must be at the bottom (e.g, heavy items) then check \"⬇⬇\" for that item."
-                                "All dimensions are unitless."
-                                "Select the calculation mode depending on items to be at minimum height or pushed to the edge."
-                                "Select container mode to multi container if you want to see how many container it takes to fit"
-                                "Click calculate and wait up to 100 sec."
-                                "Bin packer will try to fit the items and minimize the placement."
-                                "Gravity is ignored."
-                                "Review the result in 3D then you may share it via share the result button and copy the url."
-                                "You may visually remove some boxes by using h-filter and v-filter controls on 3D."
-
-
-                            ]
-
-                        prop.children [
-                            for item in items do
-                                Html.li [ prop.text item ]
-                        ]
-
-
-                    ]
-                    br []
-                    Bulma.label [
+                    Html.label [
                         prop.text "Enter CONTAINER dimensions:"
-                        control.isSmall
                     ]
                     if model.Loading then
                         Html.none
@@ -882,25 +836,18 @@ let viewC =
                                         }
                                 }
 
-                    Bulma.label [
+                    Html.label [
                         prop.text "Enter ITEM dimensions:"
-                        control.isSmall
                     ]
-                    Html.div [
-                        prop.className "table"
+                    Html.table [
                         prop.disabled isCalculating
                         prop.children [
-                            Html.div [
-                                prop.className "tr"
+                            Html.tr [
                                 prop.children [
                                     for col in cols do
-                                        Html.div [
-                                            prop.classes [ "td"; "th" ]
+                                        Html.td [
                                             prop.children [
-                                                Bulma.label [
-                                                    control.isSmall
-                                                    prop.text col
-                                                ]
+                                                Html.label [ prop.text col ]
                                             ]
                                         ]
                                 ]
@@ -911,8 +858,8 @@ let viewC =
 
                     let line (title: string) (v: Int64 option) =
                         React.fragment [
-                            Bulma.label title
-                            control.div [
+                            Html.label [ prop.text title ]
+                            Html.div [
                                 Html.output [
                                     if title.StartsWith "Chargable" && v.IsSome then
                                         prop.className "output"
@@ -1020,9 +967,10 @@ let viewC =
                     Html.br []
 
                     Html.div [
-                        helpers.isInlineBlock
                         prop.children [
-                            Bulma.label "Calculation mode:"
+                            Html.label [
+                                prop.text "Calculation mode:"
+                            ]
                             Html.select [
                                 prop.value (
                                     match model.CalculationMode with
@@ -1042,9 +990,10 @@ let viewC =
                     ]
 
                     Html.div [
-                        spacing.ml4 ++ helpers.isInlineBlock
                         prop.children [
-                            Bulma.label "Container mode:"
+                            Html.label [
+                                prop.text "Container mode:"
+                            ]
                             Html.select [
                                 prop.value (
                                     match model.ContainerMode with
@@ -1065,7 +1014,7 @@ let viewC =
                     Html.br []
                     Html.br []
 
-                    Bulma.button.button [
+                    Html.button [
                         prop.disabled (
                             isinvalid
                             || isCalculating
@@ -1073,7 +1022,6 @@ let viewC =
                             || volumeExceeds
                             || itemExceeds
                         )
-                        color.isPrimary
                         prop.id "calculate-button"
                         prop.text (
                             if isCalculating then
@@ -1103,7 +1051,6 @@ let viewC =
                     ]
 
                     Html.span [
-                        spacing.my1
                         prop.children [
                             match model.Calculation with
                             | Calculated c ->
@@ -1113,26 +1060,27 @@ let viewC =
                                 let label =
                                     match itemsUnput, itemsPut with
                                     | [], _ ->
-                                        Bulma.label [
+                                        Html.label [
+
                                             prop.style [ style.color.green ]
                                             prop.text "All items put successfully!"
                                         ]
                                     | _, [] ->
-                                        Bulma.label [
-                                            color.isDanger
+                                        Html.label [
                                             prop.text "Unable to fit all items!"
                                         ]
                                     | items, _ ->
                                         let g = items |> List.groupBy (fun x -> x.Tag)
 
                                         React.fragment [
-                                            Bulma.label "Could not fit the following items:"
+                                            Html.label [
+                                                prop.text "Could not fit the following items:"
+                                            ]
                                             Html.ul [
                                                 for key, values in g do
                                                     yield
                                                         Html.li [
                                                             Html.span [
-                                                                helpers.isInlineBlock ++ color.hasTextWhite
                                                                 prop.text " x "
                                                                 prop.style [
                                                                     style.backgroundColor key
@@ -1151,8 +1099,7 @@ let viewC =
 
                                 React.fragment [
                                     label
-                                    Bulma.button.button [
-                                        color.isInfo
+                                    Html.button [
                                         prop.text (
                                             if model.UrlShown then
                                                 "Now copy the url and share it"
@@ -1173,22 +1120,19 @@ let viewC =
                     | Calculated c ->
                         Html.div [
                             Html.br []
-                            Bulma.button.button [
-                                color.isDanger
+                            Html.button [
                                 prop.text " << "
                                 prop.disabled ((model.CurrentResultIndex = 0) || isCalculating)
                                 prop.onClick (fun _ -> dispatch (CurrentResultChanged(model.CurrentResultIndex - 1)))
                             ]
                             let containers =
                                 Html.span [
-                                    text.hasTextWeightSemibold
                                     prop.textf "Showing container: %i/%i" (model.CurrentResultIndex + 1) (c.Length)
                                 ]
 
                             match model.Calculation with
                             | Calculated c ->
                                 Html.span [
-                                    spacing.mx2
                                     prop.style [
                                         style.display.inlineFlex
                                         style.flexDirection.column
@@ -1197,7 +1141,6 @@ let viewC =
 
                                         containers
                                         Html.span [
-                                            text.hasTextWeightSemibold
                                             if (c.[model.CurrentResultIndex].ItemsPut).Length > 0 then
                                                 prop.textf
                                                     "Max item L:%i, H:%i"
@@ -1212,8 +1155,7 @@ let viewC =
                                 ]
                             | _ -> containers
 
-                            Bulma.button.button [
-                                color.isDanger
+                            Html.button [
                                 prop.text " >> "
                                 prop.disabled (
                                     (model.CurrentResultIndex = c.Length - 1)
@@ -1226,36 +1168,16 @@ let viewC =
                         ]
                     | _ -> Html.none
 
-
                 ]
 
-            React.fragment [
-                Html.div[
-                    prop.text "title"
-                ]
-                Bulma.container [
-                    Bulma.columns [
-                        Bulma.column [
-                            Bulma.panel [
-                                spacing.mt1
-                                prop.children [
-                                    Bulma.panelHeading [
-                                        Html.h1 [
-                                            prop.style [ style.color.white ]
-                                            prop.text "3D Bin Packer"
-                                        ]
-                                    ]
-                                    Bulma.panelBlock.div [ content ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]
-            ])
+            content)
 
 let view model dispatch =
-    Client.Pages.Main.TasksView dispatch Unchecked.defaultof<_>
-   // viewC {| model = model; dispatch = dispatch |}
+    let comp =
+        viewC {| model = model; dispatch = dispatch |}
+
+    Client.Pages.Main.MainView comp dispatch Unchecked.defaultof<_>
+
 #if DEBUG
 open Elmish.Debug
 open Elmish.HMR

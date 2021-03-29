@@ -99,7 +99,7 @@ let initCanvas () =
     CanvasRenderer.renderResult container boxes true
 
 [<ReactComponent>]
-let TasksView dispatch (model: Model) =
+let MainView comp dispatch (model: Model) =
     React.useEffectOnce (initCanvas)
     let matches = React.useMediaQuery("(min-width: 1025px)")
     let attachShadowRoot, shadowRoot = Client.Util.useShadowRoot (html)
@@ -183,7 +183,9 @@ let TasksView dispatch (model: Model) =
                     prop.children[
                         Html.div[
                             prop.id "form"
-                            prop.text "form"
+                            prop.children[
+                                comp
+                            ]
                         ]
                         Html.div[
                             prop.className "button-panel"
