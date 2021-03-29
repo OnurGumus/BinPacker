@@ -49,11 +49,7 @@
         scroll-snap-align: start;
     }
 
-    #help-wrapper {
-        padding: 1em;
-        display: flex;
-        justify-content: center;
-        place-content: center;
+    ::slotted(#help-wrapper) {
         flex-grow: 1;
         flex-basis: 33%;
         scroll-snap-align: start;
@@ -78,11 +74,8 @@
     </slot>
     <div id="content-wrapper">
         <div id="content">
-            <div id="help-wrapper">
-                <slot name="help">
-                    help
-                </slot>
-            </div>
+            <slot name="help">
+            </slot>
             <slot name="form">
             </slot>
             <slot name="my-canvas">

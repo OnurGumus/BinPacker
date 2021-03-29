@@ -151,18 +151,30 @@ let TasksView dispatch (model: Model) =
                         ]
                         Html.button[
                             prop.text "Back"
-                            prop.onClick(fun _ -> document.querySelector(if matches then "#help" else "#form")?scrollIntoView() )
+                            prop.onClick(fun _ -> document.querySelector("#form")?scrollIntoView() )
+                            prop.style [ if matches then style.visibility.collapse ]
                         ]
                     ]
                 ]
-                Html.div [
-                    prop.id "help"
+                Html.div[
+                    prop.id "help-wrapper"
                     prop.slot "help"
-                    prop.children [
-                        Html.h1[
-                            prop.text "How to use"
+                    prop.children[
+                        Html.div [
+                            prop.id "help"
+                            prop.children [
+                                Html.h1[
+                                    prop.text "How to use"
+                                ]
+                                howto
+                            ]
+
                         ]
-                        howto
+                        Html.button[
+                            prop.text "Next"
+                            prop.onClick(fun _ -> document.querySelector("#form")?scrollIntoView() )
+                            prop.style [ if matches then style.visibility.collapse ]
+                        ]
                     ]
                 ]
                 Html.div [
