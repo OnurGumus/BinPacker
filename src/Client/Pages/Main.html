@@ -2,39 +2,62 @@
     canvas {
         background-color: blue;
     }
-    #content-wrapper{
+
+    #content-wrapper {
         width: 100vw;
+        flex-grow: 1;
         overflow-x: scroll;
-        -ms-overflow-style: none;  /* Internet Explorer 10+ */
-        scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none;
+        /* Internet Explorer 10+ */
+        scrollbar-width: none;
+        /* Firefox */
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
     }
+
     #content-wrapper::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
+        display: none;
+        /* Safari and Chrome */
+    }
+    #content >*{
+        scroll-snap-align: start;
     }
 
     #content {
         display: flex;
-        width:150vw;
+        width: 150vw;
+        scroll-behavior: smooth;
+        height: 100%;
     }
+
     ::slotted(#help) {
         background-color: red;
         flex-grow: 1;
-        flex-basis:33%;
+        flex-basis: 33%;
+        scroll-snap-align: start;
     }
+
     #form {
         background-color: green;
         flex-grow: 1;
-        flex-basis:33%;
+        flex-basis: 33%;
     }
 
     ::slotted(canvas) {
-        flex-basis:33%;
+        flex-basis: 33%;
         flex-grow: 1;
-        height: 500px !important;
+        height: 100% !important;
+        scroll-snap-align: start;
     }
-
+    #main{
+        display: flex;
+        flex-direction: column;
+        background-color: yellow;
+        height: 100vh;
+    }
 </style>
-<section>
+<section id="main">
     <slot name="title">
         <div>test-title</div>
     </slot>
