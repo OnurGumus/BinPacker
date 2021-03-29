@@ -838,20 +838,25 @@ let viewC =
                     Html.label [
                         prop.text "Enter ITEM dimensions:"
                     ]
-                    Html.table [
-                        prop.disabled isCalculating
-                        prop.children [
-                            Html.tr [
+                    Html.div[
+                        prop.id "item-table-wrapper"
+                        prop.children[
+                            Html.table [
+                                prop.disabled isCalculating
                                 prop.children [
-                                    for col in cols do
-                                        Html.th [
-                                            prop.children [
-                                                Html.label [ prop.text col ]
-                                            ]
+                                    Html.tr [
+                                        prop.children [
+                                            for col in cols do
+                                                Html.th [
+                                                    prop.children [
+                                                        Html.label [ prop.text col ]
+                                                    ]
+                                                ]
                                         ]
+                                    ]
+                                    rowItems |> ofList
                                 ]
                             ]
-                            rowItems |> ofList
                         ]
                     ]
 

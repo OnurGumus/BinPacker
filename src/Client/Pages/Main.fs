@@ -150,7 +150,8 @@ let MainView comp dispatch (model: Model) =
                             prop.id "my-canvas"
                         ]
                         Html.button[
-                            prop.text "Back"
+                            prop.text "<< Back"
+                            prop.className "nav-button"
                             prop.onClick(fun _ -> document.querySelector("#form")?scrollIntoView() )
                             prop.style [ if matches then style.visibility.collapse ]
                         ]
@@ -170,7 +171,8 @@ let MainView comp dispatch (model: Model) =
                             ]
                         ]
                         Html.button[
-                            prop.text "Next"
+                            prop.text "Next >>"
+                            prop.className "nav-button"
                             prop.onClick(fun _ -> document.querySelector("#form")?scrollIntoView() )
                             prop.style [ if matches then style.visibility.collapse ]
                         ]
@@ -190,11 +192,13 @@ let MainView comp dispatch (model: Model) =
                             prop.className "button-panel"
                             prop.children[
                                 Html.button[
-                                    prop.text "Help"
+                                    prop.className "nav-button"
+                                    prop.text "<< Help"
                                     prop.onClick(fun _ -> document.querySelector("#help")?scrollIntoView() )
                                 ]
                                 Html.button[
-                                    prop.text "3D Canvas"
+                                    prop.className "nav-button"
+                                    prop.text "3D Canvas >>"
                                     prop.onClick(fun _ -> document.querySelector("#my-canvas")?scrollIntoView() )
                                 ]
                             ]
