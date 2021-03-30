@@ -9,7 +9,9 @@ open Shared
 
 let mutable demoMode2 = false
 
-let gui = Dat.exports.GUI.Create()
+let gui = Dat.exports.GUI.Create(!!{|autoPlace = false|})
+
+
 
 let THREE = Three.exports
 let scene = THREE.Scene.Create()
@@ -188,6 +190,7 @@ let init () =
 
     //let track = TrackballControls.exports
     let initTrackballControls (camera, (renderer: Three.Renderer)) =
+        document.querySelector("#canvas-wrapper").insertBefore(gui.domElement, document.querySelector("canvas")) |> ignore
         let trackballControls =
             TrackballControls.TrackballControls.Create(camera, renderer.domElement)
 

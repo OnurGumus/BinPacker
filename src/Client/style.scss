@@ -33,6 +33,7 @@ page-main { /* -- Pages -- */
         display: flex;
         flex-direction: column;
         border: 1px solid black;
+        justify-content: space-around;
     }
     #form-wrapper {
         display: flex;
@@ -59,7 +60,13 @@ page-main { /* -- Pages -- */
         flex-grow: 1;
     }
 }
-
+#canvas-wrapper{
+    .dg.main{
+        margin: 0 auto;
+        position: relative;
+        top:3em;
+    }
+}
 #help-wrapper{
     li{
         font-size: 0.8em;
