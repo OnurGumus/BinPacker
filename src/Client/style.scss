@@ -27,18 +27,28 @@ h1 {
     border-radius: 0.1em;
 }
 
-page-main { /* -- Pages -- */
+page-main {
+    /* -- Pages -- */
 
     #canvas-wrapper {
         display: flex;
         flex-direction: column;
-        border: 1px solid black;
         justify-content: space-around;
+        @media only screen and (min-width: 1025px) {
+            border-left: 1px solid black;
+            padding-top:1em;
+        }
+    }
+    canvas{
+        height: 80vh !important;
     }
     #form-wrapper {
         display: flex;
         flex-direction: column;
         overflow-y: auto;
+        @media only screen and (min-width: 1025px) {
+            padding-top:2em;
+        }
     }
 
     #help-wrapper {
@@ -46,6 +56,9 @@ page-main { /* -- Pages -- */
         justify-content: center;
         place-content: center;
         flex-direction: column;
+        @media only screen and (min-width: 1025px) {
+            padding-top:2em;
+        }
     }
 
     #help {
@@ -54,35 +67,43 @@ page-main { /* -- Pages -- */
     #form {
         flex-grow: 1;
     }
+    #title {
+        height: 3em;
+        background-color: red;
+    }
     #my-canvas {
         width: 100% !important;
-        flex-basis: 90%;
+        flex-basis: 50%;
         flex-grow: 1;
     }
 }
-#canvas-wrapper{
-    .dg.main{
+#canvas-wrapper {
+    .dg.main {
         margin: 0 auto;
         position: relative;
-        top:3em;
+        top: 5em;
     }
 }
-#help-wrapper{
-    li{
+#help-wrapper {
+    li {
         font-size: 0.8em;
-        margin-bottom: 1em;
+        margin-bottom: 0.6em;
     }
     @media only screen and (min-width: 600px) {
         padding: 1em;
-        li{
+        li {
             font-size: 0.9em;
+            margin-bottom: 1em;
         }
     }
 }
 #form-wrapper {
-
-    input[type="checkbox"]{
-        margin:0;
+    .detail-label{
+        margin: 0.1em 0;
+        display: block;
+    }
+    input[type="checkbox"] {
+        margin: 0;
     }
     th {
         font-weight: unset;
@@ -167,14 +188,11 @@ page-main { /* -- Pages -- */
         border-color: transparent;
         box-shadow: none;
         color: white;
-        justify-content: center;
         padding: 1em;
-        text-align: center;
         white-space: nowrap;
         display: block;
         margin: 1em 0;
-        text-align: center;
-        margin: 0 auto;
+        width:33%;
     }
     .share-button {
         background-color: #3298dc;
@@ -187,6 +205,7 @@ page-main { /* -- Pages -- */
         white-space: nowrap;
         display: block;
         margin: 1em 0;
+        width:33%;
     }
 
     .arrow-button {
@@ -265,6 +284,4 @@ page-main { /* -- Pages -- */
 
 .nav-button {
     margin: 0 auto;
-    position: relative;
-    bottom: 3em;
 }

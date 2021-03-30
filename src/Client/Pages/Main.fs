@@ -119,11 +119,12 @@ let MainView comp dispatch (model: Model) =
                     "All dimensions are unitless."
                     "Select the calculation mode depending on items to be at minimum height or pushed to the edge."
                     "Select container mode to multi container if you want to see how many container it takes to fit"
-                    "Click calculate and wait up to 100 sec."
+                    "Click calculate and wait up to 100 sec. And then click 3D Canvas button at the bottom to see the visuals."
                     "Bin packer will try to fit the items and minimize the placement."
                     "Gravity is ignored."
                     "Review the result in 3D then you may share it via share the result button and copy the url."
                     "You may visually remove some boxes by using h-filter and v-filter controls on 3D."
+                    "For your questions and problems send a mail to onur@outlook.com.tr or tweet to @onurgumusdev."
                 ]
 
             prop.children [
@@ -140,7 +141,12 @@ let MainView comp dispatch (model: Model) =
             prop.children [
                 Html.div [
                     prop.slot "title"
-                    prop.text "onur"
+                    prop.children[
+                       Html.div[
+                           prop.id "title"
+                           prop.text "title"
+                       ]
+                    ]
                 ]
                 Html.div[
                     prop.id "canvas-wrapper"
@@ -150,7 +156,7 @@ let MainView comp dispatch (model: Model) =
                             prop.id "my-canvas"
                         ]
                         Html.button[
-                            prop.text "<< Back"
+                            prop.text "<< See parameters"
                             prop.className "nav-button"
                             prop.onClick(fun _ -> document.querySelector("#form")?scrollIntoView() )
                             prop.style [ if matches then style.visibility.collapse ]

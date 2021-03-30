@@ -12,6 +12,9 @@ open Zanaptak.TypedCssClasses
 open Fable.Core
 open Shared.ClientModel
 open Browser.Dom
+open Fable.Core
+open Browser.Dom
+open Fable.Core.JsInterop
 
 type FA = CssClasses<"../../node_modules/@fortawesome/fontawesome-free/css/all.css", Naming.Underscores>
 open Thoth.Json
@@ -200,7 +203,16 @@ let update (msg: Msg) model =
         match msg with
         | ModelLoaded model ->
             match model.Calculation with
-            | Calculated c -> { model with Loading = false }, Cmd.ofMsg (ResultLoaded c)
+            | Calculated c ->
+                console.log("calc")
+                let element =
+                        document.querySelector ("#canvas-wrapper")
+
+                element?scrollIntoView ({|
+                                                behavior = "smooth"
+                                                block = "start"
+                                            |})
+                { model with Loading = false }, Cmd.ofMsg (ResultLoaded c)
             | _ -> failwith "should not happen"
 
         | ModelSaved guid ->
@@ -209,6 +221,7 @@ let update (msg: Msg) model =
 
         | ShareRequested -> model, saveCmd model
         | CurrentResultChanged i ->
+
             match model.Calculation with
             | Calculated c -> { model with CurrentResultIndex = i }, Cmd.ofMsg (ResultLoaded c)
             | _ -> failwith "should not happen"
@@ -246,7 +259,10 @@ let update (msg: Msg) model =
                     CanvasRenderer.renderResult
                         c.[model.CurrentResultIndex].Container
                         c.[model.CurrentResultIndex].ItemsPut
-                        false)
+                        false
+
+                        )
+
 
         | ContainerUpdated c -> { model with ContainerItem = c }, Cmd.none
         | CalculationModeChanged "Minimize Length" ->
@@ -711,7 +727,7 @@ let viewC =
                     results
                     |> List.exists (fun r -> r.ItemsPut.Length > 0) ->
                     let element =
-                        document.querySelector ("#calculate-button")
+                        document.querySelector ("#canvas-wrapper")
 
                     element?scrollIntoView ({|
                                                 behavior = "smooth"
@@ -722,6 +738,12 @@ let viewC =
                 { new IDisposable with
                     member this.Dispose() = ()
                 }
+
+            // React.useEffect((fun _ ->
+            //     match model.Calculation with
+            //     | Calculated _ ->
+            //         document.querySelector("#canvas-wrapper")?scrollIntoView();
+            //     |_  -> ()      ), [| (model.Calculation)|> unbox<_> |])
 
             React.useEffect (scollDown, [| box isCalculating |])
 
@@ -857,7 +879,7 @@ let viewC =
 
                     let line (title: string) (v: Int64 option) =
                         React.fragment [
-                            Html.label [ prop.text title ]
+                            Html.label [ prop.text title;  prop.className "detail-label"]
                             Html.div [
                                 Html.output [
                                     if title.StartsWith "Chargable" && v.IsSome then
@@ -1014,8 +1036,6 @@ let viewC =
                         ]
                     ]
 
-                    Html.br []
-                    Html.br []
 
                     Html.button [
                         prop.disabled (
@@ -1066,18 +1086,18 @@ let viewC =
                                         Html.label [
 
                                             prop.style [ style.color.green ]
-                                            prop.text "All items put successfully!"
+                                            prop.text "All items put successfully! (See 3D Canvas)"
                                         ]
                                     | _, [] ->
                                         Html.label [
-                                            prop.text "Unable to fit all items!"
+                                            prop.text "Unable to fit all items! (See 3D Canvas)"
                                         ]
                                     | items, _ ->
                                         let g = items |> List.groupBy (fun x -> x.Tag)
 
                                         React.fragment [
                                             Html.label [
-                                                prop.text "Could not fit the following items:"
+                                                prop.text "Could not fit the following items (See 3D canvas):"
                                             ]
                                             Html.ul [
                                                 for key, values in g do
@@ -1106,7 +1126,7 @@ let viewC =
                                         prop.className "share-button"
                                         prop.text (
                                             if model.UrlShown then
-                                                "Now copy the url and share it"
+                                                "Now copy the url from address bar and share it"
                                             else
                                                 "Share the result"
                                         )
