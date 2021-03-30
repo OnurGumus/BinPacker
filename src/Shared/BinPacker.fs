@@ -1654,7 +1654,10 @@ let runPerContainer
         let res =
             resList |> List.maxBy (fun x -> x.PutVolume)
 
-        logger.Log "Result {@res}" [| res |]
+        logger.Log "Result Summary {@res}"
+            [| {|CalculationMode = calculationMode; ContainerMode = containerMode; PutItems = res.ItemsPut.Length; ItemsUnput = res.ItemsUnput.Length|} |]
+
+        logger.Log "Result {@res}" [| { res with EmptyContainers = [] } |]
 
         let convertContainerToItemPut (container: Container): ItemPut =
             {
