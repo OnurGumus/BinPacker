@@ -144,7 +144,7 @@ let MainView comp dispatch (model: Model) =
                     prop.children[
                        Html.div[
                            prop.id "title"
-                           prop.text "title"
+                           prop.text "Bindrake - Your bin packing magician!"
                        ]
                     ]
                 ]
