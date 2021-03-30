@@ -28,6 +28,10 @@ h1 {
 }
 
 page-main {
+    .inner-wrapper{
+        max-height: 80vh;
+        overflow-y: auto;
+    }
     /* -- Pages -- */
 
     #canvas-wrapper {
@@ -53,8 +57,6 @@ page-main {
 
     #help-wrapper {
         display: flex;
-        justify-content: center;
-        place-content: center;
         flex-direction: column;
         @media only screen and (min-width: 1025px) {
             padding-top:2em;
@@ -196,7 +198,7 @@ page-main {
         white-space: nowrap;
         display: block;
         margin: 1em 0;
-        width:33%;
+        width:40%;
     }
     .share-button {
         background-color: #3298dc;
@@ -209,7 +211,7 @@ page-main {
         white-space: nowrap;
         display: block;
         margin: 1em 0;
-        width:33%;
+        width:40%;
     }
 
     .arrow-button {

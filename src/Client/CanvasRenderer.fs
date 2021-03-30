@@ -190,7 +190,7 @@ let init () =
 
     //let track = TrackballControls.exports
     let initTrackballControls (camera, (renderer: Three.Renderer)) =
-        document.querySelector("#canvas-wrapper").insertBefore(gui.domElement, document.querySelector("canvas")) |> ignore
+        document.querySelector("#canvas-wrapper").insertBefore(gui.domElement, document.querySelector("#canvas-inner-wrapper")) |> ignore
         let trackballControls =
             TrackballControls.TrackballControls.Create(camera, renderer.domElement)
 

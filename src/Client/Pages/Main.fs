@@ -152,8 +152,14 @@ let MainView comp dispatch (model: Model) =
                     prop.id "canvas-wrapper"
                     prop.slot "my-canvas"
                     prop.children[
-                        Html.canvas [
-                            prop.id "my-canvas"
+                        Html.div[
+                            prop.id "canvas-inner-wrapper"
+                            prop.className "inner-wrapper"
+                            prop.children[
+                                Html.canvas [
+                                    prop.id "my-canvas"
+                                ]
+                            ]
                         ]
                         Html.button[
                             prop.text "<< See parameters"
@@ -167,13 +173,18 @@ let MainView comp dispatch (model: Model) =
                     prop.id "help-wrapper"
                     prop.slot "help"
                     prop.children[
-                        Html.div [
-                            prop.id "help"
-                            prop.children [
-                                Html.h1[
-                                    prop.text "How to use"
+                        Html.div[
+                            prop.className "inner-wrapper"
+                            prop.children[
+                                Html.div [
+                                    prop.id "help"
+                                    prop.children [
+                                        Html.h1[
+                                            prop.text "How to use"
+                                        ]
+                                        howto
+                                    ]
                                 ]
-                                howto
                             ]
                         ]
                         Html.button[
@@ -190,6 +201,7 @@ let MainView comp dispatch (model: Model) =
                     prop.children[
                         Html.div[
                             prop.id "form"
+                            prop.className "inner-wrapper"
                             prop.children[
                                 comp
                             ]
