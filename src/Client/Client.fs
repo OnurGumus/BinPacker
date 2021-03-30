@@ -760,7 +760,7 @@ let viewC =
                 }
 
             React.useEffect (subscribeToTimer)
-            let colors = ["red"; "green"; "blue"; "yellow"; "white"; "purple";"cyan";"orange"; "pink"; "white"]
+            let colors = ["gray"; "green"; "blue"; "yellow"; "white"; "purple";"cyan";"orange"; "pink"; "white"]
             let rowItems =
                 [
                     for i, (row, key) in model.RowItems |> List.indexed do
