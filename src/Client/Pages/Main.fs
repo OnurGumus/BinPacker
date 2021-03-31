@@ -8,7 +8,17 @@ open Browser.Types
 open Fable
 open Shared
 
-type Model = NA
+type Model = { Form: ClientModel.Model}
+
+
+let init () =
+    let model, cmd = Client.Form.init()
+    { Form = model}, cmd
+
+let update msg (model:Model) =
+    let model, cmd = Client.Form.update msg model.Form
+    { Form = model}, cmd
+
 open Feliz.UseMediaQuery
 
 let html : string =
@@ -101,7 +111,7 @@ let initCanvas () =
     CanvasRenderer.renderResult container boxes true
 
 [<ReactComponent>]
-let MainView comp dispatch (model: Model) =
+let MainView (model: Model) dispatch  =
     React.useEffectOnce (initCanvas)
     let matches = React.useMediaQuery("(min-width: 1025px)")
     let attachShadowRoot, shadowRoot = Client.Util.useShadowRoot (html)
@@ -137,6 +147,7 @@ let MainView comp dispatch (model: Model) =
         ]
 
 
+    let formView = Client.Form.view model.Form dispatch
     Interop.createElement
         "page-main"
         [
@@ -206,7 +217,7 @@ let MainView comp dispatch (model: Model) =
                             prop.id "form"
                             prop.className "inner-wrapper"
                             prop.children[
-                                comp
+                                formView
                             ]
                         ]
                         Html.div[
