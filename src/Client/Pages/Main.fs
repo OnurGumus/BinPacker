@@ -7,17 +7,22 @@ open System
 open Browser.Types
 open Fable
 open Shared
+open Client
+open Elmish
 
-type Model = { Form: ClientModel.Model}
+type Model = { Form: Form.Model}
 
+type Msg = FormMsg of Form.Msg
 
 let init () =
-    let model, cmd = Client.Form.init()
-    { Form = model}, cmd
+    let model, cmd = Form.init()
+    { Form = model}, Cmd.map FormMsg cmd
 
 let update msg (model:Model) =
-    let model, cmd = Client.Form.update msg model.Form
-    { Form = model}, cmd
+    match msg with
+    | FormMsg msg ->
+        let model, cmd = Form.update msg model.Form
+        { Form = model}, Cmd.map FormMsg cmd
 
 open Feliz.UseMediaQuery
 
@@ -147,7 +152,7 @@ let MainView (model: Model) dispatch  =
         ]
 
 
-    let formView = Client.Form.view model.Form dispatch
+    let formView = Client.Form.view model.Form (FormMsg >> dispatch)
     Interop.createElement
         "page-main"
         [

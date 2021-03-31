@@ -27,6 +27,7 @@ let fromBase64String (s: string) : string = jsNative
 
 let r = Random()
 
+type Model = { SharedModel: ClientModel.Model }
 type Msg =
     | ResultLoaded of CalcResult list
     | ModelSaved of Guid
@@ -39,7 +40,7 @@ type Msg =
     | ContainerModeChanged of string
     | CurrentResultChanged of int
     | ShareRequested
-    | ModelLoaded of Model
+    | ModelLoaded of ClientModel.Model
 
 module Server =
     let logger : Shared.ILogger =
@@ -135,20 +136,20 @@ let init () =
             console.log e
             Cmd.none, false
 
-
-    {
-        Calculation = NotCalculated
-        Container = None
-        ContainerItem = None
-        RowItems = [ newRowItem () ]
-        TotalVolume = None
-        CalculationMode = CalculationMode.MinimizeLength
-        ContainerMode = ContainerMode.SingleContainer
-        CurrentResultIndex = 0
-        UrlShown = false
-        Loading = loading
-    },
-    cmd
+    let sharedModel =
+        {
+            Calculation = NotCalculated
+            Container = None
+            ContainerItem = None
+            RowItems = [ newRowItem () ]
+            TotalVolume = None
+            CalculationMode = CalculationMode.MinimizeLength
+            ContainerMode = ContainerMode.SingleContainer
+            CurrentResultIndex = 0
+            UrlShown = false
+            Loading = loading
+        }
+    {SharedModel = sharedModel},cmd
 
 let cols =
     [
@@ -176,7 +177,7 @@ let validateTreshold v =
         |> t.Lt 100_000. "must be less than {max}"
         |> t.End
 
-let convertToItems (model: Model) =
+let convertToItems (model: Shared.ClientModel.Model) =
     [
         for rowItem, key in model.RowItems do
             let r = rowItem.Value
@@ -201,6 +202,7 @@ let convertToItems (model: Model) =
     ]
 
 let update (msg: Msg) model =
+    let model = model.SharedModel
     let model, cmd =
         match msg with
         | ModelLoaded model ->
@@ -329,7 +331,7 @@ let update (msg: Msg) model =
             Some vol
         | _ -> None
 
-    { model with TotalVolume = totalVolume }, cmd
+    { SharedModel = { model with TotalVolume = totalVolume }}, cmd
 
 type RowFormData =
     {
@@ -726,7 +728,7 @@ let viewC =
     React.functionComponent
         (fun (props: {| model: Model
                         dispatch: Msg -> unit |}) ->
-            let model = props.model
+            let model = props.model.SharedModel
             let dispatch = props.dispatch
 
             let isCalculating =
