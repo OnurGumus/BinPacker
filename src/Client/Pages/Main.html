@@ -5,14 +5,74 @@
         box-sizing: border-box;
     }
 
+    :host {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    :host>section:first-of-type>h1 {
+        height: 3em;
+        background-color: red;
+        color: white;
+        font-weight: bold;
+        padding: 1em;
+        font-size: 1.1em;
+    }
+
+    :host>section:nth-of-type(2)::-webkit-scrollbar {
+        display: none;
+    }
+
+    :host>section:nth-of-type(2) {
+
+        flex-grow: 1;
+        overflow-x: scroll;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        width: 100vw;
+        height: 585px;;
+    }
+
+    ::slotted(*), .scrolling-body > * {
+        scroll-snap-align: start;
+        flex-grow: 1;
+        flex-basis: 33%;
+    }
+
+    .scrolling-body {
+        width: 300vw;
+        display: flex;
+        height: 100%;
+    }
+
+    @media only screen and (min-width: 1025px) {
+        .scrolling-body {
+            width: 150vw;
+        }
+
+    }
+    #help-wrapper{
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+    #help-content{
+        min-height: 0;
+        flex-grow: 1;
+        overflow-y:auto;
+    }
+    /*
     #content-wrapper {
         width: 100vw;
         flex-grow: 1;
         overflow-x: scroll;
         -ms-overflow-style: none;
-        /* Internet Explorer 10+ */
+        /* Internet Explorer 10+ *
         scrollbar-width: none;
-        /* Firefox */
         -webkit-overflow-scrolling: touch;
         scroll-snap-type: x mandatory;
         scroll-behavior: smooth;
@@ -20,7 +80,6 @@
 
     #content-wrapper::-webkit-scrollbar {
         display: none;
-        /* Safari and Chrome */
     }
 
     #content>* {
@@ -66,20 +125,45 @@
             width: 150vw;
         }
 
-    }
+    } */
 </style>
-<section id="main">
-    <slot name="title">
-        <div>test-title</div>
-    </slot>
-    <div id="content-wrapper">
-        <div id="content">
-            <slot name="help">
-            </slot>
-            <slot name="form">
-            </slot>
-            <slot name="my-canvas">
-            </slot>
+<section>
+    <h1> Bindrake - Your bin packing magician!</h1>
+</section>
+<section>
+    <div class="scrolling-body">
+        <div id="help-wrapper">
+            <div id="help-content">
+            <h2>How to use</h2>
+            <ul style="list-style-type: disc;">
+                <li>Enter container and item dimensions between 1 and 2000, no decimals.</li>
+                <li>Weight range is between 0 and 100,000.</li>
+                <li>Add as many items as you want.</li>
+                <li>If the item is not stackable (no other item is on top of this) uncheck "Stack" for that item.
+                </li>
+                <li>If the item must keep its upright then check "⬆" for that item.</li>
+                <li>If the item must be at the bottom (e.g, heavy items) then check "⬇" for that item.</li>
+                <li>To prevent all kinds of rotation uncheck "🔄"</li>
+                <li>All dimensions are unitless.</li>
+                <li>Select the calculation mode depending on items to be at minimum height or pushed to the edge.
+                </li>
+                <li>Select container mode to multi container if you want to see how many container it takes to fit
+                </li>
+                <li>Click calculate and wait up to 100 sec. And then click 3D Canvas button at the bottom to see the
+                    visuals.</li>
+                <li>Bin packer will try to fit the items and minimize the placement.</li>
+                <li>Gravity is ignored.</li>
+                <li>Review the result in 3D then you may share it via share the result button and copy the url.</li>
+                <li>You may visually remove some boxes by using h-filter and v-filter controls on 3D.</li>
+                <li>For your questions and problems send a mail to onur@outlook.com.tr or tweet to @onurgumusdev.
+                </li>
+            </ul>
+            </div>
+            <button onclick="document.querySelector('#form').scrollIntoView()">Next</button>
         </div>
+        <slot name="form">
+        </slot>
+        <slot name="my-canvas">
+        </slot>
     </div>
 </section>

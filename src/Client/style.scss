@@ -28,13 +28,13 @@ h1 {
 }
 
 page-main {
-    .inner-wrapper{
-        max-height: 70vh;
-        overflow-y: auto;
-    }
-    @media only screen and (min-width: 600px) {
-        max-height: 90vh;
-    }
+    // .inner-wrapper{
+    //     max-height: 70vh;
+    //     overflow-y: auto;
+    // }
+    // @media only screen and (min-width: 600px) {
+    //     max-height: 90vh;
+    // }
     /* -- Pages -- */
 
     #canvas-wrapper {
