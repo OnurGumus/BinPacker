@@ -7,7 +7,7 @@ let random = System.Random()
 
 module Rotate =
     let inline rotateZ (item: Item) =
-        if item.KeepTop then
+        if item.KeepTop || not (item.Rotation) then
             item
         else
 
@@ -21,6 +21,9 @@ module Rotate =
             }
 
     let inline rotateY (item: Item) =
+        if  not (item.Rotation) then
+            item
+        else
         { item with
             Dim =
                 {
@@ -31,7 +34,7 @@ module Rotate =
         }
 
     let inline rotateX (item: Item) =
-        if item.KeepTop then
+        if item.KeepTop || not (item.Rotation) then
             item
         else
             { item with
@@ -1670,6 +1673,7 @@ let runPerContainer
                         Tag = sprintf "rgb(%i,%i,%i)" (random.Next(256)) (random.Next(256)) (random.Next(256))
                         NoTop = false
                         KeepTop = false
+                        Rotation = false
                         KeepBottom = false
                         Weight = 0
                     }

@@ -157,10 +157,11 @@ let cols =
         "Height"
         "Weight"
         "Quant."
-        "⬆⬆"
-        "⬇⬇"
+        "⬆"
+        "⬇"
+        "🔄"
         "Stack"
-        "Color"
+        "🎨"
         ""
         ""
     ]
@@ -195,6 +196,7 @@ let convertToItems (model: Model) =
                         Weight = r.Weight
                         KeepTop = r.KeepTop
                         KeepBottom = r.KeepBottom
+                        Rotation = r.Rotation
                     }
     ]
 
@@ -339,6 +341,7 @@ type RowFormData =
         Color: string
         Stackable: bool
         KeepTop: bool
+        Rotation: bool
         KeepBottom: bool
     }
 
@@ -518,6 +521,7 @@ module Row =
         | WeightChanged of string
         | StackableChanged of bool
         | KeepBottomChanged of bool
+        | RotationChanged of bool
         | TopChanged of bool
         | QuantityChanged of string
 
@@ -544,6 +548,7 @@ module Row =
                 Stackable = formData.Stackable
                 KeepTop = formData.KeepTop
                 KeepBottom = formData.KeepBottom
+                Rotation = formData.Rotation
                 Color = formData.Color
             }: RowItem
 
@@ -560,6 +565,7 @@ module Row =
             | StackableChanged s -> { formData with Stackable = s }
             | KeepBottomChanged s -> { formData with KeepBottom = s }
             | TopChanged s -> { formData with KeepTop = s }
+            | RotationChanged s -> {formData with Rotation = s}
 
         let r = validate formData
 
@@ -613,8 +619,9 @@ module Row =
                     | "Width" -> WidthChanged v
                     | "Weight" -> WeightChanged v
                     | "Quant." -> QuantityChanged v
-                    | "⬆⬆" -> TopChanged(Boolean.Parse v)
-                    | "⬇⬇" -> KeepBottomChanged(Boolean.Parse v)
+                    | "⬆" -> TopChanged(Boolean.Parse v)
+                    | "⬇" -> KeepBottomChanged(Boolean.Parse v)
+                    | "🔄" -> RotationChanged(Boolean.Parse v)
                     | "Stack" -> StackableChanged(Boolean.Parse v)
                     | "Length" -> LengthChanged v
                     | other -> failwith other
@@ -626,10 +633,11 @@ module Row =
                     | "Width" -> model.FormData.Width.ToString()
                     | "Weight" -> model.FormData.Weight.ToString()
                     | "Quant." -> model.FormData.Quantity.ToString()
-                    | "⬆⬆" -> model.FormData.KeepTop.ToString()
-                    | "⬇⬇" -> model.FormData.KeepBottom.ToString()
+                    | "⬆" -> model.FormData.KeepTop.ToString()
+                    | "⬇" -> model.FormData.KeepBottom.ToString()
                     | "Stack" -> model.FormData.Stackable.ToString()
                     | "Length" -> model.FormData.Length.ToString()
+                    | "🔄" -> model.FormData.Rotation.ToString()
                     | other -> failwith other
 
                 Html.tr [
@@ -639,19 +647,26 @@ module Row =
                                 prop.children [
                                     if i < cols.Length - 2 then
                                         match col with
-                                        | "⬆⬆" ->
+                                        | "⬆" ->
                                             Html.input [
                                                 prop.type'.checkbox
                                                 prop.defaultChecked model.FormData.KeepTop
                                                 prop.readOnly props.Disabled
-                                                prop.onCheckedChange (fun e -> dispatch' "⬆⬆" (e.ToString()))
+                                                prop.onCheckedChange (fun e -> dispatch' "⬆" (e.ToString()))
                                             ]
-                                        | "⬇⬇" ->
+                                        | "⬇" ->
                                             Html.input [
                                                 prop.type'.checkbox
                                                 prop.defaultChecked model.FormData.KeepBottom
                                                 prop.readOnly props.Disabled
-                                                prop.onCheckedChange (fun e -> dispatch' "⬇⬇" (e.ToString()))
+                                                prop.onCheckedChange (fun e -> dispatch' "⬇" (e.ToString()))
+                                            ]
+                                        | "🔄" ->
+                                            Html.input [
+                                                prop.type'.checkbox
+                                                prop.defaultChecked model.FormData.Rotation
+                                                prop.readOnly props.Disabled
+                                                prop.onCheckedChange (fun e -> dispatch' "🔄" (e.ToString()))
                                             ]
                                         | "Stack" ->
                                             Html.input [
@@ -660,7 +675,7 @@ module Row =
                                                 prop.defaultChecked model.FormData.Stackable
                                                 prop.onCheckedChange (fun e -> dispatch' "Stack" (e.ToString()))
                                             ]
-                                        | "Color" ->
+                                        | "🎨" ->
                                             Html.input [
                                                 prop.readOnly true
                                                 prop.style [
@@ -799,6 +814,7 @@ let viewC =
                                                     (r.Next(40, 256))
                                                     (r.Next(40, 256))
                                             Stackable = true
+                                            Rotation = true
                                             KeepTop = false
                                             KeepBottom = false
                                             Quantity = "1"
@@ -812,6 +828,7 @@ let viewC =
                                             Weight = r.Weight.ToString()
                                             Color = r.Color.ToString()
                                             Stackable = r.Stackable
+                                            Rotation = r.Rotation
                                             KeepTop = r.KeepTop
                                             KeepBottom = r.KeepBottom
                                             Quantity = r.Quantity.ToString()

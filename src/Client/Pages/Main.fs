@@ -56,6 +56,7 @@ let initCanvas () =
                             KeepTop = false
                             Weight = 0
                             KeepBottom = false
+                            Rotation = false
                         }
                 }
             for i = 0L to 9L do
@@ -80,6 +81,7 @@ let initCanvas () =
                             KeepTop = false
                             KeepBottom = false
                             Weight = 0
+                            Rotation = false
                         }
                 }
         ]
@@ -114,8 +116,9 @@ let MainView comp dispatch (model: Model) =
                     "Weight range is between 0 and 100,000."
                     "Add as many items as you want."
                     "If the item is not stackable (no other item is on top of this) uncheck \"Stack\" for that item."
-                    "If the item must keep its upright then check \"⬆⬆\" for that item."
-                    "If the item must be at the bottom (e.g, heavy items) then check \"⬇⬇\" for that item."
+                    "If the item must keep its upright then check \"⬆\" for that item."
+                    "If the item must be at the bottom (e.g, heavy items) then check \"⬇\" for that item."
+                    "To prevent all kinds of rotation uncheck \"🔄\""
                     "All dimensions are unitless."
                     "Select the calculation mode depending on items to be at minimum height or pushed to the edge."
                     "Select container mode to multi container if you want to see how many container it takes to fit"

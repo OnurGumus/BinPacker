@@ -37,6 +37,7 @@ type Item =
         Tag: string
         NoTop: bool
         KeepTop: bool
+        Rotation: bool
         KeepBottom: bool
     }
 
@@ -89,6 +90,7 @@ module ClientModel =
             Quantity: int
             Stackable: bool
             KeepTop: bool
+            Rotation : bool
             KeepBottom: bool
         }
 
