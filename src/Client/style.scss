@@ -32,6 +32,9 @@ page-main {
         max-height: 70vh;
         overflow-y: auto;
     }
+    @media only screen and (min-width: 600px) {
+        max-height: 90vh;
+    }
     /* -- Pages -- */
 
     #canvas-wrapper {
@@ -44,7 +47,7 @@ page-main {
         }
     }
     canvas{
-        height: 80vh !important;
+        height: 70vh !important;
     }
     #form-wrapper {
         display: flex;
@@ -185,10 +188,7 @@ page-main {
     select {
         display: block;
     }
-    #item-table-wrapper {
-        max-height: 40vh;
-        overflow-y: auto;
-    }
+
     #calculate-button {
         background-color: #00d1b2;
         border-color: transparent;
