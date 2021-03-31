@@ -1629,8 +1629,9 @@ let runPerContainer
                 | 0 -> items
                 | n -> loopMutate (items |> mutate calculationMode res.ItemsPut) (n - 1)
             let retryMode =
-                match containerMode with
-                | SingleContainer -> MinimizeVolume
+                match containerMode, calculationMode with
+                | SingleContainer, MinimizeHeight -> MinimizeLength
+                | SingleContainer, MinimizeLength -> MinimizeHeight
                 | _ -> calculationMode
             outerLoop (retryMode) containerMode (loopMutate items (items.Length / 10)) (retryCount - 1) results
 
