@@ -16,39 +16,11 @@ body {
     padding: 0;
     margin: 0;
 }
-h1 {
-    all: unset;
-    display: block;
-    background-color: #bd3a3a;
-    color: white;
-    font-size: 2em;
-    line-height: 25px;
-    padding: 0.5em;
-    border-radius: 0.1em;
-}
 
 page-main {
-    // .inner-wrapper{
-    //     max-height: 70vh;
-    //     overflow-y: auto;
-    // }
-    // @media only screen and (min-width: 600px) {
-    //     max-height: 90vh;
-    // }
-    /* -- Pages -- */
 
-    #canvas-wrapper {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        @media only screen and (min-width: 1025px) {
-            border-left: 1px solid black;
-            padding-top:1em;
-        }
-    }
-    canvas{
-        height: 70vh !important;
-    }
+
+
     #form-wrapper {
         display: flex;
         flex-direction: column;
@@ -58,17 +30,9 @@ page-main {
         }
     }
 
-    #help-wrapper {
-        display: flex;
-        flex-direction: column;
-        @media only screen and (min-width: 1025px) {
-            padding-top:2em;
-        }
-    }
 
-    #help {
-        flex-grow: 1;
-    }
+
+
     #form {
         flex-grow: 1;
     }
@@ -80,32 +44,9 @@ page-main {
         padding: 1em 1em;
         font-size: 1.1em;
     }
-    #my-canvas {
-        width: 100% !important;
-        flex-basis: 50%;
-        flex-grow: 1;
-    }
+
 }
-#canvas-wrapper {
-    .dg.main {
-        margin: 0 auto;
-        position: relative;
-        top: 5em;
-    }
-}
-#help-wrapper {
-    li {
-        font-size: 0.8em;
-        margin-bottom: 0.6em;
-    }
-    @media only screen and (min-width: 600px) {
-        padding: 1em;
-        li {
-            font-size: 0.9em;
-            margin-bottom: 1em;
-        }
-    }
-}
+
 #form-wrapper {
     .detail-label{
         margin: 0.1em 0;

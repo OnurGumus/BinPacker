@@ -126,7 +126,10 @@ let MainView (model: Model) dispatch =
 
     let howto =
         React.fragment [
-            Html.h2 [ prop.text "How to use:"; prop.slot "help" ]
+            Html.h2 [
+                prop.text "How to use:"
+                prop.slot "help"
+            ]
             Html.ul [
                 prop.style [ style.listStyleType.disc ]
                 prop.slot "help"
@@ -176,25 +179,23 @@ let MainView (model: Model) dispatch =
                         ]
                     ]
                 ]
-                Html.div [
-                    prop.id "canvas-wrapper"
-                    prop.slot "my-canvas"
-                    prop.children [
-                        Html.div [
-                            prop.id "canvas-inner-wrapper"
-                            prop.className "inner-wrapper"
-                            prop.children [
-                                Html.canvas [ prop.id "my-canvas" ]
-                            ]
-                        ]
-                        Html.button [
-                            prop.text "<< See parameters"
-                            prop.className "nav-button"
-                            prop.onClick (fun _ -> document.querySelector("[slot='form']")?scrollIntoView ())
-                            prop.style [
-                                if matches then
-                                    style.visibility.collapse
-                            ]
+                React.fragment [
+                    Html.div [
+                        prop.id "visual-filter"
+                        prop.slot "my-canvas"
+                    ]
+                    Html.canvas [
+                        prop.id "my-canvas"
+                        prop.slot "my-canvas"
+                    ]
+                    Html.button [
+                        prop.text "<< See parameters"
+                        prop.slot "my-canvas"
+                        prop.className "nav-button"
+                        prop.onClick (fun _ -> document.querySelector("[slot='form']")?scrollIntoView ())
+                        prop.style [
+                            if matches then
+                                style.visibility.collapse
                         ]
                     ]
                 ]
@@ -219,7 +220,8 @@ let MainView (model: Model) dispatch =
                                 Html.button [
                                     prop.className "nav-button"
                                     prop.text "3D Canvas >>"
-                                    prop.onClick (fun _ -> document.querySelector("[slot='my-canvas']")?scrollIntoView ())
+                                    prop.onClick
+                                        (fun _ -> document.querySelector("[slot='my-canvas']")?scrollIntoView ())
                                 ]
                             ]
                         ]

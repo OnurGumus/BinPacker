@@ -49,7 +49,7 @@
         display: flex;
         height: 100%;
         max-height: 100%;
-        padding-bottom: 3em;
+        padding-bottom: 6em;
     }
 
     @media only screen and (min-width: 1025px) {
@@ -113,6 +113,10 @@
 slot[name="help"]::slotted(h2){
     color:red;
 }
+slot[name="my-canvas"]::slotted(#visual-filter){
+    display: flex;
+    justify-content: center;
+}
 
 </style>
 <section>
@@ -154,7 +158,10 @@ slot[name="help"]::slotted(h2){
         </div>
         <slot name="form">
         </slot>
-        <slot name="my-canvas">
-        </slot>
+        <div id="my-canvas">
+            <slot name="my-canvas">
+            </slot>
+        </div>
+
     </div>
 </section>
