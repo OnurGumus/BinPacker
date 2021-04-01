@@ -70,17 +70,19 @@
         overflow-y: auto;
     }
 
-    slot[name="my-canvas"]::slotted(button) {
-    }
-    slot[name="my-canvas"]::slotted(#my-canvas-wrapper) {
+    slot[name="my-canvas"]::slotted(button) {}
+
+    slot[name="my-canvas"]::slotted(#my-canvas) {
         flex-grow: 1;
     }
+
     slot[name="my-canvas"]::slotted(#visual-filter) {
         display: flex;
         justify-content: center;
-        min-height: 60px;
+        min-height: 54px;
     }
 
+    ::slotted(.nav-button),
     .nav-button {
         box-sizing: border-box;
         -webkit-appearance: none;
@@ -115,7 +117,9 @@
 
     }
 
-    .nav-button :hover,
+    ::slotted(.nav-button:hover),
+    ::slotted(.nav-button:focus),
+    .nav-button:hover,
     .nav-button :focus {
         color: #fff;
         outline: 0;
@@ -126,8 +130,6 @@
     slot[name="help"]::slotted(h2) {
         color: red;
     }
-
-
 </style>
 <section>
     <h1> Bindrake - Your bin packing magician!</h1>

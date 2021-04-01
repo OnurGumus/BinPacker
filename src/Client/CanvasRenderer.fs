@@ -26,8 +26,7 @@ let init1 () =
         .appendChild (gui.domElement)
     |> ignore
     let element : Element =
-        document.querySelector ("#my-canvas-wrapper")
-    // console.log(element.getBoundingClientRect())
+        document.querySelector ("#my-canvas")
     // let element:Element = document.querySelector("canvas")
     let rect = element.getBoundingClientRect ()
     camera <- THREE.PerspectiveCamera.Create(30., rect.width / rect.height, 20., 10000.)

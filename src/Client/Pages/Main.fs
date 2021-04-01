@@ -183,13 +183,9 @@ let MainView (model: Model) dispatch =
                         prop.id "visual-filter"
                         prop.slot "my-canvas"
                     ]
-                    Html.div [
-                        prop.id "my-canvas-wrapper"
+                    Html.canvas [
+                        prop.id "my-canvas"
                         prop.slot "my-canvas"
-                        prop.children [
-                            Html.canvas [ prop.id "my-canvas"]
-                        ]
-                        prop.style [style.backgroundColor.green]
                     ]
                     Html.button [
                         prop.text "<< See parameters"
