@@ -37,7 +37,6 @@
         height: 100%;
     }
 
-    ::slotted(*),
     .scrolling-body>* {
         scroll-snap-align: start;
         flex-grow: 1;
@@ -49,7 +48,6 @@
         display: flex;
         height: 100%;
         max-height: 100%;
-        padding-bottom: 6em;
     }
 
     @media only screen and (min-width: 1025px) {
@@ -59,7 +57,8 @@
 
     }
 
-    #help {
+    #help,
+    #my-canvas {
         display: flex;
         flex-direction: column;
         min-height: 0;
@@ -70,53 +69,64 @@
         flex-grow: 1;
         overflow-y: auto;
     }
+
+    slot[name="my-canvas"]::slotted(button) {
+    }
+    slot[name="my-canvas"]::slotted(#my-canvas-wrapper) {
+        flex-grow: 1;
+    }
+    slot[name="my-canvas"]::slotted(#visual-filter) {
+        display: flex;
+        justify-content: center;
+        min-height: 60px;
+    }
+
     .nav-button {
-    box-sizing: border-box;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: #3298dc;
-    border: 2px solid #3298dc;
-    border-radius: 0.6em;
-    color: white;
-    cursor: pointer;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-align-self: center;
-    -ms-flex-item-align: center;
-    align-self: center;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1;
-    margin: 20px;
-    padding: 1.2em 2.8em;
-    text-decoration: none;
-    text-align: center;
-    text-transform: uppercase;
-    font-family: "Montserrat", sans-serif;
-    font-weight: 700;
-    -webkit-transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
-    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
-    transform: scale(0.8);
-    margin: 0 auto;
+        box-sizing: border-box;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-color: #3298dc;
+        border: 2px solid #3298dc;
+        border-radius: 0.6em;
+        color: white;
+        cursor: pointer;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-align-self: center;
+        -ms-flex-item-align: center;
+        align-self: center;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1;
+        margin: 20px;
+        padding: 1.2em 2.8em;
+        text-decoration: none;
+        text-align: center;
+        text-transform: uppercase;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 700;
+        -webkit-transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+        transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+        transform: scale(0.8);
+        margin: 0 auto;
 
-}
-.nav-button :hover,
-.nav-button :focus {
-    color: #fff;
-    outline: 0;
-    box-shadow: 0 0 40px 40px #f14668 inset;
+    }
 
-}
-slot[name="help"]::slotted(h2){
-    color:red;
-}
-slot[name="my-canvas"]::slotted(#visual-filter){
-    display: flex;
-    justify-content: center;
-}
+    .nav-button :hover,
+    .nav-button :focus {
+        color: #fff;
+        outline: 0;
+        box-shadow: 0 0 40px 40px #f14668 inset;
+
+    }
+
+    slot[name="help"]::slotted(h2) {
+        color: red;
+    }
+
 
 </style>
 <section>
@@ -126,29 +136,35 @@ slot[name="my-canvas"]::slotted(#visual-filter){
     <div class="scrolling-body">
         <div id="help">
             <div>
-                <slot name = "help">
+                <slot name="help">
                     <h2>How to use</h2>
                     <ul style="list-style-type: disc;">
                         <li>Enter container and item dimensions between 1 and 2000, no decimals.</li>
                         <li>Weight range is between 0 and 100,000.</li>
                         <li>Add as many items as you want.</li>
-                        <li>If the item is not stackable (no other item is on top of this) uncheck "Stack" for that item.
+                        <li>If the item is not stackable (no other item is on top of this) uncheck "Stack" for that
+                            item.
                         </li>
                         <li>If the item must keep its upright then check "⬆" for that item.</li>
                         <li>If the item must be at the bottom (e.g, heavy items) then check "⬇" for that item.</li>
                         <li>To prevent all kinds of rotation uncheck "🔄"</li>
                         <li>All dimensions are unitless.</li>
-                        <li>Select the calculation mode depending on items to be at minimum height or pushed to the edge.
+                        <li>Select the calculation mode depending on items to be at minimum height or pushed to the
+                            edge.
                         </li>
-                        <li>Select container mode to multi container if you want to see how many container it takes to fit
+                        <li>Select container mode to multi container if you want to see how many container it takes to
+                            fit
                         </li>
-                        <li>Click calculate and wait up to 100 sec. And then click 3D Canvas button at the bottom to see the
+                        <li>Click calculate and wait up to 100 sec. And then click 3D Canvas button at the bottom to see
+                            the
                             visuals.</li>
                         <li>Bin packer will try to fit the items and minimize the placement.</li>
                         <li>Gravity is ignored.</li>
-                        <li>Review the result in 3D then you may share it via share the result button and copy the url.</li>
+                        <li>Review the result in 3D then you may share it via share the result button and copy the url.
+                        </li>
                         <li>You may visually remove some boxes by using h-filter and v-filter controls on 3D.</li>
-                        <li>For your questions and problems send a mail to onur@outlook.com.tr or tweet to @onurgumusdev.
+                        <li>For your questions and problems send a mail to onur@outlook.com.tr or tweet to
+                            @onurgumusdev.
                         </li>
                     </ul>
                 </slot>
@@ -156,8 +172,12 @@ slot[name="my-canvas"]::slotted(#visual-filter){
             </div>
             <button class="nav-button" onclick="document.querySelector('#form').scrollIntoView()">Next</button>
         </div>
-        <slot name="form">
-        </slot>
+        <div id="form">
+
+            <slot name="form">
+            </slot>
+        </div>
+
         <div id="my-canvas">
             <slot name="my-canvas">
             </slot>

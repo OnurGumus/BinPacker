@@ -208,7 +208,6 @@ let update (msg: Msg) model =
         | ModelLoaded model ->
             match model.Calculation with
             | Calculated c ->
-                console.log("calc")
                 let element =
                         document.querySelector ("#canvas-wrapper")
 

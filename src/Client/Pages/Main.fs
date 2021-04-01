@@ -30,7 +30,6 @@ let html : string =
     importDefault ("!!raw-loader!./_Pages/Main.html")
 
 let initCanvas () =
-    console.log ("init")
     CanvasRenderer.init ()
 
     let colors =
@@ -117,12 +116,12 @@ let initCanvas () =
 
 [<ReactComponent>]
 let MainView (model: Model) dispatch =
-    React.useEffectOnce (initCanvas)
+    let attachShadowRoot, shadowRoot = Client.Util.useShadowRoot (html)
+    React.useEffect ((fun _ -> if shadowRoot.IsSome then initCanvas() else ()), [| shadowRoot |> box<_>|])
 
     let matches =
         React.useMediaQuery ("(min-width: 1025px)")
 
-    let attachShadowRoot, shadowRoot = Client.Util.useShadowRoot (html)
 
     let howto =
         React.fragment [
@@ -184,9 +183,13 @@ let MainView (model: Model) dispatch =
                         prop.id "visual-filter"
                         prop.slot "my-canvas"
                     ]
-                    Html.canvas [
-                        prop.id "my-canvas"
+                    Html.div [
+                        prop.id "my-canvas-wrapper"
                         prop.slot "my-canvas"
+                        prop.children [
+                            Html.canvas [ prop.id "my-canvas"]
+                        ]
+                        prop.style [style.backgroundColor.green]
                     ]
                     Html.button [
                         prop.text "<< See parameters"

@@ -6,10 +6,12 @@ open Fable.Core.JsInterop
 open Fable.Core.JS
 open System
 open Shared
+open Browser.Types
 
 let mutable demoMode2 = false
 
-let gui = Dat.exports.GUI.Create(!!{|autoPlace = false|})
+let gui =
+    Dat.exports.GUI.Create(!!{| autoPlace = false |})
 
 
 
@@ -17,18 +19,29 @@ let THREE = Three.exports
 let scene = THREE.Scene.Create()
 let mutable camera = Unchecked.defaultof<_>
 let mutable renderer = Unchecked.defaultof<_>
-let init1() =
-    camera <-
-        THREE.PerspectiveCamera.Create(30., window.innerWidth / window.innerHeight, 20., 10000.)
+
+let init1 () =
+    document
+        .querySelector("#visual-filter")
+        .appendChild (gui.domElement)
+    |> ignore
+    let element : Element =
+        document.querySelector ("#my-canvas-wrapper")
+    // console.log(element.getBoundingClientRect())
+    // let element:Element = document.querySelector("canvas")
+    let rect = element.getBoundingClientRect ()
+    camera <- THREE.PerspectiveCamera.Create(30., rect.width / rect.height, 20., 10000.)
+
     let opt =
-        jsOptions<Three.WebGLRendererParameters> (fun x ->
-            x.antialias <- true
-            x.canvas <- !^(document.getElementById ("my-canvas")))
+        jsOptions<Three.WebGLRendererParameters>
+            (fun x ->
+                x.antialias <- true
+                x.canvas <- !^(document.getElementById ("my-canvas")))
 
     renderer <- THREE.WebGLRenderer.Create(opt)
 
     renderer.setClearColor (!^THREE.Color.Create(!^(float 0xFFFFFF)))
-    renderer.setSize (window.innerWidth, window.innerHeight)
+    renderer.setSize (rect.width, rect.height)
     renderer.shadowMap?enabled <- true
 
 let axes = THREE.AxesHelper.Create(20.)
@@ -39,12 +52,14 @@ let mutable lastHController = None
 let renderPlane (container: Container) =
 
     let x =
-        (System.Math.Max
-            (1L,
-             System.Math.Min
-                 (40L,
-                  50000L
-                  / (container.Dim.Width * container.Dim.Length)))
+        (System.Math.Max(
+            1L,
+            System.Math.Min(
+                40L,
+                50000L
+                / (container.Dim.Width * container.Dim.Length)
+            )
+         )
          |> float)
         / 1.5
 
@@ -80,7 +95,7 @@ let renderPlane (container: Container) =
         THREE.PlaneGeometry.Create(container.Dim.Length |> float, container.Dim.Height |> float)
 
     let planeMaterial =
-        THREE.MeshLambertMaterial.Create(jsOptions<_> (fun x -> x.color <-  !^ "red"))
+        THREE.MeshLambertMaterial.Create(jsOptions<_> (fun x -> x.color <- !^ "red"))
 
     let plane =
         THREE.Mesh.Create(planeGeometry, planeMaterial)
@@ -96,17 +111,21 @@ let renderPlane (container: Container) =
     currentContainer.Add plane
 
 let cubeMaterial =
-    THREE.MeshLambertMaterial.Create
-        (jsOptions<Three.MeshLambertMaterialParameters> (fun x ->
-            x.color <- !^ "green"
-            x.wireframe <- true))
+    THREE.MeshLambertMaterial.Create(
+        jsOptions<Three.MeshLambertMaterialParameters>
+            (fun x ->
+                x.color <- !^ "green"
+                x.wireframe <- true)
+    )
 
 let wireframeMaterial =
-    THREE.MeshBasicMaterial.Create
-        (jsOptions<Three.MeshBasicMaterialParameters> (fun x ->
-            x.wireframe <- true
-            x.transparent <- true
-            x.color <- !^ "black"))
+    THREE.MeshBasicMaterial.Create(
+        jsOptions<Three.MeshBasicMaterialParameters>
+            (fun x ->
+                x.wireframe <- true
+                x.transparent <- true
+                x.color <- !^ "black")
+    )
 
 let lineMaterial =
     THREE.LineBasicMaterial.Create(jsOptions<Three.LineBasicMaterialParameters> (fun x -> x.color <- !^ "black"))
@@ -115,10 +134,12 @@ let cubes = ResizeArray<Three.Object3D>()
 
 let renderCube x y z width height length (color: string) L W =
     let cubeMaterial =
-        THREE.MeshLambertMaterial.Create
-            (jsOptions<Three.MeshLambertMaterialParameters> (fun x ->
-                x.color <- !^color
-                x.wireframe <- false))
+        THREE.MeshLambertMaterial.Create(
+            jsOptions<Three.MeshLambertMaterialParameters>
+                (fun x ->
+                    x.color <- !^color
+                    x.wireframe <- false)
+        )
 
     let cubeGeometry =
         THREE.BoxGeometry.Create(length, height, width)
@@ -148,7 +169,8 @@ let renderCube x y z width height length (color: string) L W =
 
 
 let init () =
-    init1()
+    init1 ()
+
     let addSpottLight x y z inten =
         let spotLight = THREE.SpotLight.Create(!^ "white")
         spotLight.position.set (x, y, z) |> ignore
@@ -188,9 +210,11 @@ let init () =
     camera.lookAt (!^scene.position)
 
 
+
     //let track = TrackballControls.exports
     let initTrackballControls (camera, (renderer: Three.Renderer)) =
-        document.querySelector("#visual-filter").appendChild(gui.domElement) |> ignore
+        console.log ("initi trackball")
+
         let trackballControls =
             TrackballControls.TrackballControls.Create(camera, renderer.domElement)
 
@@ -215,41 +239,40 @@ let init () =
         let needResize =
             canvas.width <> width || canvas.height <> height
 
-        if (needResize) then renderer.setSize (width, height, false)
+        if (needResize) then
+            renderer.setSize (width, height, false)
+
         needResize
 
-    let rec renderScene (trackballControls:option<_>) time =
-        let time = time * 0.001
-        if (trackballControls.IsNone |> not) then
-            trackballControls.Value?update (clock.getDelta ())
-        let tb =
-            if (resizeRendererToDisplaySize (renderer)) then
-                let canvas = renderer.domElement
-                camera.aspect <- canvas.clientWidth / canvas.clientHeight
-                camera.updateProjectionMatrix ()
-                if trackballControls.IsNone then
-                    Some(initTrackballControls (camera, renderer))
-                else
-                    trackballControls
-            else
-                trackballControls
+    let ttb =
+        initTrackballControls (camera, renderer)
 
+    let rec renderScene time =
+        let time = time * 0.001
+        ttb.update (clock.getDelta ())
+
+        if (resizeRendererToDisplaySize (renderer)) then
+            let canvas = renderer.domElement
+            camera.aspect <- canvas.clientWidth / canvas.clientHeight
+            camera.updateProjectionMatrix ()
 
         if demoMode2 then
             cubes
             |> Seq.indexed
-            |> Seq.iter (fun (ndx, ob) ->
-                let speed = 0.1 + float (ndx) * 0.05
-                let rot = time * speed
-                ob?rotation?x <- rot
-                ob?rotation?y <- rot)
+            |> Seq.iter
+                (fun (ndx, ob) ->
+                    let speed = 0.1 + float (ndx) * 0.05
+                    let rot = time * speed
+                    ob?rotation?x <- rot
+                    ob?rotation?y <- rot)
 
         renderer.render (scene, camera)
 
-        window.requestAnimationFrame (renderScene tb)
+        window.requestAnimationFrame (renderScene)
         |> ignore
-    resizeRendererToDisplaySize(renderer) |> ignore
-    renderScene None 0.
+
+    resizeRendererToDisplaySize (renderer) |> ignore
+    renderScene 0.
 
 let renderResultInner container items demoMode =
     demoMode2 <- demoMode
@@ -278,30 +301,32 @@ let renderResult (container: Container) items demoMode =
     let v = {| v_filter = 0 |}
 
     let callback =
-        List.filter (fun i ->
-            float (container.Dim.Length - i.Coord.Z)
-            >= float (!!h.h_filter)
-            && float (container.Dim.Height - i.Coord.Y)
-               >= float (!!v.v_filter))
+        List.filter
+            (fun i ->
+                float (container.Dim.Length - i.Coord.Z)
+                >= float (!!h.h_filter)
+                && float (container.Dim.Height - i.Coord.Y)
+                   >= float (!!v.v_filter))
 
     lastLController <-
-        Some
-            (gui
+        Some(
+            gui
                 .add(h, "h_filter", 0., float (container.Dim.Length))
-                .onChange(fun v -> renderResultInner container (items |> callback) demoMode2))
+                .onChange (fun v -> renderResultInner container (items |> callback) demoMode2)
+        )
 
     match lastHController with
     | Some c -> gui.remove (c)
     | _ -> ()
 
     lastHController <-
-        Some
-            (gui
+        Some(
+            gui
                 .add(v, "v_filter", 0., float (container.Dim.Height))
-                .onChange(fun _ -> renderResultInner container (items |> callback) demoMode2))
+                .onChange (fun _ -> renderResultInner container (items |> callback) demoMode2)
+        )
 
     gui?__closeButton?hidden <- true
-    console.log gui
     gui.updateDisplay ()
 
     renderResultInner container items demoMode
