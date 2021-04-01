@@ -10,19 +10,19 @@ open Shared
 open Client
 open Elmish
 
-type Model = { Form: Form.Model}
+type Model = { Form: Form.Model }
 
 type Msg = FormMsg of Form.Msg
 
 let init () =
-    let model, cmd = Form.init()
-    { Form = model}, Cmd.map FormMsg cmd
+    let model, cmd = Form.init ()
+    { Form = model }, Cmd.map FormMsg cmd
 
-let update msg (model:Model) =
+let update msg (model: Model) =
     match msg with
     | FormMsg msg ->
         let model, cmd = Form.update msg model.Form
-        { Form = model}, Cmd.map FormMsg cmd
+        { Form = model }, Cmd.map FormMsg cmd
 
 open Feliz.UseMediaQuery
 
@@ -116,43 +116,52 @@ let initCanvas () =
     CanvasRenderer.renderResult container boxes true
 
 [<ReactComponent>]
-let MainView (model: Model) dispatch  =
+let MainView (model: Model) dispatch =
     React.useEffectOnce (initCanvas)
-    let matches = React.useMediaQuery("(min-width: 1025px)")
+
+    let matches =
+        React.useMediaQuery ("(min-width: 1025px)")
+
     let attachShadowRoot, shadowRoot = Client.Util.useShadowRoot (html)
 
     let howto =
-        Html.ul [
-            prop.style [ style.listStyleType.disc ]
+        React.fragment [
+            Html.h2 [ prop.text "How to use:"; prop.slot "help" ]
+            Html.ul [
+                prop.style [ style.listStyleType.disc ]
+                prop.slot "help"
 
-            let items =
-                [
-                    "Enter container and item dimensions between 1 and 2000, no decimals."
-                    "Weight range is between 0 and 100,000."
-                    "Add as many items as you want."
-                    "If the item is not stackable (no other item is on top of this) uncheck \"Stack\" for that item."
-                    "If the item must keep its upright then check \"⬆\" for that item."
-                    "If the item must be at the bottom (e.g, heavy items) then check \"⬇\" for that item."
-                    "To prevent all kinds of rotation uncheck \"🔄\""
-                    "All dimensions are unitless."
-                    "Select the calculation mode depending on items to be at minimum height or pushed to the edge."
-                    "Select container mode to multi container if you want to see how many container it takes to fit"
-                    "Click calculate and wait up to 100 sec. And then click 3D Canvas button at the bottom to see the visuals."
-                    "Bin packer will try to fit the items and minimize the placement."
-                    "Gravity is ignored."
-                    "Review the result in 3D then you may share it via share the result button and copy the url."
-                    "You may visually remove some boxes by using h-filter and v-filter controls on 3D."
-                    "For your questions and problems send a mail to onur@outlook.com.tr or tweet to @onurgumusdev."
+                let items =
+                    [
+                        "Enter container and item dimensions between 1 and 2000, no decimals."
+                        "Weight range is between 0 and 100,000."
+                        "Add as many items as you want."
+                        "If the item is not stackable (no other item is on top of this) uncheck \"Stack\" for that item."
+                        "If the item must keep its upright then check \"⬆\" for that item."
+                        "If the item must be at the bottom (e.g, heavy items) then check \"⬇\" for that item."
+                        "To prevent all kinds of rotation uncheck \"🔄\""
+                        "All dimensions are unitless."
+                        "Select the calculation mode depending on items to be at minimum height or pushed to the edge."
+                        "Select container mode to multi container if you want to see how many container it takes to fit"
+                        "Click calculate and wait up to 100 sec. And then click 3D Canvas button at the bottom to see the visuals."
+                        "Bin packer will try to fit the items and minimize the placement."
+                        "Gravity is ignored."
+                        "Review the result in 3D then you may share it via share the result button and copy the url."
+                        "You may visually remove some boxes by using h-filter and v-filter controls on 3D."
+                        "For your questions and problems send a mail to onur@outlook.com.tr or tweet to @onurgumusdev."
+                    ]
+
+                prop.children [
+                    for item in items do
+                        Html.li [ prop.text item ]
                 ]
-
-            prop.children [
-                for item in items do
-                    Html.li [ prop.text item ]
             ]
         ]
 
 
-    let formView = Client.Form.view model.Form (FormMsg >> dispatch)
+    let formView =
+        Client.Form.view model.Form (FormMsg >> dispatch)
+
     Interop.createElement
         "page-main"
         [
@@ -160,83 +169,57 @@ let MainView (model: Model) dispatch  =
             prop.children [
                 Html.div [
                     prop.slot "title"
-                    prop.children[
-                       Html.div[
-                           prop.id "title"
-                           prop.text "Bindrake - Your bin packing magician!"
-                       ]
-                    ]
-                ]
-                Html.div[
-                    prop.id "canvas-wrapper"
-                    prop.slot "my-canvas"
-                    prop.children[
-                        Html.div[
-                            prop.id "canvas-inner-wrapper"
-                            prop.className "inner-wrapper"
-                            prop.children[
-                                Html.canvas [
-                                    prop.id "my-canvas"
-                                ]
-                            ]
-                        ]
-                        Html.button[
-                            prop.text "<< See parameters"
-                            prop.className "nav-button"
-                            prop.onClick(fun _ -> document.querySelector("#form")?scrollIntoView() )
-                            prop.style [ if matches then style.visibility.collapse ]
-                        ]
-                    ]
-                ]
-                Html.div[
-                    prop.id "help-wrapper"
-                    prop.slot "help"
-                    prop.children[
-                        Html.div[
-                            prop.className "inner-wrapper"
-                            prop.children[
-                                Html.div [
-                                    prop.id "help"
-                                    prop.children [
-                                        Html.h1[
-                                            prop.text "How to use"
-                                        ]
-                                        howto
-                                    ]
-                                ]
-                            ]
-                        ]
-                        Html.button[
-                            prop.text "Next >>"
-                            prop.className "nav-button"
-                            prop.onClick(fun _ -> document.querySelector("#form")?scrollIntoView() )
-                            prop.style [ if matches then style.visibility.collapse ]
+                    prop.children [
+                        Html.div [
+                            prop.id "title"
+                            prop.text "Bindrake - Your bin packing magician!"
                         ]
                     ]
                 ]
                 Html.div [
-                    prop.id "form-wrapper"
-                    prop.slot "form"
-                    prop.children[
-                        Html.div[
-                            prop.id "form"
+                    prop.id "canvas-wrapper"
+                    prop.slot "my-canvas"
+                    prop.children [
+                        Html.div [
+                            prop.id "canvas-inner-wrapper"
                             prop.className "inner-wrapper"
-                            prop.children[
-                                formView
+                            prop.children [
+                                Html.canvas [ prop.id "my-canvas" ]
                             ]
                         ]
-                        Html.div[
+                        Html.button [
+                            prop.text "<< See parameters"
+                            prop.className "nav-button"
+                            prop.onClick (fun _ -> document.querySelector("[slot='form']")?scrollIntoView ())
+                            prop.style [
+                                if matches then
+                                    style.visibility.collapse
+                            ]
+                        ]
+                    ]
+                ]
+                howto
+                Html.div [
+                    prop.id "form-wrapper"
+                    prop.slot "form"
+                    prop.children [
+                        Html.div [
+                            prop.id "form"
+                            prop.className "inner-wrapper"
+                            prop.children [ formView ]
+                        ]
+                        Html.div [
                             prop.className "button-panel"
-                            prop.children[
-                                Html.button[
+                            prop.children [
+                                Html.button [
                                     prop.className "nav-button"
                                     prop.text "<< Help"
-                                    prop.onClick(fun _ -> document.querySelector("#help")?scrollIntoView() )
+                                    prop.onClick (fun _ -> document.querySelector("[slot='help']")?scrollIntoView ())
                                 ]
-                                Html.button[
+                                Html.button [
                                     prop.className "nav-button"
                                     prop.text "3D Canvas >>"
-                                    prop.onClick(fun _ -> document.querySelector("#my-canvas")?scrollIntoView() )
+                                    prop.onClick (fun _ -> document.querySelector("[slot='my-canvas']")?scrollIntoView ())
                                 ]
                             ]
                         ]
