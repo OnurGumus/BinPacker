@@ -2,7 +2,7 @@
 :host {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: calc(100vh - 6em);
 }
 
 #header {
@@ -58,7 +58,7 @@
 }
 
 .nav-button-wrapper {
-    margin-bottom: 6em;
+   /* margin-bottom: 6em;*/
     display: flex;
     place-content: center;
     justify-content: center;
