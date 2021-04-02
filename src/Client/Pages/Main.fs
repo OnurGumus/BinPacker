@@ -228,38 +228,31 @@ let MainView (model: Model) dispatch =
                             style.visibility.collapse
                     ]
                 ]
-                React.fragment [
-                    Html.div [
-                        prop.id "form-wrapper"
-                        prop.slot "form"
-                        prop.children [
-                            Html.div [
-                                prop.id "form"
-                                prop.className "inner-wrapper"
-                                prop.children [ formView ]
-                            ]
 
-                        ]
 
-                    ]
-                    Html.div [
-                        prop.className "button-panel"
-                        prop.slot "form-nav-button"
-                        prop.children [
-                            Html.button [
-                                prop.className "nav-button"
-                                prop.text "<< Help"
-                                prop.onClick (fun _ -> document.querySelector("[slot='help']")?scrollIntoView ())
-                            ]
-                            Html.button [
-                                prop.className "nav-button"
-                                prop.text "3D Canvas >>"
-                                prop.onClick (fun _ -> document.querySelector("[slot='my-canvas']")?scrollIntoView ())
-                            ]
-                        ]
-                    ]
+                Html.div [
+                    prop.id "form"
+                    prop.slot "form"
 
+                    prop.className "inner-wrapper"
+                    prop.children [ formView ]
                 ]
 
+                Html.div [
+                    prop.className "button-panel"
+                    prop.slot "form-nav-button"
+                    prop.children [
+                        Html.button [
+                            prop.className "nav-button"
+                            prop.text "<< Help"
+                            prop.onClick (fun _ -> document.querySelector("[slot='help']")?scrollIntoView ())
+                        ]
+                        Html.button [
+                            prop.className "nav-button"
+                            prop.text "3D Canvas >>"
+                            prop.onClick (fun _ -> document.querySelector("[slot='my-canvas']")?scrollIntoView ())
+                        ]
+                    ]
+                ]
             ]
         ]

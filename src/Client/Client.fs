@@ -14,8 +14,8 @@ open Elmish.HMR
 #endif
 
 let baseCSS : string = importDefault ("!!raw-loader!./_Static/Base.css")
-let modulesCSS : string = importDefault ("!!raw-loader!./_Static/Modules.css")
-let themeCSS : string = importDefault ("!!raw-loader!./_Static/Theme.css")
+let modulesCSS : string = importDefault ("!!raw-loader!sass-loader!./_Static/Modules.scss")
+let themeCSS : string = importDefault ("!!raw-loader!sass-loader!./_Static/Theme.scss")
 
 
 Browser.Dom.document?adoptedStyleSheets <- [| baseCSS;modulesCSS;themeCSS |] |> Array.map createSheet
