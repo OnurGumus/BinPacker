@@ -1,0 +1,11 @@
+
+:host>section:first-of-type>h1 {
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+slot[name="help"]::slotted(h2) {
+    color: green;
+}

@@ -94,7 +94,7 @@ module.exports = env => ({
         // See https://github.com/fable-compiler/Fable/issues/1490
         symlinks: false,
         alias: {
-            './_Pages': path.resolve(__dirname, `src/Client/Pages`),
+            './_Static': path.resolve(__dirname, `src/Client/Static`),
             './_Components': path.resolve(__dirname, `src/Client/Components`),
         }
     },

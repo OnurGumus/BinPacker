@@ -28,10 +28,14 @@ open Feliz.UseMediaQuery
 open Client.Util
 
 let html : string =
-    importDefault ("!!raw-loader!./_Pages/Main.html")
+    importDefault ("!!raw-loader!./_Static/Main/index.html")
 
-let mainCss : string =
-    importDefault ("!!raw-loader!./_Pages/Main.css")
+let layoutCSS : string =
+    importDefault ("!!raw-loader!./_Static/Main/Layout.css")
+
+let themeCSS : string =
+    importDefault ("!!raw-loader!./_Static/Main/Theme.css")
+
 
 let initCanvas () =
     CanvasRenderer.init ()
@@ -118,19 +122,16 @@ let initCanvas () =
 
     CanvasRenderer.renderResult container boxes true
 
-let sheet = new CSSStyleSheet()
-sheet?replaceSync (mainCss)
-
 
 [<ReactComponent>]
 let MainView (model: Model) dispatch =
-    let attachShadowRoot, shadowRoot = Client.Util.useShadowRoot (html)
+    let attachShadowRoot, shadowRoot = useShadowRoot (html)
 
     React.useEffect (
         (fun _ ->
             if shadowRoot.IsSome then
                 initCanvas ()
-                shadowRoot.Value?adoptedStyleSheets <- [| sheet |]),
+                shadowRoot.Value?adoptedStyleSheets <- [| layoutCSS; themeCSS |] |> Array.map createSheet),
         [| shadowRoot |> box<_> |]
     )
 

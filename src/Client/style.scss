@@ -1,21 +1,6 @@
 @charset "utf-8";
 @import "../../node_modules/@fortawesome/fontawesome-free/css/all.css";
 
-/* -- General -- */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-* {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-}
-
-body {
-    padding: 0;
-    margin: 0;
-}
 
 page-main {
     #form-wrapper {
