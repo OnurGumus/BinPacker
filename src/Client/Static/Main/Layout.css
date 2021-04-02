@@ -5,8 +5,7 @@
     height: 100vh;
 }
 
-:host>section:first-of-type>h1 {
-    height: 3em;
+#header {
     padding: 1em;
 }
 
@@ -27,13 +26,13 @@
     height: 100%;
 }
 
-.scrolling-body>* {
+#scrolling-body>* {
     scroll-snap-align: start;
     flex-grow: 1;
     flex-basis: 33%;
 }
 
-.scrolling-body {
+#scrolling-body {
     width: 300vw;
     display: flex;
     height: 100%;
@@ -41,7 +40,7 @@
 }
 
 @media only screen and (min-width: 1025px) {
-    .scrolling-body {
+    #scrolling-body {
         width: 150vw;
     }
 

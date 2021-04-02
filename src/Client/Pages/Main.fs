@@ -130,8 +130,10 @@ let MainView (model: Model) dispatch =
     React.useEffect (
         (fun _ ->
             if shadowRoot.IsSome then
-                initCanvas ()
-                shadowRoot.Value?adoptedStyleSheets <- [| layoutCSS; themeCSS |] |> Array.map createSheet),
+                shadowRoot.Value?adoptedStyleSheets <- [| layoutCSS; themeCSS |] |> Array.map createSheet
+                initCanvas()
+                ),
+
         [| shadowRoot |> box<_> |]
     )
 
