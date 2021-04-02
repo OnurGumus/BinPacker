@@ -1,11 +1,10 @@
-
 <section>
     <h1 id="header"> Bindrake - Your bin packing magician!</h1>
 </section>
 <section>
     <div id="scrolling-body">
-        <div id="help">
-            <div>
+        <section id="help">
+            <div class="content-wrapper">
                 <slot name="help">
                     <h2>How to use</h2>
                     <ul style="list-style-type: disc;">
@@ -38,21 +37,25 @@
                         </li>
                     </ul>
                 </slot>
-
             </div>
             <div class="nav-button-wrapper">
                 <slot name="help-nav-button">
                     <button class="nav-button" onclick="document.querySelector('#form').scrollIntoView()">Next</button>
                 </slot>
             </div>
-        </div>
-        <div id="form">
+        </section>
+        <section id="form">
+            <div class="content-wrapper">
+                <slot name="form">
+                </slot>
+            </div>
+            <div class="nav-button-wrapper">
+                <slot name="form-nav-button">
+                </slot>
+            </div>
+        </section>
 
-            <slot name="form">
-            </slot>
-        </div>
-
-        <div id="my-canvas">
+        <section id="my-canvas">
             <slot name="my-canvas">
             </slot>
             <div class="nav-button-wrapper">
@@ -60,7 +63,7 @@
                     <button class="nav-button" onclick="document.querySelector('#form').scrollIntoView()">Next</button>
                 </slot>
             </div>
-        </div>
+        </section>
 
     </div>
 </section>

@@ -1,6 +1,6 @@
 .nav-button {
     appearance: none;
-    display: flex;
+    display: inline-flex;
     align-self: center;
     padding: 1.2em 2.8em;
     text-decoration: none;

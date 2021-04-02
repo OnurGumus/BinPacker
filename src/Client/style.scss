@@ -6,7 +6,6 @@ page-main {
     #form-wrapper {
         display: flex;
         flex-direction: column;
-        overflow-y: auto;
         @media only screen and (min-width: 1025px) {
             padding-top: 2em;
         }
@@ -38,6 +37,7 @@ page-main {
     }
     .button-panel {
         display: flex;
+        width: 100%;
         justify-content: space-around;
     }
     label {

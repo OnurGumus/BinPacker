@@ -45,15 +45,13 @@
     }
 
 }
-
-#help,
-#my-canvas {
+#scrolling-body > section {
     display: flex;
     flex-direction: column;
     min-height: 0;
 }
 
-#help> :first-child {
+.content-wrapper {
     min-height: 0;
     flex-grow: 1;
     overflow-y: auto;
@@ -74,9 +72,4 @@ slot[name="my-canvas"]::slotted(#visual-filter) {
     display: flex;
     justify-content: center;
     min-height: 54px;
-}
-/* safari scrolling fix*/
-::slotted(#visual-filter){
-    position: relative;
-    top:4em;
 }

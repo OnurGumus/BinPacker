@@ -131,8 +131,9 @@ let MainView (model: Model) dispatch =
         (fun _ ->
             if shadowRoot.IsSome then
                 shadowRoot.Value?adoptedStyleSheets <- [| layoutCSS; themeCSS |] |> Array.map createSheet
-                (Fable.Core.JS.setTimeout initCanvas 100) |> ignore
-                ),
+
+                (Fable.Core.JS.setTimeout initCanvas 100)
+                |> ignore),
 
         [| shadowRoot |> box<_> |]
     )
@@ -218,41 +219,47 @@ let MainView (model: Model) dispatch =
                 ]
                 howto
                 Html.button [
-                        prop.text "Next >>"
-                        prop.slot "help-nav-button"
-                        prop.className "nav-button"
-                        prop.onClick (fun _ -> document.querySelector("[slot='form']")?scrollIntoView ())
-                        prop.style [
-                            if matches then
-                                style.visibility.collapse
-                        ]
+                    prop.text "Next >>"
+                    prop.slot "help-nav-button"
+                    prop.className "nav-button"
+                    prop.onClick (fun _ -> document.querySelector("[slot='form']")?scrollIntoView ())
+                    prop.style [
+                        if matches then
+                            style.visibility.collapse
                     ]
-                Html.div [
-                    prop.id "form-wrapper"
-                    prop.slot "form"
-                    prop.children [
-                        Html.div [
-                            prop.id "form"
-                            prop.className "inner-wrapper"
-                            prop.children [ formView ]
+                ]
+                React.fragment [
+                    Html.div [
+                        prop.id "form-wrapper"
+                        prop.slot "form"
+                        prop.children [
+                            Html.div [
+                                prop.id "form"
+                                prop.className "inner-wrapper"
+                                prop.children [ formView ]
+                            ]
+
                         ]
-                        Html.div [
-                            prop.className "button-panel"
-                            prop.children [
-                                Html.button [
-                                    prop.className "nav-button"
-                                    prop.text "<< Help"
-                                    prop.onClick (fun _ -> document.querySelector("[slot='help']")?scrollIntoView ())
-                                ]
-                                Html.button [
-                                    prop.className "nav-button"
-                                    prop.text "3D Canvas >>"
-                                    prop.onClick
-                                        (fun _ -> document.querySelector("[slot='my-canvas']")?scrollIntoView ())
-                                ]
+
+                    ]
+                    Html.div [
+                        prop.className "button-panel"
+                        prop.slot "form-nav-button"
+                        prop.children [
+                            Html.button [
+                                prop.className "nav-button"
+                                prop.text "<< Help"
+                                prop.onClick (fun _ -> document.querySelector("[slot='help']")?scrollIntoView ())
+                            ]
+                            Html.button [
+                                prop.className "nav-button"
+                                prop.text "3D Canvas >>"
+                                prop.onClick (fun _ -> document.querySelector("[slot='my-canvas']")?scrollIntoView ())
                             ]
                         ]
                     ]
+
                 ]
+
             ]
         ]
