@@ -72,5 +72,8 @@ slot[name="my-canvas"]::slotted(#visual-filter) {
     justify-content: center;
     min-height: 54px;
 }
-
-
+/* safari scrolling fix*/
+::slotted(#visual-filter){
+    position: relative;
+    top:4em;
+}

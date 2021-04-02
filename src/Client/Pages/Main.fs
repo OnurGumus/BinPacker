@@ -131,7 +131,7 @@ let MainView (model: Model) dispatch =
         (fun _ ->
             if shadowRoot.IsSome then
                 shadowRoot.Value?adoptedStyleSheets <- [| layoutCSS; themeCSS |] |> Array.map createSheet
-                initCanvas()
+                (Fable.Core.JS.setTimeout initCanvas 100) |> ignore
                 ),
 
         [| shadowRoot |> box<_> |]

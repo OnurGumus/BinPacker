@@ -29,6 +29,7 @@ let init1 () =
         document.querySelector ("#my-canvas")
     // let element:Element = document.querySelector("canvas")
     let rect = {| width = element?offsetWidth; height = element?offsetHeight|}
+    console.log(element.getBoundingClientRect());
     camera <- THREE.PerspectiveCamera.Create(30., rect.width / rect.height, 20., 10000.)
 
     let opt =
