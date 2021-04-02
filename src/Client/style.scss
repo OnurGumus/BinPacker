@@ -18,20 +18,14 @@ body {
 }
 
 page-main {
-
-
-
     #form-wrapper {
         display: flex;
         flex-direction: column;
         overflow-y: auto;
         @media only screen and (min-width: 1025px) {
-            padding-top:2em;
+            padding-top: 2em;
         }
     }
-
-
-
 
     #form {
         flex-grow: 1;
@@ -39,16 +33,15 @@ page-main {
     #title {
         height: 3em;
         background-color: red;
-        color:white;
+        color: white;
         font-weight: bold;
         padding: 1em 1em;
         font-size: 1.1em;
     }
-
 }
 
 #form-wrapper {
-    .detail-label{
+    .detail-label {
         margin: 0.1em 0;
         display: block;
     }
@@ -139,7 +132,7 @@ page-main {
         white-space: nowrap;
         display: block;
         margin: 1em 0;
-        width:50%;
+        width: 50%;
     }
     .share-button {
         background-color: #3298dc;
@@ -152,7 +145,7 @@ page-main {
         white-space: nowrap;
         display: block;
         margin: 1em 0;
-        width:50%;
+        width: 50%;
     }
 
     .arrow-button {
@@ -184,4 +177,43 @@ page-main {
         }
         padding: 1em;
     }
+}
+
+.nav-button {
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #3298dc;
+    border: 2px solid #3298dc;
+    border-radius: 0.6em;
+    color: white;
+    cursor: pointer;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-self: center;
+    -ms-flex-item-align: center;
+    align-self: center;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    margin: 20px;
+    padding: 1.2em 2.8em;
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    -webkit-transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+    transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+    transform: scale(0.8);
+}
+
+.nav-button:hover,
+.nav-button :focus {
+    color: #fff;
+    outline: 0;
+    box-shadow: 0 0 40px 40px #f14668 inset;
 }

@@ -209,7 +209,7 @@ let update (msg: Msg) model =
             match model.Calculation with
             | Calculated c ->
                 let element =
-                        document.querySelector ("#canvas-wrapper")
+                        document.querySelector ("#my-canvas")
 
                 element?scrollIntoView ({|
                                                 behavior = "smooth"
@@ -743,7 +743,7 @@ let viewC =
                     results
                     |> List.exists (fun r -> r.ItemsPut.Length > 0) ->
                     let element =
-                        document.querySelector ("#canvas-wrapper")
+                        document.querySelector ("#my-canvas")
 
                     element?scrollIntoView ({|
                                                 behavior = "smooth"

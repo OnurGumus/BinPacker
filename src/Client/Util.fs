@@ -6,7 +6,7 @@ open Fable.React.Helpers
 open Fable.Core.JsInterop
 open Browser.Types
 
-//importAll "construct-style-sheets-polyfill"
+importAll "construct-style-sheets-polyfill"
 
 
 [<Global>]
@@ -14,8 +14,7 @@ type CSSStyleSheet() =
     class
     end
 
-//let sheet = new CSSStyleSheet()
-//sheet?replaceSync ("h1 { color: red; }")
+
 
 //Browser.Dom.document?adoptedStyleSheets <- [| sheet |]
 

@@ -25,9 +25,13 @@ let update msg (model: Model) =
         { Form = model }, Cmd.map FormMsg cmd
 
 open Feliz.UseMediaQuery
+open Client.Util
 
 let html : string =
     importDefault ("!!raw-loader!./_Pages/Main.html")
+
+let mainCss : string =
+    importDefault ("!!raw-loader!./_Pages/Main.css")
 
 let initCanvas () =
     CanvasRenderer.init ()
@@ -114,10 +118,21 @@ let initCanvas () =
 
     CanvasRenderer.renderResult container boxes true
 
+let sheet = new CSSStyleSheet()
+sheet?replaceSync (mainCss)
+
+
 [<ReactComponent>]
 let MainView (model: Model) dispatch =
     let attachShadowRoot, shadowRoot = Client.Util.useShadowRoot (html)
-    React.useEffect ((fun _ -> if shadowRoot.IsSome then initCanvas() else ()), [| shadowRoot |> box<_>|])
+
+    React.useEffect (
+        (fun _ ->
+            if shadowRoot.IsSome then
+                initCanvas ()
+                shadowRoot.Value?adoptedStyleSheets <- [| sheet |]),
+        [| shadowRoot |> box<_> |]
+    )
 
     let matches =
         React.useMediaQuery ("(min-width: 1025px)")
