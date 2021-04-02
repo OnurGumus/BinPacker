@@ -9,5 +9,17 @@ body {
 }
 
 body{
-    height: calc(100vh - 6em);
+    height: calc(100vh - 5em);
+}
+
+main{
+    height: 100%;
+}
+
+#elmish-app{
+    height:100%;
+}
+
+page-main{
+    height: 100%;
 }
