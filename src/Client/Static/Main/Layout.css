@@ -59,8 +59,11 @@
     overflow-y: auto;
 }
 
-slot[name="my-canvas"]::slotted(button) {
-
+.nav-button-wrapper {
+    margin-bottom: 6em;
+    display: flex;
+    place-content: center;
+    justify-content: center;
 }
 
 slot[name="my-canvas"]::slotted(#my-canvas) {

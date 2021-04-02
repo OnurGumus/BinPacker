@@ -207,7 +207,7 @@ let MainView (model: Model) dispatch =
                     ]
                     Html.button [
                         prop.text "<< See parameters"
-                        prop.slot "my-canvas"
+                        prop.slot "canvas-nav-button"
                         prop.className "nav-button"
                         prop.onClick (fun _ -> document.querySelector("[slot='form']")?scrollIntoView ())
                         prop.style [
@@ -217,6 +217,16 @@ let MainView (model: Model) dispatch =
                     ]
                 ]
                 howto
+                Html.button [
+                        prop.text "Next >>"
+                        prop.slot "help-nav-button"
+                        prop.className "nav-button"
+                        prop.onClick (fun _ -> document.querySelector("[slot='form']")?scrollIntoView ())
+                        prop.style [
+                            if matches then
+                                style.visibility.collapse
+                        ]
+                    ]
                 Html.div [
                     prop.id "form-wrapper"
                     prop.slot "form"

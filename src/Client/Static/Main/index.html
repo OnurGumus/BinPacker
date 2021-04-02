@@ -40,7 +40,11 @@
                 </slot>
 
             </div>
-            <button class="nav-button" onclick="document.querySelector('#form').scrollIntoView()">Next</button>
+            <div class="nav-button-wrapper">
+                <slot name="help-nav-button">
+                    <button class="nav-button" onclick="document.querySelector('#form').scrollIntoView()">Next</button>
+                </slot>
+            </div>
         </div>
         <div id="form">
 
@@ -51,6 +55,11 @@
         <div id="my-canvas">
             <slot name="my-canvas">
             </slot>
+            <div class="nav-button-wrapper">
+                <slot name="canvas-nav-button">
+                    <button class="nav-button" onclick="document.querySelector('#form').scrollIntoView()">Next</button>
+                </slot>
+            </div>
         </div>
 
     </div>
