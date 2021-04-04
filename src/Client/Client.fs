@@ -33,7 +33,6 @@ let langValue =
     elif lang.StartsWith "ru" then Lang.RU
     else
         Lang.EN
-console.log(lang)
 
 Program.mkProgram (Main.init) Main.update Main.MainView
 #if DEBUG
