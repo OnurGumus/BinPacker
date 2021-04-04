@@ -1172,7 +1172,7 @@ let inline mutate (calcMode: CalculationMode) (itemsPut: ItemPut list) (items: I
         arr.[secondSwap] <- tmp
         arr |> List.ofArray
 
-let TMin = 0.01
+let TMin = 1.
 
 open System
 open System.Diagnostics
@@ -1228,7 +1228,7 @@ let calcCost rootContainer (calculationMode: CalculationMode) containers items =
                     |> fun max -> max.Item.Dim.Length + max.Coord.Z
 
         float
-            ((unfitItems |> List.sumBy calcVolume) * 1000.
+            ((unfitItems |> List.sumBy calcVolume) * 10.
              // + 1000. * float (cs |> List.sumBy(fun x->x.Dim |> dimToArea))
              + 5. * float(totalArea)
              + 1. * float (sumZ)
@@ -1325,7 +1325,6 @@ let rec calc
                             globalBest
 
                 loop (nextItem, res) globalBest2 (count - 1)
-
         if TMin >= T
            || sw.ElapsedMilliseconds > 8000L
            || (itemsWithCost.Items.Length = 1
