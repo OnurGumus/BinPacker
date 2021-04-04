@@ -9,20 +9,21 @@ open Fable
 open Shared
 open Client
 open Elmish
+open Client.Util
 
-type Model = { Form: Form.Model }
+type Model = { Form: Form.Model; Lang : Lang }
 
 type Msg = FormMsg of Form.Msg
 
-let init () =
-    let model, cmd = Form.init ()
-    { Form = model }, Cmd.map FormMsg cmd
+let init (lang : Lang) =
+    let model, cmd = Form.init (lang)
+    { Form = model; Lang = lang }, Cmd.map FormMsg cmd
 
-let update msg (model: Model) =
+let update msg (mainModel: Model) =
     match msg with
     | FormMsg msg ->
-        let model, cmd = Form.update msg model.Form
-        { Form = model }, Cmd.map FormMsg cmd
+        let model, cmd = Form.update msg mainModel.Form
+        { mainModel with Form = model }, Cmd.map FormMsg cmd
 
 open Feliz.UseMediaQuery
 open Client.Util
@@ -125,6 +126,7 @@ let initCanvas () =
 
 [<ReactComponent>]
 let MainView (model: Model) dispatch =
+    let translate = Util.translate model.Lang
     let attachShadowRoot, shadowRoot = useShadowRoot (html)
 
     React.useEffect (
@@ -145,7 +147,7 @@ let MainView (model: Model) dispatch =
     let howto =
         React.fragment [
             Html.h2 [
-                prop.text "How to use:"
+                prop.text ("How to use:" |> translate)
                 prop.slot "help"
             ]
             Html.ul [
@@ -165,12 +167,11 @@ let MainView (model: Model) dispatch =
                         "Select the calculation mode depending on items to be at minimum height or pushed to the edge."
                         "Select container mode to multi container if you want to see how many container it takes to fit"
                         "Click calculate and wait up to 100 sec. And then click 3D Canvas button at the bottom to see the visuals."
-                        "Bin packer will try to fit the items and minimize the placement."
                         "Gravity is ignored."
-                        "Review the result in 3D then you may share it via share the result button and copy the url."
+                        "You may share the result via share the result button and copy the url."
                         "You may visually remove some boxes by using h-filter and v-filter controls on 3D."
                         "For your questions and problems send a mail to onur@outlook.com.tr or tweet to @onurgumusdev."
-                    ]
+                    ] |>  List.map translate
 
                 prop.children [
                     for item in items do
@@ -193,7 +194,7 @@ let MainView (model: Model) dispatch =
                     prop.children [
                         Html.div [
                             prop.id "title"
-                            prop.text "Bindrake - Your bin packing magician!"
+                            prop.text ("Bindrake - Your bin packing magician!" |> translate)
                         ]
                     ]
                 ]
@@ -219,7 +220,7 @@ let MainView (model: Model) dispatch =
                 ]
                 howto
                 Html.button [
-                    prop.text "Next >>"
+                    prop.text ("Next >>" |> translate)
                     prop.slot "help-nav-button"
                     prop.className "nav-button"
                     prop.onClick (fun _ -> document.querySelector("[slot='form']")?scrollIntoView ())
@@ -244,12 +245,12 @@ let MainView (model: Model) dispatch =
                     prop.children [
                         Html.button [
                             prop.className "nav-button"
-                            prop.text "<< Help"
+                            prop.text ("<< Help" |> translate)
                             prop.onClick (fun _ -> document.querySelector("[slot='help']")?scrollIntoView ())
                         ]
                         Html.button [
                             prop.className "nav-button"
-                            prop.text "3D Canvas >>"
+                            prop.text ("3D Canvas >>" |> translate)
                             prop.onClick (fun _ -> document.querySelector("[slot='my-canvas']")?scrollIntoView ())
                         ]
                     ]

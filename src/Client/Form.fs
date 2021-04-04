@@ -18,6 +18,7 @@ open Fable.Core.JsInterop
 
 type FA = CssClasses<"../../node_modules/@fortawesome/fontawesome-free/css/all.css", Naming.Underscores>
 open Thoth.Json
+open Util
 
 [<Emit("btoa($0)")>]
 let toBase64String (s: string) : string = jsNative
@@ -27,7 +28,7 @@ let fromBase64String (s: string) : string = jsNative
 
 let r = Random()
 
-type Model = { SharedModel: ClientModel.Model }
+type Model = { SharedModel: ClientModel.Model; Lang : Lang }
 type Msg =
     | ResultLoaded of CalcResult list
     | ModelSaved of Guid
@@ -115,7 +116,7 @@ let numericCheck (t: Validator<_>) typef min max name data =
     |> t.Lt max "must be less than is {max}"
     |> t.End
 
-let init () =
+let init (lang : Lang) =
 
     let cmd, loading =
         try
@@ -149,7 +150,7 @@ let init () =
             UrlShown = false
             Loading = loading
         }
-    {SharedModel = sharedModel},cmd
+    {SharedModel = sharedModel; Lang = lang},cmd
 
 let cols =
     [
@@ -201,8 +202,8 @@ let convertToItems (model: Shared.ClientModel.Model) =
                     }
     ]
 
-let update (msg: Msg) model =
-    let model = model.SharedModel
+let update (msg: Msg) mainModel =
+    let model = mainModel.SharedModel
     let model, cmd =
         match msg with
         | ModelLoaded model ->
@@ -330,7 +331,7 @@ let update (msg: Msg) model =
             Some vol
         | _ -> None
 
-    { SharedModel = { model with TotalVolume = totalVolume }}, cmd
+    { mainModel with SharedModel = { model with TotalVolume = totalVolume }}, cmd
 
 type RowFormData =
     {
@@ -355,6 +356,7 @@ type RowProp =
         Key: string
         Disabled: bool
         FormData: RowFormData
+        Lang : Lang
     }
 
 type ContainerFormData =
@@ -370,6 +372,7 @@ type ContainerProp =
         ContainerUpdated: ContainerItem option -> unit
         Disabled: bool
         ContainerFormData: ContainerFormData
+        Lang : Lang
     }
 
 module Container =
@@ -438,6 +441,7 @@ module Container =
     let view =
         React.functionComponent (
             (fun (props: ContainerProp) ->
+                let translate = Util.translate props.Lang
                 let model, dispatch =
                     React.useElmish (init props.ContainerFormData, update props.ContainerUpdated, [||])
 
@@ -478,7 +482,7 @@ module Container =
                                 for col in cols do
                                     Html.th [
                                         prop.children [
-                                            Html.label [ prop.text col ]
+                                            Html.label [ prop.text (col |> translate) ]
                                         ]
                                     ]
                             ]
@@ -494,7 +498,7 @@ module Container =
                                                 prop.maxLength 4
                                                 prop.max 2000
                                                 prop.defaultValue (defaultValue col)
-                                                prop.placeholder col
+                                                prop.placeholder (col |> translate)
                                                 prop.onChange (fun (e: Event) -> dispatch' col e.Value)
                                             ]
                                         ]
@@ -586,6 +590,7 @@ module Row =
     let view =
         React.functionComponent (
             (fun (props: RowProp) ->
+                let translate = Util.translate props.Lang
                 let model, dispatch =
                     React.useElmish (init props.FormData, update props.RowUpdated, [||])
 
@@ -690,7 +695,7 @@ module Row =
                                                 prop.readOnly props.Disabled
                                                 prop.defaultValue (defaultt col)
                                                 prop.max 2000
-                                                prop.placeholder col
+                                                prop.placeholder (col |> translate)
                                                 prop.onChange (fun (e: Browser.Types.Event) -> dispatch' col e.Value)
                                             ]
                                     else if i = cols.Length - 2 then
@@ -727,6 +732,7 @@ let viewC =
     React.functionComponent
         (fun (props: {| model: Model
                         dispatch: Msg -> unit |}) ->
+            let translate = Util.translate props.model.Lang
             let model = props.model.SharedModel
             let dispatch = props.dispatch
 
@@ -797,6 +803,7 @@ let viewC =
                                 RowUpdated = fun r -> dispatch (RowUpdated(key, r))
                                 AddRow = addRow
                                 Key = key
+                                Lang = props.model.Lang
                                 Remove = remove
                                 Disabled = isCalculating
                                 FormData =
@@ -843,7 +850,7 @@ let viewC =
                 Html.div [
 
                     Html.label [
-                        prop.text "Enter CONTAINER dimensions:"
+                        prop.text ("Enter CONTAINER dimensions:" |> translate)
                     ]
                     if model.Loading then
                         Html.none
@@ -861,6 +868,7 @@ let viewC =
                                             Weight = "0"
                                             Length = ""
                                         }
+                                    Lang = props.model.Lang
                                 }
                         | Some container ->
                             Container.view
@@ -874,10 +882,11 @@ let viewC =
                                             Weight = container.Weight.ToString()
                                             Length = container.Length.ToString()
                                         }
+                                    Lang = props.model.Lang
                                 }
 
                     Html.label [
-                        prop.text "Enter ITEM dimensions:"
+                        prop.text ("Enter ITEM dimensions:" |> translate)
                     ]
                     Html.table [
                         prop.disabled isCalculating
@@ -887,7 +896,7 @@ let viewC =
                                     for col in cols do
                                         Html.th [
                                             prop.children [
-                                                Html.label [ prop.text col ]
+                                                Html.label [ prop.text (col |> translate) ]
                                             ]
                                         ]
                                 ]
@@ -906,7 +915,7 @@ let viewC =
                                     prop.text (
                                         v
                                         |> Option.map (thousands)
-                                        |> Option.defaultValue "Please complete the form."
+                                        |> Option.defaultValue ("Please complete the form." |> translate)
                                     )
                                 ]
                             ]
@@ -915,7 +924,7 @@ let viewC =
                     [
                         let items =
                             [
-                                ("Total Item Volume:", model.TotalVolume)
+                                ("Total Item Volume:" |> translate, model.TotalVolume)
                             ]
 
                         for t, v in items do
@@ -926,7 +935,7 @@ let viewC =
                     match model.ContainerItem with
                     | Some container ->
                         line
-                            "Container volume:"
+                            ("Container volume:" |> translate)
                             (Some(
                                 container.Height
                                 * container.Width
@@ -935,7 +944,7 @@ let viewC =
                     | _ -> Html.none
 
                     match model.Calculation with
-                    | Calculated r -> line "Volume fit:" (Some(r |> List.sumBy (fun c -> c.PutVolume)))
+                    | Calculated r -> line ("Volume fit:"|> translate) (Some(r |> List.sumBy (fun c -> c.PutVolume)))
                     | _ -> Html.none
 
                     let isMultiBin =
@@ -1011,7 +1020,7 @@ let viewC =
                             Html.div [
                                 prop.children [
                                     Html.label [
-                                        prop.text "Calculation mode:"
+                                        prop.text ("Calculation mode:" |> translate)
                                     ]
                                     Html.select [
                                         prop.value (
@@ -1020,8 +1029,8 @@ let viewC =
                                             | _ -> "Minimize Length"
                                         )
                                         prop.children [
-                                            Html.option "Minimize Height"
-                                            Html.option "Minimize Length"
+                                            Html.option [prop.value "Minimize Height"; prop.text("Minimize Height" |> translate)]
+                                            Html.option [prop.value "Minimize Length"; prop.text("Minimize Length" |> translate)]
                                         ]
                                         prop.onChange
                                             (fun (e: Event) ->
@@ -1034,7 +1043,7 @@ let viewC =
                             Html.div [
                                 prop.children [
                                     Html.label [
-                                        prop.text "Container mode:"
+                                        prop.text ("Container mode:" |> translate)
                                     ]
                                     Html.select [
                                         prop.value (
@@ -1044,8 +1053,8 @@ let viewC =
                                         )
 
                                         prop.children [
-                                            Html.option "Single Container"
-                                            Html.option "Multi Container"
+                                            Html.option [prop.value "Single Container"; prop.text ("Single Container" |> translate)]
+                                            Html.option [prop.value "Multi Container"; prop.text ("Multi Container" |> translate)]
                                         ]
 
                                         prop.onChange (fun (e: Event) -> ContainerModeChanged(!!e.target?value) |> dispatch)
@@ -1067,19 +1076,19 @@ let viewC =
                         prop.id "calculate-button"
                         prop.text (
                             if isCalculating then
-                                sprintf "Calculating... (Max %i sec)" counterValue
+                                 (("Calculating... (Max " |> translate) + counterValue.ToString() + "sec)"|> translate )
 
                             elif volumeExceeds then
-                                "Items' volume exceeds single container volume."
+                                "Items' volume exceeds single container volume." |> translate
                             //  else if nostackExceeds then
                             //      "No stack items won't fit to single container."
                             elif isinvalid then
-                                "First fill the form correctly!"
+                                "First fill the form correctly!" |> translate
                             else if itemExceeds then
-                                "An item's parameters are larger than container's."
+                                "An item's parameters are larger than container's." |> translate
 
                             else
-                                "Calculate"
+                                "Calculate" |> translate
                         )
                         let duration =
                             match model.ContainerMode with
@@ -1105,18 +1114,18 @@ let viewC =
                                         Html.label [
 
                                             prop.style [ style.color.green ]
-                                            prop.text "All items put successfully! (See 3D Canvas)"
+                                            prop.text ("All items put successfully! (See 3D Canvas)" |> translate)
                                         ]
                                     | _, [] ->
                                         Html.label [
-                                            prop.text "Unable to fit all items! (See 3D Canvas)"
+                                            prop.text ("Unable to fit all items! (See 3D Canvas)" |> translate)
                                         ]
                                     | items, _ ->
                                         let g = items |> List.groupBy (fun x -> x.Tag)
 
                                         React.fragment [
                                             Html.label [
-                                                prop.text "Could not fit the following items (See 3D canvas):"
+                                                prop.text ("Could not fit the following items (See 3D canvas):" |> translate)
                                             ]
                                             Html.ul [
                                                 for key, values in g do
@@ -1130,9 +1139,9 @@ let viewC =
                                                                 ]
                                                             ]
                                                             Html.span [
-                                                                prop.textf
-                                                                    "%i items not fit with this color."
-                                                                    values.Length
+                                                                prop.text
+                                                                    (values.Length.ToString() + " items not fit with this color." |> translate)
+
                                                             ]
                                                         ]
                                             ]
@@ -1145,9 +1154,9 @@ let viewC =
                                         prop.className "share-button"
                                         prop.text (
                                             if model.UrlShown then
-                                                "Now copy the url from address bar and share it"
+                                                "Now copy the url from address bar and share it" |> translate
                                             else
-                                                "Share the result"
+                                                "Share the result" |> translate
                                         )
                                         prop.disabled (isCalculating || model.UrlShown)
                                         prop.onClick (fun _ -> dispatch ShareRequested)
@@ -1171,7 +1180,7 @@ let viewC =
                             ]
                             let containers =
                                 Html.span [
-                                    prop.textf "Showing container: %i/%i" (model.CurrentResultIndex + 1) (c.Length)
+                                    prop.text (("Showing container: " |> translate) + ((model.CurrentResultIndex + 1).ToString()) + "/" + (c.Length).ToString())
                                 ]
 
                             match model.Calculation with
@@ -1186,14 +1195,14 @@ let viewC =
                                         containers
                                         Html.span [
                                             if (c.[model.CurrentResultIndex].ItemsPut).Length > 0 then
-                                                prop.textf
-                                                    "Max item L:%i, H:%i"
-                                                    ((c.[model.CurrentResultIndex].ItemsPut
+                                                prop.text
+                                                    (("Max item L:" |> translate )+ //%i, H:%i"
+                                                    (((c.[model.CurrentResultIndex].ItemsPut
                                                       |> List.map (fun i -> i.Coord.Z + i.Item.Dim.Length))
-                                                     |> List.max)
+                                                     |> List.max).ToString()) + (", H:" |> translate) +
                                                     ((c.[model.CurrentResultIndex].ItemsPut
                                                       |> List.map (fun i -> i.Coord.Y + i.Item.Dim.Height))
-                                                     |> List.max)
+                                                     |> List.max).ToString())
                                         ]
                                     ]
                                 ]
