@@ -189,14 +189,10 @@ let MainView (model: Model) dispatch =
         [
             attachShadowRoot
             prop.children [
-                Html.div [
-                    prop.slot "title"
-                    prop.children [
-                        Html.div [
-                            prop.id "title"
-                            prop.text ("Bindrake - Your bin packing magician!" |> translate)
-                        ]
-                    ]
+                Html.h1 [
+                    prop.slot "header"
+                    prop.id "header"
+                    prop.text ("Bindrake - Your bin packing magician!" |> translate)
                 ]
                 React.fragment [
                     Html.div [

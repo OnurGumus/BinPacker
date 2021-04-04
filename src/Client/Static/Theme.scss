@@ -97,7 +97,7 @@
     }
 
     button:disabled {
-        opacity: 0.5;
+        opacity: 0.9;
     }
     select {
         display: block;
@@ -151,4 +151,11 @@
             font-size: 1em;
         }
     }
+}
+#header {
+    background-color: green;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 1.2em;
 }

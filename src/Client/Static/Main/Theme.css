@@ -1,10 +1,5 @@
 
-#header {
-    background-color: green;
-    color: white;
-    font-weight: bold;
-    font-size: 1.1em;
-}
+
 
 slot[name="help"]::slotted(h2) {
     color: red;

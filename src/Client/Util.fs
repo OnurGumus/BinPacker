@@ -44,6 +44,7 @@ type Lang = EN | TR | RU
 
 let translate lang text =
     match lang with
+    | RU
     | EN -> text
     | TR ->
         match text with
