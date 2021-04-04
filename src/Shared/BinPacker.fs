@@ -1132,7 +1132,7 @@ let calculateCost (calculationMode: CalculationMode) =
             | (cs, _, itemPuts) :: _, _ -> ValueSome(cs, itemPuts)
             | _, _ -> ValueSome(containers, [])
 
-        loop ([ containers, items, [] ], 1000)
+        loop ([ containers, items, [] ], 6000)
 
 let calcVolume (item: Item) =
     float (item.Dim.Width)
@@ -1194,7 +1194,11 @@ let calcCost rootContainer (calculationMode: CalculationMode) containers items =
     | ValueSome (cs, res) ->
         let cs = (cs |> mergeContainers)
         let unfitItems = findUnfitItems res items
-        let totalArea = SurfaceCalc.calculateSurfaceArea res rootContainer
+        let totalArea =
+            match calculationMode with
+            | MinimizeVolume ->
+                SurfaceCalc.calculateSurfaceArea res rootContainer
+            | _ -> 0L
         let sumZ: Int64 =
             if res.Length = 0 then
                 Int64.MaxValue
@@ -1226,6 +1230,7 @@ let calcCost rootContainer (calculationMode: CalculationMode) containers items =
         float
             ((unfitItems |> List.sumBy calcVolume) * 1000.
              // + 1000. * float (cs |> List.sumBy(fun x->x.Dim |> dimToArea))
+             + 5. * float(totalArea)
              + 1. * float (sumZ)
              + 1.0 * float (maxZCoord)),
         res,
@@ -1251,7 +1256,7 @@ let rec calc
     (sw: IStopwatch)
     =
     if TMin >= T
-       || sw.ElapsedMilliseconds > 2000L
+       || sw.ElapsedMilliseconds > 4000L
        || (itemsWithCost.Items.Length = 1
            && globalBest.ItemsPut.Length = 1) then
         globalBest
@@ -1322,7 +1327,7 @@ let rec calc
                 loop (nextItem, res) globalBest2 (count - 1)
 
         if TMin >= T
-           || sw.ElapsedMilliseconds > 2000L
+           || sw.ElapsedMilliseconds > 4000L
            || (itemsWithCost.Items.Length = 1
                && globalBest.ItemsPut.Length = 1) then
             globalBest
@@ -1402,6 +1407,7 @@ let shuffle a =
 
 let defaultBatchSize = 20
 
+
 let runPerContainer
     (logger: ILogger)
     (sw: IStopwatch)
@@ -1433,13 +1439,12 @@ let runPerContainer
 
         // let batchCount =
         //     if (items.Length > 0 && items.Head.NoTop) then 1 else batchCount
-
+        //let items = items |> Array.ofList |> shuffle |> List.ofArray
         let currentItems, remainingItems =
             if items.Length > batchCount then
                 items |> List.splitAt batchCount
             else
                 items, []
-
         let batchCount = oldBatchCount
 
         let res =
@@ -1540,7 +1545,7 @@ let runPerContainer
 
     let rec outerLoop (calculationMode: CalculationMode) (containerMode: ContainerMode) (items: Item list) retryCount resList =
 
-        let defaultBatchSize = if items.Length < 100 then 15 else 20
+        let defaultBatchSize = if items.Length < 100 then 50 else 50
 
         let res =
             loop rootContainer [ rootContainer ] calculationMode (items) [] defaultBatchSize 6
@@ -1633,8 +1638,8 @@ let runPerContainer
                 | n -> loopMutate (items |> mutate calculationMode res.ItemsPut) (n - 1)
             let retryMode =
                 match containerMode, calculationMode with
-                | SingleContainer, MinimizeHeight -> MinimizeLength
-                | SingleContainer, MinimizeLength -> MinimizeHeight
+                | SingleContainer, MinimizeHeight -> MinimizeVolume
+                | SingleContainer, MinimizeLength -> MinimizeVolume
                 | _ -> calculationMode
             outerLoop (retryMode) containerMode (loopMutate items (items.Length / 10)) (retryCount - 1) results
 
