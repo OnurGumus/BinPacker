@@ -454,30 +454,12 @@ let twGroup (rootContainer: Container) (items: Item list) =
 
             p @ h
 
-let splitAdjustedHeight (sample: Item) (item: ItemPut) =
-    let hr =
-        int (item.Item.Dim.Height / sample.Dim.Height)
 
-    let items =
-        [
-            for i = 0 to (hr - 1) do
-                {
-                    Item = { item.Item with Dim = { item.Item.Dim with Height = item.Item.Dim.Height / int64(hr)}}
-                    Coord =
-                        { item.Coord with
-                            Y =
-                                item.Coord.Y
-                                + item.Item.Dim.Height / int64 (hr) * int64 (i)
-                        }
-                }: ItemPut
-        ]
-
-    items
 
 module SplitAdjust =
 
-    let findAndAdjust (samples:Item list) (item: ItemPut) =
-        let dim = item.Item.Dim
+    let findAndAdjust (samples:Item list) (item: Item) =
+        let dim = item.Dim
         let rec loop = function
             | [] -> failwith "not possible"
 
@@ -487,6 +469,27 @@ module SplitAdjust =
                 else
                     loop tail
         loop  samples
+
+    let splitAdjustedHeight (sample: Item) (item: ItemPut) =
+        let hr =
+            int (item.Item.Dim.Height / sample.Dim.Height)
+
+        let items =
+            [
+                for i = 0 to (hr - 1) do
+                    {
+                        Item = { item.Item with Dim = { item.Item.Dim with Height = item.Item.Dim.Height / int64(hr)}}
+                        Coord =
+                            { item.Coord with
+                                Y =
+                                    item.Coord.Y
+                                    + item.Item.Dim.Height / int64 (hr) * int64 (i)
+                            }
+                    }: ItemPut
+            ]
+
+        items
+
 
     let splitAdjustedWidth (sample: Item) (item: ItemPut) =
         let hr =
@@ -534,6 +537,61 @@ module SplitAdjust =
         |> List.map (splitAdjustedLength sample)
         |> List.collect id
         |> List.map (splitAdjustedWidth sample)
+        |> List.collect id
+
+
+    let splitAdjustedHeightUnput (sample: Item) (item: Item) =
+        let hr =
+            int (item.Dim.Height / sample.Dim.Height)
+
+        let items =
+            [
+                for i = 0 to (hr - 1) do
+
+                        { item with Dim = { item.Dim with Height = item.Dim.Height / int64(hr)}}
+
+
+            ]
+
+        items
+
+
+    let splitAdjustedWidthUnput (sample: Item) (item: Item) =
+        let hr =
+            int (item.Dim.Width / sample.Dim.Width)
+
+        let items =
+            [
+                for i = 0 to (hr - 1) do
+                    {
+                        item with Dim = { item.Dim with Width = item.Dim.Width / int64(hr)}
+
+                    }: Item
+            ]
+
+        items
+
+    let splitAdjustedLengthUnput (sample: Item) (item: Item) =
+        let hr =
+            int (item.Dim.Length / sample.Dim.Length)
+
+        let items =
+            [
+                for i = 0 to (hr - 1) do
+                    {
+                        item with Dim = { item.Dim with Length = item.Dim.Length / int64(hr)}
+
+                    }: Item
+            ]
+
+        items
+
+    let splitAdjustedUnput (item: Item, sample: Item) =
+        (item)
+        |> (splitAdjustedHeightUnput sample)
+        |> List.map (splitAdjustedLengthUnput sample)
+        |> List.collect id
+        |> List.map (splitAdjustedWidthUnput sample)
         |> List.collect id
 
 let groupItems (rootContainer: Container) (items: Item list) (map: Map<_, _>) =
@@ -653,10 +711,18 @@ let run
             let itemsPut =
                 [ for itemPut in finalResult.ItemsPut do
                     let samples = map.[itemPut.Item.Tag]
-                    let adjusted = SplitAdjust.findAndAdjust samples itemPut
+                    let adjusted = SplitAdjust.findAndAdjust samples itemPut.Item
                     yield! SplitAdjust.splitAdjusted(itemPut, adjusted)
 
                 ]
+            let itemsInput =
+                [ for itemUnput in finalResult.ItemsUnput do
+                    let samples = map.[itemUnput.Tag]
+                    let adjusted = SplitAdjust.findAndAdjust samples itemUnput
+                    yield! SplitAdjust.splitAdjustedUnput(itemUnput, adjusted)
+
+                ]
+
             {finalResult with ItemsPut = itemsPut}
     ]
 
