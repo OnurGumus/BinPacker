@@ -260,10 +260,14 @@ let update (msg: Msg) mainModel =
             model,
             Cmd.ofSub
                 (fun _ ->
-                    CanvasRenderer.renderResult
-                        c.[model.CurrentResultIndex].Container
-                        c.[model.CurrentResultIndex].ItemsPut
-                        false
+                    let f () =
+                        CanvasRenderer.renderResult
+                            c.[model.CurrentResultIndex].Container
+                            c.[model.CurrentResultIndex].ItemsPut
+                            false
+
+                    (Fable.Core.JS.setTimeout f 500) |> ignore
+
 
                         )
 
