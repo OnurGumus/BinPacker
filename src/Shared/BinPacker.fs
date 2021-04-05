@@ -1741,6 +1741,42 @@ let runPerContainer
         logger.LogError e
         reraise ()
 
+let bundleItems (item1: Item , item2 : Item) =
+    let w = item1.Dim.Width
+    let h = item1.Dim.Height
+    let l = item1.Dim.Length
+    if w < h && w < l then
+        { item1 with Dim = {  item1.Dim with Width = item1.Dim.Width * 2L} }
+    elif l < h && l < w then
+        { item1 with Dim = {  item1.Dim with Length = item1.Dim.Length * 2L} }
+    else
+        { item1 with Dim = {  item1.Dim with Height = item1.Dim.Height * 2L} }
+    //     { item1 with Width = item1.Width * 2L}
+
+let toPairs (l:list<'a>) : list<'a*'a>=
+    let li = l |> List.mapi (fun i k -> (i,k))
+    let evens,odds = li |> List.partition(fun (i,_) -> i % 2 = 0)
+    let combined = evens |> List.zip odds
+    combined |> List.map(fun ((i1,j1), (i2,j2)) -> (j1,j2))
+
+let twGroup (items : Item list) =
+    let chunks = items |> List.chunkBySize 20
+    let rev = chunks |> List.rev
+    match rev with
+        | [] -> []
+        | h ::[] -> h
+        | h::t ->
+            let paired = t |> List.map toPairs
+            let p: Item list = paired |> List.collect id |> List.map bundleItems
+            p @ h
+
+
+
+let groupItems (items : Item list) =
+    let itemGroups = items |> List.groupBy(fun x -> x.Tag)
+    itemGroups |> List.map(fun (_,g) -> twGroup g) |> List.collect id
+//     let smallParts, bigParts = itemGroups |> List.partition (fun (s,g) -> g.Length < 20)
+
 let run
     (sw: IStopwatch)
     (logger: ILogger)
@@ -1751,6 +1787,7 @@ let run
     (T: float)
     (alpha: float)
     =
+    let items = groupItems items
     let rec loop results unputItems =
         let res =
             runPerContainer logger sw rootContainer containerMode calculationMode unputItems T alpha
