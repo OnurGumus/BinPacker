@@ -443,12 +443,64 @@ let containerNestedSort (calcMode: CalculationMode) (containers: Container list)
          |> List.map (fun x -> 0L, (-(x.Dim |> dimToArea))))
         |> List.min
 
-let rec putItem (rootContainer: Container) (calculationMode: CalculationMode) tryCount: PutItem =
+let rec putItem (rootContainer: Container) (calculationMode: CalculationMode) tryCount firstLevelRetry: PutItem =
     fun container item (weightPut: int) ->
         let remainingWidth = container.Dim.Width - item.Dim.Width
         let remainingHeight = container.Dim.Height - item.Dim.Height
         let remainingLength = container.Dim.Length - item.Dim.Length
+        let minVolumeMode = match calculationMode with | MinimizeVolume -> true | _ -> false
 
+        let rotateForMinWidth item : Item =
+            if remainingWidth <> 0L then
+                let newItem = item |> Rotate.rotateZ
+                if newItem.Dim.Width <> container.Dim.Width then
+                    let newItem = item |> Rotate.rotateY
+                    if newItem.Dim.Width <> container.Dim.Width then
+                        item
+                    else
+                        newItem
+                else
+                    newItem
+            else
+                item
+
+        let rotateForMinHeight item =
+            if remainingHeight<> 0L then
+                let newItem = item |> Rotate.rotateZ
+                if newItem.Dim.Height <> container.Dim.Height then
+                    let newItem = item |> Rotate.rotateX
+                    if newItem.Dim.Height <> container.Dim.Height then
+                        item
+                    else
+                        newItem
+                else
+                    newItem
+            else
+                item
+
+        let rotateForMinLength item =
+            if remainingLength<> 0L then
+                let newItem = item |> Rotate.rotateY
+                if newItem.Dim.Length <> container.Dim.Length then
+                    let newItem = item |> Rotate.rotateX
+                    if newItem.Dim.Length <> container.Dim.Length then
+                        item
+                    else
+                        newItem
+                else
+                    newItem
+            else
+                item
+
+
+
+
+
+        if minVolumeMode && remainingHeight > 0L && remainingWidth > 0L  && remainingLength > 0L && firstLevelRetry > 0 then
+                    let item = item |> rotateForMinHeight |> rotateForMinWidth |> rotateForMinLength
+                    putItem rootContainer calculationMode (tryCount) (firstLevelRetry - 1) container item weightPut
+
+        else
         let remainingWeight =
             rootContainer.Weight - weightPut - item.Weight
 
@@ -466,15 +518,15 @@ let rec putItem (rootContainer: Container) (calculationMode: CalculationMode) tr
                 if tryCount = 3 then
                     let item = item |> Rotate.rotateZ
 
-                    putItem rootContainer calculationMode (tryCount - 1) container item weightPut
+                    putItem rootContainer calculationMode (tryCount - 1) 0 container item weightPut
                 else if tryCount = 2 then
                     let item = item |> Rotate.rotateZ |> Rotate.rotateY
 
-                    putItem rootContainer calculationMode (tryCount - 1) container item weightPut
+                    putItem rootContainer calculationMode (tryCount - 1) 0 container item weightPut
                 else
                     let item = item |> Rotate.rotateY |> Rotate.rotateX
 
-                    putItem rootContainer calculationMode (tryCount - 1) container item weightPut
+                    putItem rootContainer calculationMode (tryCount - 1) 0 container item weightPut
             else
                 ValueNone
         else
@@ -1188,7 +1240,7 @@ let inline findUnfitItems itemsPut (items: Item list) =
 let calcCost rootContainer (calculationMode: CalculationMode) containers items =
     match calculateCost
               calculationMode
-              (putItem rootContainer calculationMode 3)
+              (putItem rootContainer calculationMode 3 3)
               containers
               (items |> List.sortByDescending calcVolume) with
     | ValueSome (cs, res) ->
@@ -1544,7 +1596,7 @@ let runPerContainer
 
     let rec outerLoop (calculationMode: CalculationMode) (containerMode: ContainerMode) (items: Item list) retryCount resList =
 
-        let defaultBatchSize = if items.Length < 100 then 50 else 50
+        let defaultBatchSize = if items.Length < 50 then 35 else 25
 
         let res =
             loop rootContainer [ rootContainer ] calculationMode (items) [] defaultBatchSize 6
