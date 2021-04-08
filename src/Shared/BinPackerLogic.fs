@@ -56,11 +56,11 @@ let rec putItem (rootContainer: Container) (calculationMode: CalculationMode) tr
 
 
 
-        if minVolumeMode && remainingHeight > 0L && remainingWidth > 0L  && remainingLength > 0L && firstLevelRetry > 0 then
-                    let item = item |> rotateForMinHeight |> rotateForMinWidth |> rotateForMinLength
-                    putItem rootContainer calculationMode (tryCount) (firstLevelRetry - 1) container item weightPut
+        // if minVolumeMode && remainingHeight > 0L && remainingWidth > 0L  && remainingLength > 0L && firstLevelRetry > 0 then
+        //             let item = item |> rotateForMinHeight |> rotateForMinWidth |> rotateForMinLength
+        //             putItem rootContainer calculationMode (tryCount) (firstLevelRetry - 1) container item weightPut
 
-        else
+        // else
         let remainingWeight =
             rootContainer.Weight - weightPut - item.Weight
 

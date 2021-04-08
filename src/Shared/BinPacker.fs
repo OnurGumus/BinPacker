@@ -629,15 +629,15 @@ let run
     (T: float)
     (alpha: float)
     =
-    let rec loopGroup items prevItems map =
+    // let rec loopGroup items prevItems map =
 
-        if items = prevItems then
-            items, map
-        else
-            let newItems, newMap = groupItems rootContainer items map
-            loopGroup newItems items newMap
+    //     if items = prevItems then
+    //         items, map
+    //     else
+    //         let newItems, newMap = groupItems rootContainer items map
+    //         loopGroup newItems items newMap
 
-    let items, map = loopGroup items [] Map.empty
+    // let items, map = loopGroup items [] Map.empty
 
     let rec loop results unputItems =
         let res =
@@ -706,23 +706,24 @@ let run
 
     let finalResults = (loop [] items) |> List.rev
 
-    [
-        for finalResult in finalResults do
-            let itemsPut =
-                [ for itemPut in finalResult.ItemsPut do
-                    let samples = map.[itemPut.Item.Tag]
-                    let adjusted = SplitAdjust.findAndAdjust samples itemPut.Item
-                    yield! SplitAdjust.splitAdjusted(itemPut, adjusted)
+    // [
+    //     for finalResult in finalResults do
+    //         let itemsPut =
+    //             [ for itemPut in finalResult.ItemsPut do
+    //                 let samples = map.[itemPut.Item.Tag]
+    //                 let adjusted = SplitAdjust.findAndAdjust samples itemPut.Item
+    //                 yield! SplitAdjust.splitAdjusted(itemPut, adjusted)
 
-                ]
-            let itemsInput =
-                [ for itemUnput in finalResult.ItemsUnput do
-                    let samples = map.[itemUnput.Tag]
-                    let adjusted = SplitAdjust.findAndAdjust samples itemUnput
-                    yield! SplitAdjust.splitAdjustedUnput(itemUnput, adjusted)
+    //             ]
+    //         let itemsInput =
+    //             [ for itemUnput in finalResult.ItemsUnput do
+    //                 let samples = map.[itemUnput.Tag]
+    //                 let adjusted = SplitAdjust.findAndAdjust samples itemUnput
+    //                 yield! SplitAdjust.splitAdjustedUnput(itemUnput, adjusted)
 
-                ]
+    //             ]
 
-            {finalResult with ItemsPut = itemsPut}
-    ]
+    //         {finalResult with ItemsPut = itemsPut}
+    // ]
+    finalResults
 
