@@ -4,9 +4,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Shared.fs" />
-    <Compile Include="BinPackerUtil.fs" />
-    <Compile Include="BinPackerLogic.fs" />
-    <Compile Include="BinPacker.fs" />
+    <Compile Include="BinPacker/BinPackerUtil.fs" />
+    <Compile Include="BinPacker/BinPackerLogic.fs" />
+    <Compile Include="BinPacker/BinPacker.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
