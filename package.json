@@ -19,7 +19,7 @@
     "source-map-loader": "^2.0.1",
     "style-loader": "^2.0.0",
     "terser": "^5.6.1",
-    "three": "^0.118.3",
+    "three": "^0.125.0",
     "three-trackballcontrols": "^0.0.8",
     "three-trackballcontrols-ts": "^0.2.1",
     "webpack": "^5.15.2",
