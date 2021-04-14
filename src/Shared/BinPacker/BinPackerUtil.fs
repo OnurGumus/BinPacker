@@ -217,9 +217,10 @@ module SurfaceCalc =
 
     let generatePairs (surfaces: Surface list): ((Surface * Surface) list) =
         [
-            for x in surfaces do
-                for y in surfaces do
-                    (x, y)
+            for x in surfaces |> List.indexed do
+                for y in surfaces |> List.indexed do
+                    if x <> y then
+                        (x|> snd, y |> snd)
         ]
         |> List.distinctBy (fun (x, y) -> (y, x))
 
