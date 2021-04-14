@@ -147,28 +147,24 @@ module SurfaceCalc =
         items
         |> List.map (fun i -> xSurfaces i root)
         |> List.collect id
-        |> List.distinct
 
     let allYSurfaces (items: ItemPut list) (root: Container) =
         items
         |> List.map (fun i -> ySurfaces i root)
         |> List.collect id
-        |> List.distinct
 
     let allZSurfaces (items: ItemPut list) (root: Container) =
         items
         |> List.map (fun i -> zSurfaces i root)
         |> List.collect id
-        |> List.distinct
 
     let mostlyIntersects (xa1: int64, ya1: int64, xa2: int64, ya2: int64, xb1, yb1, xb2, yb2) =
         let iLeft = Math.Max(xa1, xb1)
         let iRight = Math.Min(xa2, xb2)
-        let iTop = Math.Max(ya1, yb1)
-        let iBottom = Math.Min(ya2, yb2)
-
+        let iTop = Math.Min(ya1, yb1)
+        let iBottom = Math.Max(ya2, yb2)
         Math.Max(0L, iRight - iLeft)
-            * Math.Max(0L, iBottom - iTop)
+            * Math.Max(0L, iTop - iBottom)
 
 
 
@@ -223,7 +219,7 @@ module SurfaceCalc =
         [
             for x in surfaces do
                 for y in surfaces do
-                    if x <> y then (x, y)
+                    (x, y)
         ]
         |> List.distinctBy (fun (x, y) -> (y, x))
 
@@ -239,7 +235,7 @@ module SurfaceCalc =
             xSurfaces
             |> List.sumBy (fun s -> s.Width * s.Height)
 
-        let xA = xSum - xInt
+        let xA = xSum - (2L * xInt)
 
         let yInt =
             List.sumBy (intersections Y) (ySurfaces |> generatePairs)
@@ -248,16 +244,17 @@ module SurfaceCalc =
             xSurfaces
             |> List.sumBy (fun s -> s.Width * s.Height)
 
-        let yA = ySum - yInt
+        let yA = ySum - (2L * yInt)
+        let zPairs = (zSurfaces |> generatePairs)
 
         let zInt =
-            List.sumBy (intersections Y) (zSurfaces |> generatePairs)
+            List.sumBy (intersections Z) zPairs
 
         let zSum =
             zSurfaces
             |> List.sumBy (fun s -> s.Width * s.Height)
 
-        let zA = zSum - zInt
+        let zA = zSum - (2L * zInt)
         xA + yA + zA
 
 let dimToVolume (d: Dim) = d.Width * d.Height * d.Length
@@ -459,3 +456,13 @@ let checkConflictI itemsPut =
                && checkConflict item1 item2 then
                 printfn "Items conflc %A %A" item1 item2
                 failwith "wr"
+
+let generate6Comb (item: Item) =
+    [
+        item
+        item |> Rotate.rotateZ
+        item |> Rotate.rotateY
+        item |> Rotate.rotateY |> Rotate.rotateZ
+        item |> Rotate.rotateX
+        item |> Rotate.rotateX |> Rotate.rotateZ
+    ]
