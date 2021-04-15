@@ -221,7 +221,7 @@ let runPerContainer
         resList
         =
 
-        let defaultBatchSize = if items.Length < 50 then 35 else 25
+        let defaultBatchSize = if items.Length < 50 then 500 else 500
 
         let res =
             loop rootContainer [ rootContainer ] calculationMode (items) [] defaultBatchSize 6
@@ -315,8 +315,8 @@ let runPerContainer
 
             let retryMode =
                 match containerMode, calculationMode with
-                | SingleContainer, MinimizeHeight -> MinimizeVolume
-                | SingleContainer, MinimizeLength -> MinimizeVolume
+                | SingleContainer, MinimizeHeight -> MinimizeHeight
+                | SingleContainer, MinimizeLength -> MinimizeLength
                 | _ -> calculationMode
 
             outerLoop (retryMode) containerMode (loopMutate items (items.Length / 10)) (retryCount - 1) results
@@ -324,7 +324,7 @@ let runPerContainer
     let retryCount =
         match containerMode with
         | MultiContainer -> 2
-        | _ -> 10
+        | _ -> 2
 
     try
         let resList =
@@ -440,7 +440,7 @@ let twGroup (rootContainer: Container) (items: Item list) =
     | [] -> []
     | head :: _ when (decide rootContainer head) |> not -> items
     | _ ->
-        let chunks = items |> List.chunkBySize 50
+        let chunks = items |> List.chunkBySize 8
         let rev = chunks |> List.rev
 
         match rev with
@@ -723,7 +723,7 @@ let run
 
                 ]
 
-            {finalResult with ItemsPut = itemsPut}
+            {finalResult with ItemsPut = itemsPut; ItemsUnput = itemsInput}
     ]
     //finalResults
 
