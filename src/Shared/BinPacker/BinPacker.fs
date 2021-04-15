@@ -440,7 +440,7 @@ let twGroup (rootContainer: Container) (items: Item list) =
     | [] -> []
     | head :: _ when (decide rootContainer head) |> not -> items
     | _ ->
-        let chunks = items |> List.chunkBySize 8
+        let chunks = items |> List.chunkBySize 250
         let rev = chunks |> List.rev
 
         match rev with
