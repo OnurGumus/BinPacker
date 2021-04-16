@@ -1,12 +1,28 @@
 <section>
     <slot name="header">
         <h1 id="header"> Bindrake - Your bin packing magician!</h1>
-    </div>
+        </div>
 </section>
 <section>
     <div id="scrolling-body">
         <section id="help">
             <div class="content-wrapper">
+                <div id="donate">
+                    <p> We offer BinDrake for free. If you have found this application useful please support it in order
+                        to have the service uninterrupted</p>
+                    <div id="form-wrapper">
+
+                        <form action="https://www.paypal.com/donate" method="post" target="_top">
+                            <input type="hidden" name="hosted_button_id" value="Y6HB2AE6F98QL" />
+                            <input type="image" src="https://www.paypalobjects.com/en_US/NO/i/btn/btn_donateCC_LG.gif"
+                                border="0" name="submit" title="PayPal - The safer, easier way to pay online!"
+                                alt="Donate with PayPal button" />
+                            <img alt="" border="0" src="https://www.paypal.com/en_NO/i/scr/pixel.gif" width="1"
+                                height="1" />
+                        </form>
+
+                    </div>
+                </div>
                 <slot name="help">
                     <h2>How to use</h2>
                     <ul style="list-style-type: disc;">
@@ -39,6 +55,8 @@
                         </li>
                     </ul>
                 </slot>
+
+
             </div>
             <div class="nav-button-wrapper">
                 <slot name="help-nav-button">

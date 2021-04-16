@@ -8,6 +8,16 @@
     padding: 1em;
 }
 
+#donate{
+    padding-left:2em;
+}
+#form-wrapper{
+    display: flex;
+    justify-content: center;
+}
+#donate form{
+    transform: scale(1.5);
+}
 :host>section:nth-of-type(2)::-webkit-scrollbar {
     display: none;
 }
