@@ -666,8 +666,8 @@ let calculateCost (calculationMode: CalculationMode) =
     fun putItem containers items ->
         let rec loop =
             function
-            | struct (containerSet, [], itemPuts) :: _, _ -> ValueSome(containerSet, itemPuts)
-            | struct (containerSet, item :: remainingItems, itemPuts) :: remainingStack, counter when counter > 0 ->
+            | struct (containerSet, [], itemPuts) :: _, _, _ -> ValueSome(containerSet, itemPuts)
+            | struct (containerSet, item :: remainingItems, itemPuts) :: remainingStack, counter, _ when counter > 0 ->
                 let containerSet = containerSet |> mergeContainers
 
                 let rec loopContainers: (struct (Container list * Container list)) -> StackItem list =
@@ -724,11 +724,13 @@ let calculateCost (calculationMode: CalculationMode) =
                 let stackItems = loopContainers (sorted, [])
                 let totalStack = (stackItems @ remainingStack)
 
-                loop (totalStack, counter - 1)
-            | (cs, _, itemPuts) :: _, _ -> ValueSome(cs, itemPuts)
-            | _, _ -> ValueSome(containers, [])
+                loop (totalStack, counter - 1, itemPuts)
 
-        loop ([ containers, items, [] ], 10000)
+            | (cs, _, itemPuts) :: _, _, _ -> ValueSome(cs, itemPuts)
+            | [(cs, _, itemPuts)] , _, _ -> ValueSome(cs, itemPuts)
+            | _, _, itemPuts -> ValueSome([], itemPuts)
+
+        loop ([ containers, items, [] ], 10000, [])
 
 let calcVolume (item: Item) =
     float (item.Dim.Width)
