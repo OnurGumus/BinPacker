@@ -667,7 +667,7 @@ let calculateCost (calculationMode: CalculationMode) =
         let rec loop =
             function
             | struct (containerSet, [], itemPuts) :: _, _, _ -> ValueSome(containerSet, itemPuts)
-            | struct (containerSet, item :: remainingItems, itemPuts) :: remainingStack, counter, _ when counter > 0 ->
+            | struct (containerSet, item :: remainingItems, itemPuts) :: remainingStack, counter, (bestItemPuts: ItemPut list) when counter > 0 ->
                 let containerSet = containerSet |> mergeContainers
 
                 let rec loopContainers: (struct (Container list * Container list)) -> StackItem list =
@@ -720,15 +720,21 @@ let calculateCost (calculationMode: CalculationMode) =
 
                 let sorted =
                     (containerSet |> List.sortBy containerSort)
+                let itemPuts =
+                    if itemPuts.Length > bestItemPuts.Length then
+                        itemPuts
 
+                    else bestItemPuts
                 let stackItems = loopContainers (sorted, [])
                 let totalStack = (stackItems @ remainingStack)
 
                 loop (totalStack, counter - 1, itemPuts)
 
             | (cs, _, itemPuts) :: _, _, _ -> ValueSome(cs, itemPuts)
-            | [(cs, _, itemPuts)] , _, _ -> ValueSome(cs, itemPuts)
-            | _, _, itemPuts -> ValueSome([], itemPuts)
+            | [(cs, _, _)] , _, itemPuts -> ValueSome(cs, itemPuts)
+            | x, _, itemPuts ->
+                printf "%A" x;
+                ValueSome([], itemPuts)
 
         loop ([ containers, items, [] ], 10000, [])
 
